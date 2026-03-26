@@ -2455,12 +2455,18 @@ function consolRenderSankey(year, month, label) {
   const totIng = mgrTIng + (rndR ? rndR.totalIng : 0) + peruIngSankey;
   if (totIng <= 0) { section.style.display = 'none'; return; }
 
-  const totCost     = mgrTCost + (rndR ? rndR.totalCogs : 0);
-  const totGav      = mgrTGav  + (rndR ? rndR.totalSga  : 0);
-  const totMB       = totIng - totCost;
-  const totAdj      = mgrDep + mgrAdj + (rndR ? rndR.adjRent + rndR.adjCorp : 0);
-  const gavAjustado = Math.max(0, totGav - totAdj);
-  const ebitdaAdj   = Math.max(0, totMB - gavAjustado);
+  // Usar EXACTAMENTE la misma lógica del consolidado de arriba:
+  // 1) Margen Bruto consolidado = suma de MB por compañía
+  // 2) EBITDA mostrado = EBITDA Ajustado consolidado
+  // 3) Los ajustes se reflejan directamente en GAV ajustado, no se vuelven a sumar al final
+  const mgrConsol  = consolGetMgr(year, month);
+  const rndConsol  = consolGetRnd(year, month);
+  const peruConsol = consolGetPeru(year, month);
+
+  const totMB        = (mgrConsol?.mb || 0) + (rndConsol?.mb || 0) + (peruConsol?.mb || 0);
+  const ebitdaAdj    = (mgrConsol?.ebitdaAdj || 0) + (rndConsol?.ebitdaAdj || 0) + (peruConsol?.ebitdaAdj || 0);
+  const totCost      = Math.max(0, totIng - totMB);
+  const gavAjustado  = Math.max(0, totMB - ebitdaAdj);
   if (totMB <= 0) { section.style.display = 'none'; return; }
 
   const timeIng  = mgrErpSum(mgrIngData, 'Time');
