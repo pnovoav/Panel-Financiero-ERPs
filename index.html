@@ -514,26 +514,47 @@ table.brg-bridge tbody tr.pct.B td{font-weight:700;color:var(--text2);background
 </div>
 
 <script>
-function doLogin(){
+const WORKER_URL = 'https://dashboardfinanciero.pnovoav.workers.dev';
+
+async function doLogin(){
   const user = document.getElementById('loginUser').value.trim();
   const pass = document.getElementById('loginPass').value;
   const card = document.getElementById('loginCard');
   const err  = document.getElementById('loginError');
+  const btn  = card.querySelector('.login-btn');
 
-  if(user === 'Admin' && pass === 'sableerp2026'){
-    err.style.display = 'none';
-    const overlay = document.getElementById('loginOverlay');
-    overlay.classList.add('fade-out');
-    setTimeout(() => {
-      overlay.style.display = 'none';
-      document.getElementById('cloudBar').style.display = 'flex';
-      cloudLoad(false);
-    }, 500);
-  } else {
+  btn.disabled = true;
+  btn.textContent = 'Verificando...';
+
+  try {
+    const res = await fetch(`${WORKER_URL}/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user, pass })
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      if (data.token) GIST_TOKEN = data.token;
+      err.style.display = 'none';
+      const overlay = document.getElementById('loginOverlay');
+      overlay.classList.add('fade-out');
+      setTimeout(() => {
+        overlay.style.display = 'none';
+        document.getElementById('cloudBar').style.display = 'flex';
+        cloudLoad(false);
+      }, 500);
+    } else {
+      throw new Error('invalid');
+    }
+  } catch(e) {
     err.style.display = 'block';
     card.classList.remove('shake');
-    void card.offsetWidth; // reflow to restart animation
+    void card.offsetWidth;
     card.classList.add('shake');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Ingresar →';
   }
 }
 // Focus username on load
@@ -554,7 +575,7 @@ window.addEventListener('load', () => {
 //     (puede ser secreto, contenido cualquiera)
 //  4. Pega el token y el ID del Gist abajo
 // ═══════════════════════════════════════════════════════
-const GIST_TOKEN = '';   // opcional: dejar vacío si el Gist es público y solo quieres lectura
+let GIST_TOKEN = '';   // opcional: dejar vacío si el Gist es público y solo quieres lectura
 const GIST_ID    = 'c72d7567dafb186c0a9e700cee59f309';      // mgr + rnd + usr
 const GIST_ID_BRG = 'fca69901de41a6b50de5d8ebef96b009';     // bridge MRR
 const GIST_FILE  = 'sable_dashboard.json';
