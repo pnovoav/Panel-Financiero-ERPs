@@ -424,6 +424,7 @@ td:first-child{text-align:left;color:var(--text)}
 .brg-erp-pill{background:rgba(37,99,235,.1);color:#3b82f6;font-size:12px;font-weight:700;padding:7px 18px;border-radius:6px;margin-left:auto;border:1px solid rgba(37,99,235,.2);letter-spacing:.3px;font-family:var(--mono)}
 .brg-sec-title{font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.6px;border-bottom:1px solid var(--border);padding-bottom:10px;margin-bottom:14px}
 .brg-grid2{display:grid;grid-template-columns:400px 1fr;gap:24px;align-items:stretch}
+.brg-grid2 > *{min-width:0}
 @media(max-width:880px){.brg-grid2{grid-template-columns:1fr}}
 table.brg-ret{width:100%;font-size:12px;border-collapse:collapse}
 table.brg-ret thead th{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;padding-bottom:8px;text-align:right}
@@ -483,6 +484,245 @@ table.brg-bridge tbody tr.pct.B td{font-weight:700;color:var(--text2);background
 .cloud-btn.primary:hover{background:var(--mgr2)}
 .cloud-sep{width:1px;height:18px;background:var(--border);margin:0 4px;flex-shrink:0}
 
+/* ── Upload panels individuales — solo ZIP ── */
+#mgrPanel, #rndPanel, #peruPanel, #mgrFileBar { display:none !important; }
+
+/* ═══════════════════════════════════════════════
+   UPLOAD PANELS — colapsables
+   ═══════════════════════════════════════════════ */
+.upload-panel{margin-bottom:16px}
+.upload-panel-btn{
+  display:flex;align-items:center;justify-content:space-between;width:100%;
+  background:var(--surface);border:1px solid var(--border2);border-radius:8px;
+  padding:11px 16px;cursor:pointer;font-family:var(--mono);font-size:11px;
+  color:var(--text2);transition:background .15s,border-color .15s;text-align:left;
+}
+.upload-panel-btn:hover{background:var(--surface2);border-color:var(--border)}
+.upload-panel-btn-left{display:flex;align-items:center;gap:10px}
+.upload-panel-btn-icon{font-size:17px;opacity:.55;line-height:1}
+.upload-panel-btn-title{font-family:var(--sans);font-size:11px;font-weight:700;color:var(--text);text-transform:uppercase;letter-spacing:.5px;margin-bottom:1px}
+.upload-panel-btn-sub{font-size:9px;color:var(--text3);letter-spacing:.3px}
+.upload-panel-chevron{font-size:9px;color:var(--text3);transition:transform .25s;flex-shrink:0}
+.upload-panel.open .upload-panel-chevron{transform:rotate(180deg)}
+.upload-panel-body{overflow:hidden;max-height:0;transition:max-height .35s ease}
+.upload-panel.open .upload-panel-body{max-height:520px}
+.upload-panel-body .upload-zone{
+  margin-bottom:0;border-top:none;
+  border-radius:0 0 8px 8px;border-color:var(--border2);
+}
+.upload-panel-body .upload-zone.random-zone{border-color:var(--border2)}
+/* Peru: dos zonas dentro del panel */
+.upload-panel-body #peruUploadGrid{
+  display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:0;
+}
+.upload-panel-body #peruUploadGrid .upload-zone{
+  border-radius:4px;border:2px dashed var(--border2);
+}
+
+/* ═══════════════════════════════════════════════
+   MOBILE RESPONSIVE — breakpoints 640px / 480px
+   ═══════════════════════════════════════════════ */
+
+/* ── Shared: allow horizontal scroll inside sections ── */
+.section{overflow:visible}
+.sec-body{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.consol-tbl-wrap,.met-table-wrap,.brg-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+@media(max-width:768px){
+  /* Container padding */
+  .container{padding:14px}
+
+  /* Header */
+  header{flex-direction:column;align-items:flex-start;gap:10px}
+
+  /* Tab nav — horizontal scroll, no scrollbar visible */
+  .tab-nav{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;flex-wrap:nowrap;padding-bottom:0}
+  .tab-nav::-webkit-scrollbar{display:none}
+  .tab-btn{white-space:nowrap;padding:10px 14px;font-size:11px}
+
+  /* Cloud bar */
+  #cloudBar{padding:7px 12px;gap:7px;font-size:10px}
+
+  /* KPI grid — 2 columnas en tablet */
+  .kpi-grid{grid-template-columns:repeat(2,1fr)}
+
+  /* P&L blocks ya tiene su media query a 860px */
+
+  /* Consol grid */
+  .consol-grid{grid-template-columns:1fr}
+
+  /* cmrr ERP cards — 2 columnas en tablet */
+  .cmrr-grid{grid-template-columns:repeat(2,1fr) !important}
+  /* Upload zones */
+  .upload-zone{padding:28px 16px}
+
+  /* ARR */
+  .arr-kpi-row{grid-template-columns:repeat(2,1fr)}
+  .arr-product-grid{grid-template-columns:1fr}
+  .arr-card-grid{grid-template-columns:1fr 1fr}
+
+  /* Buscador */
+  .bus-kv{grid-template-columns:130px 1fr}
+}
+
+@media(max-width:480px){
+  /* Container */
+  .container{padding:10px}
+
+  /* Header compacto */
+  .logo-area h1{font-size:16px}
+  .logo-area p{font-size:9px;letter-spacing:1.5px}
+
+  /* Tabs más compactos */
+  .tab-btn{padding:9px 12px;font-size:10px;letter-spacing:0}
+
+  /* Login card */
+  .login-card{padding:28px 20px;max-width:100%;margin:12px}
+  .login-title{font-size:17px}
+
+  /* KPI — 2 columnas compactas */
+  .kpi-grid{grid-template-columns:repeat(2,1fr);gap:8px}
+  .kpi-value{font-size:18px}
+  .kpi-card{padding:11px 13px}
+  .kpi-label{font-size:9px;letter-spacing:1px}
+
+  /* Tablas: fuente más chica, padding reducido */
+  table{font-size:11px}
+  thead th,td{padding:7px 9px}
+  thead th:first-child,td:first-child{padding-left:10px}
+  tbody tr.sub-row td:first-child{padding-left:22px}
+
+  /* Secciones */
+  .sec-header{padding:9px 12px}
+  .sec-title{font-size:10px;letter-spacing:.6px}
+  .sec-total{font-size:12px}
+
+  /* P&L rows */
+  .pnl-row{padding:7px 12px;font-size:10px}
+  .pnl-row.eb .pv,.pnl-row.ea .pv,.pnl-row.nt .pv{font-size:12px}
+
+  /* Consol cards */
+  .consol-row{padding:6px 12px;font-size:10px}
+  .consol-tbl th,.consol-tbl td{padding:7px 8px;font-size:11px}
+
+  /* Period bar */
+  .period-bar{gap:5px}
+  .view-btn{padding:4px 9px;font-size:10px}
+  select.sel{font-size:10px;padding:4px 7px}
+
+  /* Upload zone */
+  .upload-zone{padding:20px 12px}
+  .upload-icon{font-size:28px}
+  .upload-zone h2{font-size:13px}
+  .upload-zone p{font-size:10px}
+
+  /* Cloud bar — compacto */
+  #cloudBar{flex-wrap:wrap;padding:6px 10px;gap:5px}
+  .cloud-sep{display:none}
+  .cloud-btn{padding:4px 10px;font-size:9px}
+
+  /* Section body tablas */
+  .sec-body table{min-width:520px}
+
+  /* ARR */
+  .arr-kpi-row{grid-template-columns:repeat(2,1fr);gap:8px}
+  .arr-kpi{padding:11px 12px}
+  .arr-kpi-val{font-size:15px}
+  .arr-kpi-label{font-size:9px}
+  .arr-product-grid{grid-template-columns:1fr}
+  .met-arr-hero{flex-direction:column;align-items:flex-start;gap:8px;padding:14px 16px}
+  .met-arr-value{font-size:22px}
+
+  /* Bridge */
+  .brg-card{padding:12px 13px}
+  .brg-erp-pill{font-size:10px;padding:5px 12px}
+
+  /* Buscador */
+  .bus-wrap{max-width:100%}
+  .bus-row{flex-direction:column;gap:8px}
+  .bus-input{min-width:unset;width:100%}
+  .bus-btn{width:100%;justify-content:center}
+  .bus-kv{grid-template-columns:1fr;row-gap:2px}
+  .bus-kv-label{margin-top:10px}
+
+  /* ZIP banner */
+  #zipBanner{flex-direction:column;padding:14px 16px;gap:10px;text-align:center}
+
+  /* Metrics */
+  .met-upload-zone{padding:20px 12px}
+  .erp-metrics-grid{grid-template-columns:1fr}
+
+  /* Consol MRR cards — carrusel 1 card visible */
+  .cmrr-grid{
+    display:flex !important;
+    overflow-x:auto;
+    scroll-snap-type:x mandatory;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+    gap:10px;
+    padding:0 2px 6px;
+  }
+  .cmrr-grid::-webkit-scrollbar{display:none}
+  .cmrr-card{flex:0 0 calc(100% - 4px);scroll-snap-align:center;overflow:visible}
+  .cmrr-card-header{flex-wrap:wrap;gap:4px 8px;padding:10px 12px}
+  .cmrr-card-name{font-size:11px}
+  .cmrr-card-header > span:last-child{font-size:11px !important}
+  .cmrr-metric{padding:7px 12px;font-size:11px}
+  .cmrr-metric-label{font-size:10px}
+  .cmrr-metric-value{font-size:11px}
+
+  /* Bridge — retención + waterfall ajustados al ancho móvil */
+  #tab-bridge{overflow-x:visible}
+  .brg-grid2{
+    width:100%;
+    max-width:100%;
+    min-width:0;
+    grid-template-columns:minmax(0,1fr) !important;
+    gap:14px;
+  }
+  .brg-grid2 > div{min-width:0}
+  table.brg-ret{table-layout:fixed}
+  table.brg-ret thead th,table.brg-ret tbody td{font-size:10px}
+  table.brg-ret thead th:first-child{width:112px !important}
+  table.brg-ret tbody td:first-child{white-space:normal;word-break:break-word;padding-right:8px}
+  table.brg-ret thead th:last-child,table.brg-ret tbody td:last-child{width:54px}
+  #brgWfChart{
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0;
+    height:260px !important;
+    min-height:260px;
+    overflow:hidden;
+  }
+
+  /* ERP metric cards in bridge — fix clipping */
+  .erp-metric-card{overflow:visible}
+  .erp-metric-header{flex-wrap:wrap;gap:4px 8px;padding:8px 10px}
+  .erp-metric-header > span:last-child{font-size:10px !important}
+  .erp-metric-name{font-size:10px}
+
+  /* Consol ARR header row — evitar que se corte */
+  #consolMrrMetrics > div:first-child{flex-wrap:wrap;gap:8px}
+  #consolMrrMetrics > div:first-child > span:last-child{width:100%}
+
+  /* ── Columna fija en tablas de scroll horizontal ── */
+  table.brg-bridge thead th:first-child,
+  table.brg-bridge tbody td:first-child{
+    position:sticky;left:0;z-index:2;
+    background:var(--surface);
+    box-shadow:2px 0 4px rgba(0,0,0,.06);
+  }
+  table.brg-bridge tbody tr.B td:first-child{background:var(--surface2)}
+  table.brg-bridge tbody tr.pct-hdr td:first-child{background:var(--surface)}
+  table.brg-bridge tbody tr.pct.B td:first-child{background:var(--surface2)}
+
+  #consolUsrTable thead th:first-child,
+  #consolUsrTable tbody td:first-child{
+    position:sticky;left:0;z-index:2;
+    background:var(--surface);
+    box-shadow:2px 0 4px rgba(0,0,0,.06);
+  }
+}
 </style>
 </head>
 <body>
@@ -788,10 +1028,12 @@ function cloudRestore(data) {
     document.getElementById('mgrFileTag').innerHTML = mgrFiles.map(f => `<span class="file-tag">📄 ${f}</span>`).join(' ');
     document.getElementById('mgrUploadZone').style.display = 'none';
     document.getElementById('mgrDashboard').style.display  = 'block';
-    document.getElementById('mgrFileBar').style.display    = 'flex';
+    document.getElementById('mgrFileBar').style.display    = 'block';
+    document.getElementById('mgrFileSummary').textContent  = mgrFiles.length + ' archivo' + (mgrFiles.length!==1?'s':'') + ' cargado' + (mgrFiles.length!==1?'s':'');
     document.getElementById('mgrFileChips').innerHTML = mgrFiles.map(f =>
       `<span style="background:var(--surface2);border:1px solid var(--border2);border-radius:4px;padding:2px 9px;font-size:10px;color:var(--text2)">📄 ${f}</span>`
     ).join('');
+    closeUploadPanel('mgrPanel');
     mgrBuildSelectors();
     mgrRenderAll();
   }
@@ -802,6 +1044,7 @@ function cloudRestore(data) {
     if (rndFile) document.getElementById('rndFileTag').innerHTML = `<span class="file-tag">📄 ${rndFile}</span>`;
     document.getElementById('rndUploadZone').style.display  = 'none';
     document.getElementById('rndDashboard').style.display   = 'block';
+    closeUploadPanel('rndPanel');
     rndBuildSelectors();
     rndRenderAll();
   }
@@ -852,8 +1095,20 @@ function cloudAutoSave() {
 
 <div class="container">
 
-  <!-- ZIP UPLOAD BANNER -->
-  <div id="zipBanner" style="background:var(--surface);border:2px dashed var(--border2);border-radius:12px;padding:22px 28px;margin-bottom:24px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;cursor:pointer;transition:all .2s" onclick="document.getElementById('zipInput').click()" ondragover="event.preventDefault();this.style.borderColor='var(--accent)';this.style.background='#eff6ff'" ondragleave="this.style.borderColor='var(--border2)';this.style.background='var(--surface)'" ondrop="event.preventDefault();this.style.borderColor='var(--border2)';this.style.background='var(--surface)';zipHandleFile(event.dataTransfer.files[0])">
+  <!-- ZIP UPLOAD PANEL -->
+  <div id="zipPanel" class="upload-panel" style="margin-bottom:8px">
+    <button class="upload-panel-btn" onclick="toggleUploadPanel('zipPanel')" style="padding:7px 12px;border-color:transparent;background:transparent;color:var(--text3)">
+      <div class="upload-panel-btn-left">
+        <span class="upload-panel-btn-icon" style="opacity:.35;font-size:13px">📦</span>
+        <div>
+          <div class="upload-panel-btn-sub" style="font-size:9px;letter-spacing:.5px;text-transform:uppercase">Cargar datos · ZIP</div>
+        </div>
+      </div>
+      <span class="upload-panel-chevron" style="font-size:8px">▼</span>
+    </button>
+    <div class="upload-panel-body">
+
+  <div id="zipBanner" style="background:var(--surface);border:2px dashed var(--border2);border-radius:0 0 8px 8px;padding:22px 28px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;cursor:pointer;transition:all .2s" onclick="document.getElementById('zipInput').click()" ondragover="event.preventDefault();this.style.borderColor='var(--accent)';this.style.background='#eff6ff'" ondragleave="this.style.borderColor='var(--border2)';this.style.background='var(--surface)'" ondrop="event.preventDefault();this.style.borderColor='var(--border2)';this.style.background='var(--surface)';zipHandleFile(event.dataTransfer.files[0])">
     <div style="font-size:28px;line-height:1">📦</div>
     <div style="flex:1;min-width:180px">
       <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px">Carga rápida — sube tu ZIP con todos los archivos</div>
@@ -864,7 +1119,7 @@ function cloudAutoSave() {
   </div>
 
   <!-- ZIP status bar (compact, collapsible) -->
-  <div id="zipStatus" style="display:none;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:0;margin-bottom:20px;overflow:hidden">
+  <div id="zipStatus" style="display:none;background:var(--surface);border:1px solid var(--border);border-radius:0 0 8px 8px;padding:0;overflow:hidden">
     <div style="display:flex;align-items:center;gap:10px;padding:9px 14px;cursor:pointer" onclick="zipToggleDetails()" id="zipStatusBar">
       <span style="font-size:13px">📦</span>
       <span style="font-size:11px;font-weight:600;color:var(--text);flex:1" id="zipStatusTitle">ZIP cargado</span>
@@ -877,6 +1132,9 @@ function cloudAutoSave() {
     </div>
     <input type="file" id="zipInput2" accept=".zip" style="display:none" onchange="zipHandleFile(this.files[0]);this.value=''">
   </div>
+
+    </div><!-- /upload-panel-body -->
+  </div><!-- /zipPanel -->
 
   
 <header>
@@ -919,19 +1177,46 @@ function cloudAutoSave() {
   <!-- ══════════════════════════════════════════ MANAGER TAB -->
   <div class="tab-content active" id="tab-manager">
 
-    <!-- Upload zone grande (estado inicial) -->
+    <!-- Upload panel colapsable -->
+    <div id="mgrPanel" class="upload-panel">
+      <button class="upload-panel-btn" onclick="toggleUploadPanel('mgrPanel')">
+        <div class="upload-panel-btn-left">
+          <span class="upload-panel-btn-icon">📊</span>
+          <div>
+            <div class="upload-panel-btn-title">Manager Software</div>
+            <div class="upload-panel-btn-sub">Libro Mayor · arrastra o selecciona .xlsx</div>
+          </div>
+        </div>
+        <span class="upload-panel-chevron">▼</span>
+      </button>
+      <div class="upload-panel-body">
     <div id="mgrUploadZone" class="upload-zone" onclick="document.getElementById('mgrFile').click()">
       <div class="upload-icon">📊</div>
       <h2>Libro Mayor — Manager Software S.A.</h2>
       <p>Arrastra o selecciona uno o varios archivos .xlsx del libro mayor · puedes combinar varios períodos</p>
     </div>
+      </div>
+    </div>
 
     <!-- Barra compacta (aparece después del primer archivo) -->
-    <div id="mgrFileBar" style="display:none;align-items:center;gap:8px;flex-wrap:wrap;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin-bottom:16px">
-      <span style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;white-space:nowrap">Mayor cargado</span>
-      <div id="mgrFileChips" style="display:flex;flex-wrap:wrap;gap:6px;flex:1"></div>
-      <button onclick="document.getElementById('mgrFile').click()" style="display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:5px;border:1px solid var(--mgr);background:transparent;color:var(--mgr2);font-family:var(--mono);font-size:10px;cursor:pointer;white-space:nowrap;transition:all .15s" onmouseover="this.style.background='var(--mgr-dim)'" onmouseout="this.style.background='transparent'">+ Agregar período</button>
-      <button onclick="mgrClearAll()" style="display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:5px;border:1px solid var(--border2);background:transparent;color:var(--text3);font-family:var(--mono);font-size:10px;cursor:pointer;transition:all .15s" onmouseover="this.style.color='var(--red2)';this.style.borderColor='var(--red2)'" onmouseout="this.style.color='var(--text3)';this.style.borderColor='var(--border2)'">✕ Limpiar</button>
+    <div id="mgrFileBar" class="upload-panel" style="display:none">
+      <button class="upload-panel-btn" onclick="toggleUploadPanel('mgrFileBar')">
+        <div class="upload-panel-btn-left">
+          <span class="upload-panel-btn-icon">📊</span>
+          <div>
+            <div class="upload-panel-btn-title">Manager Software</div>
+            <div class="upload-panel-btn-sub" id="mgrFileSummary">Mayor cargado</div>
+          </div>
+        </div>
+        <span class="upload-panel-chevron">▼</span>
+      </button>
+      <div class="upload-panel-body">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 14px;border:1px solid var(--border2);border-top:none;border-radius:0 0 8px 8px;background:var(--surface)">
+          <div id="mgrFileChips" style="display:flex;flex-wrap:wrap;gap:6px;flex:1"></div>
+          <button onclick="document.getElementById('mgrFile').click()" style="display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:5px;border:1px solid var(--mgr);background:transparent;color:var(--mgr2);font-family:var(--mono);font-size:10px;cursor:pointer;white-space:nowrap;transition:all .15s" onmouseover="this.style.background='var(--mgr-dim)'" onmouseout="this.style.background='transparent'">+ Agregar período</button>
+          <button onclick="mgrClearAll()" style="display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:5px;border:1px solid var(--border2);background:transparent;color:var(--text3);font-family:var(--mono);font-size:10px;cursor:pointer;transition:all .15s" onmouseover="this.style.color='var(--red2)';this.style.borderColor='var(--red2)'" onmouseout="this.style.color='var(--text3)';this.style.borderColor='var(--border2)'">✕ Limpiar</button>
+        </div>
+      </div>
     </div>
 
     <input type="file" id="mgrFile" multiple accept=".xlsx,.xls" style="display:none">
@@ -983,10 +1268,24 @@ function cloudAutoSave() {
 
   <!-- ══════════════════════════════════════════ RANDOM TAB -->
   <div class="tab-content" id="tab-random">
+    <div id="rndPanel" class="upload-panel">
+      <button class="upload-panel-btn" onclick="toggleUploadPanel('rndPanel')">
+        <div class="upload-panel-btn-left">
+          <span class="upload-panel-btn-icon">📋</span>
+          <div>
+            <div class="upload-panel-btn-title">Random Chile</div>
+            <div class="upload-panel-btn-sub">Balance Mensual · arrastra o selecciona .xlsx</div>
+          </div>
+        </div>
+        <span class="upload-panel-chevron">▼</span>
+      </button>
+      <div class="upload-panel-body">
     <div id="rndUploadZone" class="upload-zone random-zone" onclick="document.getElementById('rndFile').click()">
       <div class="upload-icon">📋</div>
       <h2>Balance Mensual — Random</h2>
       <p>Sube el archivo "Construcción_Balance_y_EERR_Random.xlsx" u otro con la misma estructura</p>
+    </div>
+      </div>
     </div>
     <input type="file" id="rndFile" accept=".xlsx,.xls" style="display:none">
 
@@ -1037,6 +1336,18 @@ function cloudAutoSave() {
 
   <!-- ══════════════════════════════════════════ RANDOM PERÚ TAB -->
   <div class="tab-content" id="tab-peru">
+    <div id="peruPanel" class="upload-panel">
+      <button class="upload-panel-btn" onclick="toggleUploadPanel('peruPanel')">
+        <div class="upload-panel-btn-left">
+          <span class="upload-panel-btn-icon">🇵🇪</span>
+          <div>
+            <div class="upload-panel-btn-title">Random Perú</div>
+            <div class="upload-panel-btn-sub">EERR 2025 + EERR 2026 en adelante</div>
+          </div>
+        </div>
+        <span class="upload-panel-chevron">▼</span>
+      </button>
+      <div class="upload-panel-body">
     <!-- Upload grid: dos zonas -->
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:4px" id="peruUploadGrid">
       <div id="peruUploadZone2025" class="upload-zone" onclick="document.getElementById('peruFile2025').click()">
@@ -1050,6 +1361,8 @@ function cloudAutoSave() {
         <h2>EERR Perú — 2026 en adelante</h2>
         <p>Sube el archivo <strong>Construcción_EERR_Perú.xlsx</strong> · hoja "EERR CLP" · actualizar mes a mes</p>
         <div id="peruFileTagLong" style="margin-top:8px"></div>
+      </div>
+    </div>
       </div>
     </div>
     <input type="file" id="peruFile2025" accept=".xlsx,.xls" style="display:none">
@@ -1228,7 +1541,7 @@ function cloudAutoSave() {
         <div class="brg-grid2">
           <div>
             <table class="brg-ret">
-              <thead><tr><th style="width:185px"></th><th id="brgHdrMRR">MRR [UF]</th><th>% BoP</th></tr></thead>
+              <thead><tr><th style="width:185px"></th><th id="brgHdrMRR">MRR [UF]</th></tr></thead>
               <tbody id="brgRetBody"></tbody>
             </table>
             <div style="border-top:1px solid var(--border2);margin:12px 0"></div>
@@ -1274,6 +1587,18 @@ function pct(n,d){ if(!d) return '—'; return (n/d*100).toFixed(1)+'%'; }
 function growHtml(c,p){ if(!p) return ''; const g=(c-p)/Math.abs(p)*100; return `<span class="${g>=0?'gu':'gd'}">${g>=0?'▲':'▼'} ${Math.abs(g).toFixed(1)}%</span>`; }
 function fmtSign(n){ return n>=0?`<span class="gu">${fmt(n)}</span>`:`<span class="gd">${fmt(n)}</span>`; }
 function sumObj(o){ return Object.values(o).reduce((a,b)=>a+b,0); }
+function toggleUploadPanel(id){
+  var p=document.getElementById(id);
+  if(p) p.classList.toggle('open');
+}
+function openUploadPanel(id){
+  var p=document.getElementById(id);
+  if(p){ p.style.display='block'; p.classList.add('open'); }
+}
+function closeUploadPanel(id){
+  var p=document.getElementById(id);
+  if(p){ p.classList.remove('open'); }
+}
 function toggleSec(b,a){ document.getElementById(b).classList.toggle('collapsed'); document.getElementById(a).classList.toggle('r'); }
 function switchTab(t){
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
@@ -1281,6 +1606,7 @@ function switchTab(t){
   document.querySelector(`.tab-btn.${t}`).classList.add('active');
   document.getElementById('tab-'+t).classList.add('active');
   if(t==='consol') consolRefresh();
+  if(t==='bridge' && typeof window.brgRefresh==='function') setTimeout(window.brgRefresh,80);
 }
 
 const MESES_FULL=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
@@ -1397,6 +1723,7 @@ function mgrClearAll(){
   document.getElementById('mgrFileChips').innerHTML='';
   document.getElementById('mgrUploadZone').style.display='block';
   document.getElementById('mgrDashboard').style.display='none';
+  openUploadPanel('mgrPanel');
   consolRefresh();
 }
 function mgrBuildSelectors(){
@@ -1645,9 +1972,11 @@ let rndData={}, rndFile=null, rndView='mes';
 let peruData={}, peruFile2025=null, peruFileLong=null, peruView='mes';
 
 function peruSyncUploadUI(){
+  const panel=document.getElementById('peruPanel');
   const grid=document.getElementById('peruUploadGrid');
   const dash=document.getElementById('peruDashboard');
   const hasData=!!(peruData && Object.keys(peruData).length>0);
+  if(panel) panel.style.display = hasData ? 'none' : 'block';
   if(grid) grid.style.display = hasData ? 'none' : 'grid';
   if(dash) dash.style.display = hasData ? 'block' : 'none';
 }
@@ -1821,7 +2150,7 @@ function peruRenderAll(){
   document.getElementById('peruKpi').innerHTML=`
     <div class="kpi-card" style="--kpi-accent:var(--peru)"><div class="kpi-label">Ingresos Operacionales · ${label}</div><div class="kpi-value" style="color:var(--peru2)">${fmtM(r.ing)}</div><div class="kpi-sub">${fmt(r.ing)}</div></div>
     <div class="kpi-card green"><div class="kpi-label">Margen Bruto</div><div class="kpi-value">${fmtM(r.mb)}</div><div class="kpi-sub">${pct(r.mb,r.ing)} margen</div></div>
-    <div class="kpi-card"><div class="kpi-label">EBITDA</div><div class="kpi-value">${fmtM(r.ebitda)}</div><div class="kpi-sub">${pct(r.ebitda,r.ing)} margen</div></div>`;
+    <div class="kpi-card blue"><div class="kpi-label">EBITDA</div><div class="kpi-value">${fmtM(r.ebitda)}</div><div class="kpi-sub">${pct(r.ebitda,r.ing)} margen</div></div>`;
 
   let rh=`
     <div class="pnl-row"><span class="pn">Ingresos Operacionales</span><span class="pv">${fmt(r.ing)}</span></div>
@@ -2517,12 +2846,14 @@ function consolRenderSankey(year, month, label) {
     el.innerHTML = '';
 
     const W      = el.clientWidth || 960;
-    const H      = 480;
-    const ML     = 300;  // wide left margin: fixed logo column + text
-    const MR     = 240;  // tighter right margin — more flow width
-    const MT     = 70;   // tall top margin — room for above labels
-    const MB_    = 48;
-    const NODE_W = 5;
+    const mob    = W < 520;
+    const H      = mob ? Math.round(W * 0.95) : 480;
+    const ML     = mob ? Math.round(W * 0.28) : 300;
+    const MR     = mob ? Math.round(W * 0.22) : 240;
+    const MT     = mob ? 36 : 70;
+    const MB_    = mob ? 24 : 48;
+    const NODE_W = mob ? 4 : 5;
+    el.style.height = H + 'px';
 
     // ─── Build node + link arrays ───
     const rawNodes = [], rawLinks = [];
@@ -2589,7 +2920,7 @@ function consolRenderSankey(year, month, label) {
 
     // ── Manual Y nudge: push mb up, cost down, ebt up, gav down ──
     // This increases vertical spread so the Bézier has more room to curve.
-    const NUDGE = 36; // px — conservative enough to stay within chart bounds
+    const NUDGE = mob ? Math.round(H * 0.07) : 36;
     graph.nodes.forEach(n => {
       if (n.id === 'mb') {
         n.y0 -= NUDGE; n.y1 -= NUDGE;
@@ -2646,7 +2977,8 @@ function consolRenderSankey(year, month, label) {
     // col3 mb/cost  → above, centered on node (flow is gone to the right already)
     // col4 ebt/gav  → above, centered on node
     // otros         → below
-    const FS = 13, FS2 = 11, GAP = 10;
+    const FS = mob ? 9 : 13, FS2 = mob ? 8 : 11, GAP = mob ? 6 : 10;
+    const showLogos = !mob;
     const lblDefs = {
       t:     { name: 'Time',              val: timeIng,     pct: null,                     side: 'left',       col: '#374151' },
       f:     { name: 'Flexline',          val: flexIng,     pct: null,                     side: 'left',       col: '#374151' },
@@ -2681,11 +3013,8 @@ function consolRenderSankey(year, month, label) {
 
       if (lbl.side === 'left') {
         const x = node.x0 - GAP;
-        const logos = sankeyLogoMap[node.id] || [];
+        const logos = showLogos ? (sankeyLogoMap[node.id] || []) : [];
 
-        // Option A: all logos left-aligned to a fixed column.
-        // LOGO_COL_X = same X for every node — logos form a neat vertical column.
-        // Text starts immediately to the right of the logo (or at x if no logo).
         const ICON_SIZE    = node.id === 'mp' ? 34 : 28;
         const ICON_GAP     = 4;
         const TEXT_RIGHT_X = node.x0 - GAP;
@@ -2909,7 +3238,17 @@ function consolRenderMrrMetrics(year,month){
       usersSection.style.display='none';
     }
 
-    wrap.innerHTML='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px">'+cards.join('')+'</div>';
+    var isMobMrr=window.innerWidth<640;
+    if(isMobMrr){
+      var mobileCards=cards.map(function(c){
+        return c.replace('class="cmrr-card" style="','class="cmrr-card" style="flex:0 0 calc(100% - 4px);scroll-snap-align:center;overflow:hidden;');
+      }).join('');
+      wrap.style.cssText='display:flex;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;gap:10px;padding:0 2px 6px';
+      wrap.innerHTML=mobileCards;
+    } else {
+      wrap.style.cssText='';
+      wrap.innerHTML='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px">'+cards.join('')+'</div>';
+    }
 }
 
 // ═══════════════════════════════════════ BRIDGE MRR MODULE
@@ -3061,8 +3400,7 @@ function consolRenderMrrMetrics(year,month){
     ];
     document.getElementById("brgRetBody").innerHTML=rows.map(function(r){
       return '<tr class="'+(r.bold?"B":"")+'"><td class="'+r.cls+'">'+r.label+'</td>'
-        +'<td class="'+r.cls+'">'+brgFmt(r.val)+'</td>'
-        +'<td style="color:var(--text3);font-size:11px">'+(r.label==="BoP MRR"?"100,0%":brgFmtPct(r.val,p.bop))+'</td></tr>';
+        +'<td class="'+r.cls+'">'+brgFmt(r.val)+'</td></tr>';
     }).join("");
     var pctRows=[
       {label:"BoP MRR",pct:1,bold:false},{label:"(-) Churn",pct:p.churn/Math.abs(p.bop),bold:false},
@@ -3082,24 +3420,25 @@ function consolRenderMrrMetrics(year,month){
     var bopV=x12(p.bop)/div, chuV=x12(Math.abs(p.churn))/div, dwnV=x12(Math.abs(p.downsell))/div;
     var upV=x12(p.upsell)/div, newV=x12(p.newMRR)/div, eopV=x12(p.eop)/div;
     var grosV=bopV-chuV-dwnV, netV=grosV+upV;
-    var names=["BoP ARR","(-) Churn","(-) Down","(+) Upsell","(+) New","EoP ARR"];
+    var names=["BoP ARR","(-) Churn","(-) Downsell","(+) Upsell","(+) New","EoP ARR"];
     var absVals=[bopV,chuV,dwnV,upV,newV,eopV];
     var bases=[0,bopV-chuV,grosV-dwnV,grosV,netV,0];
     var colors=["#3b82f6","#f87171","#fca5a5","#34d399","#6ee7b7","#3b82f6"];
     var dispVals=[bopV,x12(p.churn)/div,x12(p.downsell)/div,upV,newV,eopV];
     if(typeof Plotly==='undefined') return;
+    var isMobile = window.innerWidth < 520;
     var trace={type:"bar",x:names,y:absVals,base:bases,
       marker:{color:colors,opacity:0.88,line:{width:0}},
       text:dispVals.map(function(v){return v.toLocaleString("es-CL",{minimumFractionDigits:1,maximumFractionDigits:1});}),
       textposition:"inside",
       insidetextanchor:"middle",
-      textfont:{size:12,color:"#fff",family:"'DM Mono',monospace"},
+      textfont:{size:isMobile?9:12,color:"#fff",family:"'DM Mono',monospace"},
       hovertemplate:"<b>%{x}</b><br>ARR: %{text} "+unit+"<extra></extra>"};
     var layout={
-      margin:{t:16,b:44,l:55,r:10},
-      xaxis:{tickfont:{size:11,color:"#6b7280",family:"'DM Mono',monospace"},fixedrange:true,showgrid:false},
+      margin:{t:16,b:isMobile?72:44,l:isMobile?42:55,r:10},
+      xaxis:{tickfont:{size:isMobile?9:11,color:"#6b7280",family:"'DM Mono',monospace"},tickangle:isMobile?-40:0,fixedrange:true,showgrid:false},
       yaxis:{tickfont:{size:10,color:"#9ca3af"},fixedrange:true,gridcolor:"rgba(0,0,0,.05)",zeroline:false,
-             title:{text:"ARR ("+unit+")",font:{size:10,color:"#9ca3af"}}},
+             title:{text:isMobile?"":("ARR ("+unit+")"),font:{size:10,color:"#9ca3af"}}},
       bargap:0.4,
       plot_bgcolor:"#ffffff",
       paper_bgcolor:"#ffffff",
@@ -3184,11 +3523,18 @@ function consolRenderMrrMetrics(year,month){
       var rows=top5.map(function(c,i){
         var arr=c.eop*12;
         var pct=total?((c.eop/total)*100).toFixed(1)+"%":"—";
-        return '<tr style="height:36px">'
-          +'<td style="color:var(--text3);padding:0 10px;font-size:10px;width:24px">'+(i+1)+'</td>'
-          +'<td style="padding:0 10px;color:var(--text);font-size:12px;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="'+c.rut+'">'+c.nombre+'</td>'
-          +'<td style="padding:0 10px;text-align:right;font-size:11px;font-weight:600;color:'+color+'">'+fmtVal(c.eop)+'</td>'
-          +'<td style="padding:0 10px;text-align:right;font-size:10px;color:var(--text3);width:52px">'+pct+'</td>'
+        var isMobRow=window.innerWidth<640;
+        var nombreStyle=isMobRow
+          ? 'padding:8px 10px;color:var(--text);font-size:12px;text-align:left;white-space:normal;word-break:break-word;line-height:1.3;vertical-align:middle'
+          : 'padding:0 10px;color:var(--text);font-size:12px;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap';
+        var cellPad=isMobRow?'padding:8px 10px':'padding:0 10px';
+        var vAlign=isMobRow?';vertical-align:middle':'';
+        var trStyle=isMobRow?'':' style="height:36px"';
+        return '<tr'+trStyle+'>'
+          +'<td style="color:var(--text3);'+cellPad+';font-size:10px;width:24px'+vAlign+'">'+(i+1)+'</td>'
+          +'<td style="'+nombreStyle+'" title="'+c.rut+'">'+c.nombre+'</td>'
+          +'<td style="'+cellPad+';text-align:right;font-size:11px;font-weight:600;color:'+color+';white-space:nowrap'+vAlign+'">'+fmtVal(c.eop)+'</td>'
+          +'<td style="'+cellPad+';text-align:right;font-size:10px;color:var(--text3);width:52px;white-space:nowrap'+vAlign+'">'+pct+'</td>'
           +'</tr>';
       }).join('');
 
@@ -3209,7 +3555,16 @@ function consolRenderMrrMetrics(year,month){
         +'</div>';
     }).filter(Boolean);
 
-    wrap.innerHTML='<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">'+cards.join('')+'</div>';
+    var isMob=window.innerWidth<640;
+    var wrapStyle=isMob
+      ? 'display:flex;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;gap:10px;padding:0 2px 6px;scrollbar-width:none'
+      : 'display:grid;grid-template-columns:1fr 1fr;gap:16px';
+    if(isMob) cards=cards.map(function(c){
+      return c
+        .replace('class="erp-metric-card"','class="erp-metric-card" style="flex:0 0 calc(100% - 4px);scroll-snap-align:center;min-width:0;overflow:hidden"')
+        .replace('<table style="width:100%;border-collapse:collapse">','<table style="width:100%;border-collapse:collapse;table-layout:fixed">');
+    });
+    wrap.innerHTML='<div style="'+wrapStyle+'">'+cards.join('')+'</div>';
   }
 
   // Build client map for single RUT (used in top5 per-client calc)
@@ -3357,6 +3712,7 @@ function consolRenderMrrMetrics(year,month){
       consolRenderMrrMetrics(yr,mo);
     }
   };
+  window.brgRefresh = function(){ if(brgAllData.length) _origBrgRender(); };
 })();
 
 // Refresh metrics when switching to tab
@@ -3583,6 +3939,7 @@ async function zipHandleFile(zipFile) {
     document.getElementById('zipStatusDetails').style.display='none';
     document.getElementById('zipDetailsArrow').textContent='▼';
     statusDiv.style.display = 'block';
+    openUploadPanel('zipPanel');
 
     // Auto-navigate to first loaded tab
     const firstType = tasks[0]?.type;
@@ -3613,6 +3970,7 @@ function zipResetBanner() {
   banner.ondragover = (e) => { e.preventDefault(); banner.style.borderColor='var(--accent)'; banner.style.background='#eff6ff'; };
   banner.ondragleave = () => { banner.style.borderColor='var(--border2)'; banner.style.background='var(--surface)'; };
   banner.ondrop = (e) => { e.preventDefault(); banner.style.borderColor='var(--border2)'; banner.style.background='var(--surface)'; zipHandleFile(e.dataTransfer.files[0]); };
+  openUploadPanel('zipPanel');
 }
 
 function zipToggleDetails(){
@@ -3630,7 +3988,9 @@ function zipReset() {
   peruData = {}; peruFile2025 = null; peruFileLong = null;
   document.getElementById('rndUploadZone').style.display = 'block';
   document.getElementById('rndDashboard').style.display = 'none';
+  openUploadPanel('rndPanel');
   peruSyncUploadUI();
+  openUploadPanel('peruPanel');
   consolRefresh();
   // Show banner again, hide status
   document.getElementById('zipStatus').style.display = 'none';
