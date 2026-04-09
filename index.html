@@ -1868,8 +1868,8 @@ function mgrRenderAll(){
     <div class="kpi-card blue" style="--kc:var(--mgr)"><div class="kpi-label">Ingresos · ${label}</div><div class="kpi-value">${fmtM(tIng)}</div><div class="kpi-sub">${fmt(tIng)} ${growHtml(tIng,tPrevIng)}</div></div>
     <div class="kpi-card"><div class="kpi-label">Recurrentes</div><div class="kpi-value">${fmtM(rec)}</div><div class="kpi-sub">${pct(rec,tIng)} del total</div></div>
     <div class="kpi-card green"><div class="kpi-label">Margen Bruto</div><div class="kpi-value">${fmtM(mb)}</div><div class="kpi-sub">${pct(mb,tIng)} margen</div></div>
-    <div class="kpi-card"><div class="kpi-label">EBIT</div><div class="kpi-value">${fmtM(ebitda)}</div><div class="kpi-sub">${pct(ebitda,tIng)} margen</div></div>
-    <div class="kpi-card yellow"><div class="kpi-label">EBIT Ajustado</div><div class="kpi-value">${fmtM(ebitdaAdj)}</div><div class="kpi-sub">${pct(ebitdaAdj,tIng)} margen</div></div>`;
+    <div class="kpi-card"><div class="kpi-label">EBITDA</div><div class="kpi-value">${fmtM(ebitda)}</div><div class="kpi-sub">${pct(ebitda,tIng)} margen</div></div>
+    <div class="kpi-card yellow"><div class="kpi-label">EBITDA Ajustado</div><div class="kpi-value">${fmtM(ebitdaAdj)}</div><div class="kpi-sub">${pct(ebitdaAdj,tIng)} margen</div></div>`;
 
   // Ingresos table
   const showG=mgrView==='mes';
@@ -1915,7 +1915,7 @@ function mgrRenderAll(){
     <div class="pnl-row"><span class="pn">(-) Costos</span><span class="pv">${fmt(tCost)}</span></div>
     <div class="pnl-row hl"><span class="pn">= Margen Bruto</span><span class="pv">${fmtSign(mb)} <small>(${pct(mb,tIng)})</small></span></div>
     <div class="pnl-row"><span class="pn">(-) GAV</span><span class="pv">${fmt(tGav)}</span></div>
-    <div class="pnl-row eb"><span class="pn">= EBITDA</span><span class="pv">${fmtSign(ebitda)} <small>(${pct(ebitda,tIng)})</small></span></div>
+    <div class="pnl-row eb"><span class="pn">= EBIT</span><span class="pv">${fmtSign(ebitda)} <small>(${pct(ebitda,tIng)})</small></span></div>
     <div class="pnl-row"><span class="pn">(+) Depreciación</span><span class="pv">${fmt(dep)}</span></div>
     <div class="pnl-row"><span class="pn">(+) Ajuste Corporativo</span><span class="pv">${fmt(adj)}</span></div>
     <div class="pnl-row ea"><span class="pn">= EBITDA Ajustado</span><span class="pv">${fmtSign(ebitdaAdj)} <small>(${pct(ebitdaAdj,tIng)})</small></span></div>
@@ -2160,7 +2160,7 @@ function peruRenderAll(){
   document.getElementById('peruKpi').innerHTML=`
     <div class="kpi-card" style="--kpi-accent:var(--peru)"><div class="kpi-label">Ingresos Operacionales · ${label}</div><div class="kpi-value" style="color:var(--peru2)">${fmtM(r.ing)}</div><div class="kpi-sub">${fmt(r.ing)}</div></div>
     <div class="kpi-card green"><div class="kpi-label">Margen Bruto</div><div class="kpi-value">${fmtM(r.mb)}</div><div class="kpi-sub">${pct(r.mb,r.ing)} margen</div></div>
-    <div class="kpi-card blue"><div class="kpi-label">EBIT</div><div class="kpi-value">${fmtM(r.ebitda)}</div><div class="kpi-sub">${pct(r.ebitda,r.ing)} margen</div></div>`;
+    <div class="kpi-card blue"><div class="kpi-label">EBITDA</div><div class="kpi-value">${fmtM(r.ebitda)}</div><div class="kpi-sub">${pct(r.ebitda,r.ing)} margen</div></div>`;
 
   let rh=`
     <div class="pnl-row"><span class="pn">Ingresos Operacionales</span><span class="pv">${fmt(r.ing)}</span></div>
@@ -2431,8 +2431,8 @@ function rndRenderAll(){
     <div class="kpi-card purple"><div class="kpi-label">Ingresos · ${label}</div><div class="kpi-value">${fmtM(r.totalIng)}</div><div class="kpi-sub">${fmt(r.totalIng)}</div></div>
     <div class="kpi-card"><div class="kpi-label">Recurrentes</div><div class="kpi-value">${fmtM(r.recurrente)}</div><div class="kpi-sub">${pct(r.recurrente,r.totalIng)} del total</div></div>
     <div class="kpi-card green"><div class="kpi-label">Margen Bruto</div><div class="kpi-value">${fmtM(r.mb)}</div><div class="kpi-sub">${pct(r.mb,r.totalIng)} margen</div></div>
-    <div class="kpi-card"><div class="kpi-label">EBIT</div><div class="kpi-value">${fmtM(r.ebitda)}</div><div class="kpi-sub">${pct(r.ebitda,r.totalIng)} margen</div></div>
-    <div class="kpi-card yellow"><div class="kpi-label">EBIT Ajustado</div><div class="kpi-value">${fmtM(r.ebitdaAdj)}</div><div class="kpi-sub">${pct(r.ebitdaAdj,r.totalIng)} margen</div></div>`;
+    <div class="kpi-card"><div class="kpi-label">EBITDA</div><div class="kpi-value">${fmtM(r.ebitda)}</div><div class="kpi-sub">${pct(r.ebitda,r.totalIng)} margen</div></div>
+    <div class="kpi-card yellow"><div class="kpi-label">EBITDA Ajustado</div><div class="kpi-value">${fmtM(r.ebitdaAdj)}</div><div class="kpi-sub">${pct(r.ebitdaAdj,r.totalIng)} margen</div></div>`;
 
   // YoY: same month previous year (only in Mes view)
   const showYoYRnd = rndView==='mes';
@@ -2658,7 +2658,7 @@ function consolRender(){
     <div class="kpi-card teal"><div class="kpi-label">Ingresos Consolidado · ${label}</div><div class="kpi-value">${fmtM(totIng)}</div><div class="kpi-sub">${fmt(totIng)}</div></div>
     <div class="kpi-card"><div class="kpi-label">Recurrentes Consolidado</div><div class="kpi-value">${fmtM(totRec)}</div><div class="kpi-sub">${pct(totRec,totIng)} del total</div></div>
     <div class="kpi-card green"><div class="kpi-label">Margen Bruto Consolidado</div><div class="kpi-value">${fmtM(totMb)}</div><div class="kpi-sub">${pct(totMb,totIng)} margen</div></div>
-    <div class="kpi-card yellow"><div class="kpi-label">EBIT Ajustado Consolidado</div><div class="kpi-value">${fmtM(totEbitdaAdj)}</div><div class="kpi-sub">${pct(totEbitdaAdj,totIng)} margen</div></div>
+    <div class="kpi-card yellow"><div class="kpi-label">EBITDA Ajustado Consolidado</div><div class="kpi-value">${fmtM(totEbitdaAdj)}</div><div class="kpi-sub">${pct(totEbitdaAdj,totIng)} margen</div></div>
     <div class="kpi-card blue"><div class="kpi-label">Ingresos ERPs Grupo</div><div class="kpi-value">${fmtM(erpGrupoTotal)}</div><div class="kpi-sub" style="display:flex;flex-direction:column;gap:2px"><span style="color:var(--text3);font-size:9px">Time · Flexline · Manager+ · FE · Random CL · Random PE</span><span>${pct(erpGrupoTotal,totIng)} del total consolidado</span></div></div>`;
 
   // YoY (Mes view only)
@@ -2678,8 +2678,8 @@ function consolRender(){
     {label:'Ingresos',         mgr:mgr?.tIng,   rnd:rnd?.tIng,   pe:peru?.tIng,   mgrY:mgrYoY?.tIng,   rndY:rndYoY?.tIng,   peY:peruYoY?.tIng},
     {label:'Recurrentes',      mgr:mgr?.rec,    rnd:rnd?.rec,    pe:peru?.rec,    mgrY:mgrYoY?.rec,    rndY:rndYoY?.rec,    peY:peruYoY?.rec},
     {label:'Margen Bruto',     mgr:mgr?.mb,     rnd:rnd?.mb,     pe:peru?.mb,     mgrY:mgrYoY?.mb,     rndY:rndYoY?.mb,     peY:peruYoY?.mb},
-    {label:'EBIT',           mgr:mgr?.ebitda, rnd:rnd?.ebitda, pe:peru?.ebitda, mgrY:mgrYoY?.ebitda, rndY:rndYoY?.ebitda, peY:peruYoY?.ebitda},
-    {label:'EBIT Ajustado',  mgr:mgr?.ebitdaAdj,rnd:rnd?.ebitdaAdj,pe:peru?.ebitdaAdj,mgrY:mgrYoY?.ebitdaAdj,rndY:rndYoY?.ebitdaAdj,peY:peruYoY?.ebitdaAdj},
+    {label:'EBITDA',           mgr:mgr?.ebitda, rnd:rnd?.ebitda, pe:peru?.ebitda, mgrY:mgrYoY?.ebitda, rndY:rndYoY?.ebitda, peY:peruYoY?.ebitda},
+    {label:'EBITDA Ajustado',  mgr:mgr?.ebitdaAdj,rnd:rnd?.ebitdaAdj,pe:peru?.ebitdaAdj,mgrY:mgrYoY?.ebitdaAdj,rndY:rndYoY?.ebitdaAdj,peY:peruYoY?.ebitdaAdj},
   ];
 
   let th=`<table class="consol-tbl"><thead><tr>
