@@ -3777,26 +3777,22 @@ function usrHandleFiles(files) {
             var c=document.getElementById('usrChipMgr');
             if(c){c.textContent='Time · M+ · Flex ✓';c.classList.add('loaded');}
           } else if(shNames.indexOf('Precios medios por mes')>=0){
-            // Random file: parse Precios medios por mes
-            var ws=wb.Sheets['Precios medios por mes'];
+            // Random file: parse Base usuarios ERP (suma licencias por año+mes, incluye peru)
+            var ws=wb.Sheets['Base usuarios ERP'];
             var rows=XLSX.utils.sheet_to_json(ws,{header:1,raw:true,defval:null});
             if(!usrData['Random']) usrData['Random']={};
-            var curYear=null;
-            for(var i=0;i<rows.length;i++){
-              var row=rows[i]; if(!row) continue;
-              // Year in col 0 (sometimes), month name in col 0 or 1
-              if(typeof row[0]==='number'&&row[0]>1990) curYear=row[0];
-              var monthName=null, licencias=null;
-              if(typeof row[0]==='string'&&USR_MESES_ES[row[0]]){
-                monthName=row[0]; licencias=parseInt(row[3])||null;
-              } else if(typeof row[1]==='string'&&USR_MESES_ES[row[1]]){
-                monthName=row[1]; licencias=parseInt(row[3])||null;
-              }
-              if(monthName&&licencias&&curYear){
-                var ym=curYear+'-'+USR_MESES_ES[monthName];
-                usrData['Random'][ym]=licencias;
-              }
+            // rows[0] = headers: Año, TIDO, ENDO, KOPRCT, Licencias, ..., Mes
+            var totals={};
+            for(var i=1;i<rows.length;i++){
+              var row=rows[i]; if(!row||!row[0]||!row[11]) continue;
+              var yr=parseInt(row[0]); if(!yr||yr<2000) continue;
+              var mesName=String(row[11]).trim();
+              if(!USR_MESES_ES[mesName]) continue;
+              var lic=parseFloat(row[4])||0;
+              var ym=yr+'-'+USR_MESES_ES[mesName];
+              totals[ym]=(totals[ym]||0)+lic;
             }
+            Object.assign(usrData['Random'],totals);
             var c=document.getElementById('usrChipRnd');
             if(c){c.textContent='Random ✓';c.classList.add('loaded');}
           }
