@@ -26,6 +26,34 @@
   --text:#1a202c;--text2:#4a5568;--text3:#8a94a6;
   --mono:'DM Mono',monospace;--sans:'Syne',sans-serif
 }
+
+/* ═══════════ DARK MODE ═══════════ */
+[data-theme="dark"]{
+  --bg:#0f1117;--surface:#1a1d27;--surface2:#232635;--surface3:#2d3048;
+  --border:#2e3250;--border2:#3a3f60;
+  --mgr-dim:rgba(59,130,246,.15);--rnd-dim:rgba(139,92,246,.15);
+  --grp-dim:rgba(245,158,11,.15);--peru-dim:rgba(6,182,212,.15);
+  --text:#e8ecf4;--text2:#9aa3bc;--text3:#8890b4;
+}
+*,body,header,.container,.section,.kpi-card,.tab-nav,.period-bar{transition:background .25s,border-color .25s,color .15s}
+
+/* Theme toggle button */
+#themeToggle{
+  display:inline-flex;align-items:center;gap:4px;
+  margin-top:5px;
+  padding:2px 8px;border-radius:10px;
+  border:1px solid var(--border2);
+  background:transparent;
+  color:var(--text3);
+  font-family:var(--mono);font-size:9px;font-weight:500;
+  cursor:pointer;transition:all .2s;white-space:nowrap;
+  letter-spacing:.5px;
+}
+#themeToggle:hover{border-color:var(--mgr);color:var(--mgr2)}
+#themeToggle .theme-icon{display:inline-flex;align-items:center;justify-content:center;width:12px;height:12px}
+#themeToggle .theme-icon svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round}
+[data-theme="dark"] #sableLogo{filter:brightness(0) invert(1);opacity:.85}
+
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:var(--bg);color:var(--text);font-family:var(--mono);min-height:100vh;overflow-x:hidden}
 
@@ -52,6 +80,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--mono);min-height:1
 }
 .login-logo-wrap{text-align:center;margin-bottom:20px}
 .login-logo-wrap img{height:80px;object-fit:contain;opacity:.95}
+[data-theme="dark"] .login-logo-wrap img{filter:brightness(0) invert(1);opacity:.85}
 .login-divider{width:40px;height:2px;background:var(--accent);border-radius:2px;margin:0 auto 20px}
 .login-title{font-family:var(--sans);font-size:21px;font-weight:800;color:var(--text);text-align:center;letter-spacing:-.5px;line-height:1.2;margin-bottom:4px}
 .login-subtitle{font-size:10px;color:var(--text3);text-align:center;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:32px}
@@ -406,6 +435,74 @@ td:first-child{text-align:left;color:var(--text)}
 
 /* ════════════════ BRIDGE MRR TAB ════════════════ */
 .tab-btn.bridge.active{color:#3b82f6;border-bottom-color:#2563eb}
+.tab-btn.ppto.active{color:var(--mgr2);border-bottom-color:var(--mgr)}
+#tab-ppto .view-btn.active{background:var(--mgr);color:#ffffff !important}
+#tab-ppto .sec-header{border-left:3px solid var(--mgr)}
+.ppto-tbl{width:100%;border-collapse:collapse;font-size:12px}
+.ppto-tbl th{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;padding:8px 10px;border-bottom:1px solid var(--border);text-align:right;white-space:nowrap}
+.ppto-tbl th:first-child{text-align:left}
+.ppto-tbl td{padding:6px 10px;border-top:1px solid var(--border);text-align:right;font-variant-numeric:tabular-nums;color:var(--text2);white-space:nowrap}
+.ppto-tbl td:first-child{text-align:left;color:var(--text2)}
+.ppto-tbl tr.erp-tot td{font-weight:700;color:var(--text);background:var(--surface2);cursor:pointer}
+.ppto-tbl tr.erp-sub td:first-child{padding-left:28px;color:var(--text3);font-size:11px}
+.ppto-tbl tr.erp-sub{display:none}
+.ppto-tbl tr.erp-sub.open{display:table-row}
+.ppto-tbl tr.grand td{font-weight:700;color:var(--text);background:var(--surface2);border-top:2px solid var(--border2)}
+.ppto-tbl tr.erp-tot td:nth-child(2){color:var(--mgr2)}
+.ppto-tbl tr.erp-tot td:nth-child(3){color:#3b82f6}
+.ppto-tbl tr.section-head td{font-family:var(--sans);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:10px 12px;background:var(--mgr-dim);color:var(--mgr2);border-top:2px solid var(--mgr)}
+.ppto-tbl tr.section-head-red td{background:rgba(220,38,38,.08);color:#dc2626;border-top-color:#dc2626}
+.ppto-tbl tr.section-head-amber td{background:rgba(217,119,6,.08);color:#d97706;border-top-color:#d97706}
+.dev-pos{color:#16a34a;font-weight:500}
+.dev-neg{color:#dc2626;font-weight:500}
+.dev-neu{color:var(--text3)}
+[data-theme="dark"] .dev-pos{color:#4ade80}
+[data-theme="dark"] .dev-neg{color:#f87171}
+[data-theme="dark"] .ppto-chip.pos{color:#4ade80;background:rgba(74,222,128,.12)}
+[data-theme="dark"] .ppto-chip.neg{color:#f87171;background:rgba(248,113,113,.12)}
+.ppto-chip{display:inline-flex;align-items:center;gap:5px;padding:2px 8px;border-radius:999px;font-size:10px;font-weight:600;font-family:var(--mono)}
+.ppto-chip.pos{background:rgba(22,163,74,.1);color:#16a34a}
+.ppto-chip.neg{background:rgba(220,38,38,.1);color:#dc2626}
+.ppto-chip.neu{background:var(--surface2);color:var(--text3)}
+.kpi-card.ppto-adj::before{background:#8b5cf6;opacity:1}
+.kpi-sub-split{display:flex;gap:10px;margin-top:4px;font-size:10px}
+
+/* ── Insights Module ── */
+.insights-summary-bar{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:16px;background:var(--surface2);border-radius:10px;border:1px solid var(--border)}
+.insights-kpi{text-align:center}
+.insights-kpi-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px}
+.insights-kpi-value{font-size:20px;font-weight:700;font-family:var(--mono);margin:4px 0}
+.insights-kpi-sub{font-size:11px;color:var(--text3)}
+.insights-block{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 20px}
+.insights-block-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--text3);margin-bottom:12px}
+.insights-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px}
+.insights-row:last-child{border-bottom:none}
+.insights-erp-name{font-weight:600;min-width:110px}
+.insights-gap-val{font-weight:700;min-width:75px}
+.insights-gap-pct{color:var(--text3);min-width:55px;font-size:11px}
+.insights-flag{font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;letter-spacing:.5px}
+.flag-extraccion{background:rgba(217,119,6,.12);color:var(--yellow)}
+.flag-recurrente{background:rgba(220,38,38,.10);color:var(--red)}
+.flag-pipeline{background:rgba(124,58,237,.10);color:#7c3aed}
+.flag-mixto{background:var(--surface2);color:var(--text2)}
+.insights-diag{font-size:11px;color:var(--text2);flex:1}
+.insights-bridge-card{background:var(--surface2);border-radius:8px;padding:12px 14px;margin-bottom:8px}
+.insights-bridge-card:last-child{margin-bottom:0}
+.insights-bridge-erp{font-weight:700;font-size:12px;margin-bottom:6px}
+.insights-bridge-metrics{display:flex;gap:16px;font-size:11px;color:var(--text2)}
+.insights-bridge-diag{font-size:11px;color:var(--text2);margin-top:5px;font-style:italic}
+.insights-ai-result{background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--mgr);border-radius:8px;padding:18px 20px;font-size:13px;line-height:1.7;color:var(--text);white-space:pre-wrap}
+.insights-loading{color:var(--text3);font-size:12px;font-style:italic}
+.insights-error{color:var(--red2);font-size:12px}
+.ai-h2{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--text3);margin:14px 0 2px}
+.ai-bullet{padding:3px 0 3px 10px;color:var(--text);font-size:12px}
+.semaforo-verde{color:#16a34a}
+.semaforo-amarillo{color:#d97706}
+.semaforo-rojo{color:#dc2626}
+[data-theme="dark"] #consolSankeyChart image{filter:brightness(0) invert(1)}
+.kpi-sub-split span{display:inline-flex;align-items:center;gap:3px}
+.kpi-sub-split .kss-r{color:var(--mgr2)}
+.kpi-sub-split .kss-p{color:#3b82f6}
 .brg-empty{text-align:center;padding:72px 20px;display:flex;flex-direction:column;align-items:center}
 .brg-empty-icon{font-size:36px;margin-bottom:12px;opacity:.4}
 .brg-empty-title{font-family:var(--sans);font-size:17px;font-weight:700;color:var(--text);margin-bottom:6px}
@@ -1142,8 +1239,12 @@ function cloudAutoSave() {
     <div class="logo-area">
       <h1>Dashboard Financiero · Sable <span style="color:var(--accent)">ERP</span></h1>
       <p>PCGA · CLP · Multi-empresa</p>
+      <button id="themeToggle" onclick="toggleTheme()" title="Cambiar modo claro/oscuro">
+        <span class="theme-icon" id="themeIcon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.22" y1="4.22" x2="6.34" y2="6.34"/><line x1="17.66" y1="17.66" x2="19.78" y2="19.78"/><line x1="19.78" y1="4.22" x2="17.66" y2="6.34"/><line x1="6.34" y1="17.66" x2="4.22" y2="19.78"/></svg></span>
+        <span id="themeLabel">Claro</span>
+      </button>
     </div>
-    <img src="data:image/png;base64,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" style="height:120px;object-fit:contain;opacity:.9">
+    <img src="data:image/png;base64,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" id="sableLogo" style="height:120px;object-fit:contain;opacity:.9;transition:filter .25s,opacity .25s">
   </div>
 </header>
 
@@ -1154,6 +1255,7 @@ function cloudAutoSave() {
     <button class="tab-btn peru" onclick="switchTab('peru')">▸ Random Perú</button>
     <button class="tab-btn consol" onclick="switchTab('consol')">◈ Consolidado</button>
     <button class="tab-btn bridge" onclick="switchTab('bridge')">⇌ MRR Bridge</button>
+    <button class="tab-btn ppto" onclick="switchTab('ppto')">🎯 PPTO</button>
   </div>
 
   
@@ -1570,6 +1672,152 @@ function cloudAutoSave() {
     </div>
   </div>
 
+  <!-- ══════════════════════════════════════════ PPTO UNIFICADO -->
+  <div class="tab-content" id="tab-ppto">
+    <!-- Barra de período compartida -->
+    <div class="period-bar" id="pptoPeriodBar" style="display:none">
+      <span class="period-label">Vista</span>
+      <div class="view-toggle">
+        <button class="view-btn active" onclick="pptoSetView('mes')" id="pptoVBtn_mes">Mes</button>
+        <button class="view-btn" onclick="pptoSetView('ytd')" id="pptoVBtn_ytd">YTD</button>
+        <button class="view-btn" onclick="pptoSetView('anual')" id="pptoVBtn_anual">Año completo</button>
+      </div>
+      <div class="divider"></div>
+      <span class="period-label" id="pptoMonthLbl">Mes</span>
+      <select class="sel" id="pptoMonth" onchange="pptoConsolRender()"></select>
+      <div class="divider"></div>
+      <span class="period-label">Empresa</span>
+      <div class="view-toggle">
+        <button class="view-btn active" onclick="pptoSetComp('mgr')" id="pptoComp_mgr">Manager</button>
+        <button class="view-btn" onclick="pptoSetComp('rnd')" id="pptoComp_rnd">Random</button>
+        <button class="view-btn" onclick="pptoSetComp('consol')" id="pptoComp_consol">Consolidado</button>
+      </div>
+    </div>
+
+    <!-- Estado vacío global -->
+    <div id="pptoGlobalEmpty" style="padding:60px 20px;text-align:center;color:var(--text3);background:var(--surface);border:1px dashed var(--border2);border-radius:8px;margin-top:18px">
+      <div style="font-size:32px;margin-bottom:10px">🎯</div>
+      <div style="font-family:var(--sans);font-size:14px;color:var(--text2);font-weight:600;margin-bottom:4px">PPTO 2026 vs Real</div>
+      <div style="font-size:11px">Carga el Libro Mayor 2026 en Manager Software o Random para comparar Real vs Presupuesto.</div>
+    </div>
+
+    <!-- ── Vista Manager (detalle completo) ── -->
+    <div id="pptoViewMgr" style="display:none">
+      <div id="pptoMgrEmpty" style="padding:40px 20px;text-align:center;color:var(--text3);background:var(--surface);border:1px dashed var(--border2);border-radius:8px;margin-top:12px;display:none">
+        <div style="font-size:11px">Carga el Libro Mayor 2026 en la pestaña Manager Software para ver Real vs PPTO.</div>
+      </div>
+      <div id="pptoMgrDashboard">
+        <div class="kpi-grid" id="pptoKpi"></div>
+        <div class="section">
+          <div class="sec-header" onclick="toggleSec('pptoBIng','pptoAIng')">
+            <span class="sec-title">Ingresos Operacionales — Real vs PPTO</span>
+            <div style="display:flex;align-items:center;gap:12px">
+              <span class="sec-total" id="pptoTotIng"></span>
+              <span class="arrow" id="pptoAIng">▼</span>
+            </div>
+          </div>
+          <div class="sec-body" id="pptoBIng"></div>
+        </div>
+        <div class="section">
+          <div class="sec-header" onclick="toggleSec('pptoBCos','pptoACos')">
+            <span class="sec-title">Costos y Gastos — Real vs PPTO</span>
+            <div style="display:flex;align-items:center;gap:12px">
+              <span class="sec-total" id="pptoTotCos"></span>
+              <span class="arrow" id="pptoACos">▼</span>
+            </div>
+          </div>
+          <div class="sec-body" id="pptoBCos"></div>
+        </div>
+        <div class="section">
+          <div class="sec-header" onclick="toggleSec('pptoBRes','pptoARes')">
+            <span class="sec-title">Resumen hasta EBITDA Ajustado</span>
+            <span class="arrow" id="pptoARes">▼</span>
+          </div>
+          <div class="sec-body" id="pptoBRes"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Vista Random (detalle completo) ── -->
+    <div id="pptoViewRnd" style="display:none">
+      <div id="pptoRndEmpty" style="padding:40px 20px;text-align:center;color:var(--text3);background:var(--surface);border:1px dashed var(--border2);border-radius:8px;margin-top:12px;display:none">
+        <div style="font-size:11px">Carga el Libro Mayor 2026 en la pestaña Random para ver Real vs PPTO.</div>
+      </div>
+      <div id="pptoRndDashboard">
+        <div class="kpi-grid" id="pptoRndKpi"></div>
+        <div class="section">
+          <div class="sec-header" onclick="toggleSec('pptoRndBIng','pptoRndAIng')">
+            <span class="sec-title">Ingresos Operacionales — Real vs PPTO</span>
+            <div style="display:flex;align-items:center;gap:12px">
+              <span class="sec-total" id="pptoRndTotIng"></span>
+              <span class="arrow" id="pptoRndAIng">▼</span>
+            </div>
+          </div>
+          <div class="sec-body" id="pptoRndBIng"></div>
+        </div>
+        <div class="section">
+          <div class="sec-header" style="border-left-color:#dc2626" onclick="toggleSec('pptoRndBCv','pptoRndACv')">
+            <span class="sec-title" style="color:#dc2626">Costos Directos — Real vs PPTO</span>
+            <div style="display:flex;align-items:center;gap:12px">
+              <span class="sec-total" id="pptoRndTotCv"></span>
+              <span class="arrow" id="pptoRndACv">▼</span>
+            </div>
+          </div>
+          <div class="sec-body" id="pptoRndBCv"></div>
+        </div>
+        <div class="section">
+          <div class="sec-header" style="border-left-color:#d97706" onclick="toggleSec('pptoRndBSga','pptoRndASga')">
+            <span class="sec-title" style="color:#d97706">SG&amp;A — Real vs PPTO</span>
+            <div style="display:flex;align-items:center;gap:12px">
+              <span class="sec-total" id="pptoRndTotSga"></span>
+              <span class="arrow" id="pptoRndASga">▼</span>
+            </div>
+          </div>
+          <div class="sec-body" id="pptoRndBSga"></div>
+        </div>
+        <div class="section">
+          <div class="sec-header" onclick="toggleSec('pptoRndBRes','pptoRndARes')">
+            <span class="sec-title">Resumen P&amp;L — hasta EBITDA Ajustado</span>
+            <span class="arrow" id="pptoRndARes">▼</span>
+          </div>
+          <div class="sec-body" id="pptoRndBRes"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Vista Consolidado (P&L resumido) ── -->
+    <div id="pptoViewConsol" style="display:none">
+      <div class="kpi-grid" id="pptoConsolKpi"></div>
+      <div class="section">
+        <div class="sec-header">
+          <span class="sec-title" id="pptoConsolTitle">Estado de Resultados — Real vs PPTO 2026</span>
+        </div>
+        <div class="sec-body" id="pptoConsolRes"></div>
+      </div>
+    </div>
+
+    <!-- ═══ MÓDULO INSIGHTS ═══ -->
+    <div id="pptoInsights" style="display:none; margin-top:32px">
+      <div class="sec-header" style="margin-bottom:16px">
+        <span class="sec-title">ANÁLISIS AUTOMÁTICO</span>
+        <span id="insightsPeriodLabel" style="font-size:11px;color:var(--text3);margin-left:8px"></span>
+      </div>
+      <div id="insightsLayer1">
+        <div id="insightsSummaryBar"></div>
+        <div id="insightsIngresos" style="margin-top:16px"></div>
+        <div id="insightsCostos" style="margin-top:16px"></div>
+        <div id="insightsSGA" style="margin-top:16px"></div>
+        <div id="insightsBridge" style="margin-top:16px"></div>
+      </div>
+      <div id="insightsLayer2" style="margin-top:28px;border-top:1px solid var(--border);padding-top:24px">
+        <button id="insightsAIBtn" onclick="insightsAIGenerate()" style="padding:10px 20px;border-radius:8px;background:var(--mgr);color:#fff;border:none;font-family:var(--mono);font-size:12px;font-weight:600;cursor:pointer;letter-spacing:.5px">
+          ✦ Generar análisis ejecutivo
+        </button>
+        <div id="insightsAIResult" style="margin-top:16px"></div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <script>
@@ -1607,6 +1855,7 @@ function switchTab(t){
   document.getElementById('tab-'+t).classList.add('active');
   if(t==='consol') consolRefresh();
   if(t==='bridge' && typeof window.brgRefresh==='function') setTimeout(window.brgRefresh,80);
+  if(t==='ppto' && typeof window.pptoConsolRefresh==='function') setTimeout(window.pptoConsolRefresh,40);
 }
 
 const MESES_FULL=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
@@ -2989,18 +3238,22 @@ function consolRenderSankey(year, month, label) {
     // otros         → below
     const FS = mob ? 9 : 13, FS2 = mob ? 8 : 11, GAP = mob ? 6 : 10;
     const showLogos = !mob;
+    const _skDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const _skNeutral = _skDark ? '#e8ecf4' : '#374151';
+    const _skMuted   = _skDark ? '#9aa3bc' : '#6b7280';
+    const _skSub     = _skDark ? '#6b7280' : '#9ca3af';
     const lblDefs = {
-      t:     { name: 'Time',              val: timeIng,     pct: null,                     side: 'left',       col: '#374151' },
-      f:     { name: 'Flexline',          val: flexIng,     pct: null,                     side: 'left',       col: '#374151' },
-      mp:    { name: 'Manager+',          val: mplusIng,    pct: null,                     side: 'left',       col: '#374151' },
-      fe:    { name: 'Fact. Electrónica', val: feIng,       pct: null,                     side: 'left',       col: '#374151' },
-      r:     { name: peruIngSankey>0 ? 'Random CL+PE' : 'Random', val: rndIng, pct: null, side: 'left', col: '#374151' },
-      rx:    { name: 'REX + GeoVictoria', val: rexIng,      pct: null,                     side: 'left',       col: '#374151' },
-      o:     { name: 'Otros',             val: otrosIng,    pct: null,                     side: 'left',       col: '#374151' },
-      erp:   { name: 'Ingresos ERP',      val: erpIng,      pct: null,                     side: 'above-left', col: '#6b7280' },
-      third: { name: 'Prod. Terceros',    val: rexIng,      pct: null,                     side: 'above-left', col: '#6b7280' },
-      otros: { name: 'Otros ingresos',    val: otrosIng,    pct: null,                     side: 'below',      col: '#6b7280' },
-      rev:   { name: 'Ingresos',          val: totIng,      pct: null,                     side: 'above',      col: '#374151' },
+      t:     { name: 'Time',              val: timeIng,     pct: null,                     side: 'left',       col: _skNeutral },
+      f:     { name: 'Flexline',          val: flexIng,     pct: null,                     side: 'left',       col: _skNeutral },
+      mp:    { name: 'Manager+',          val: mplusIng,    pct: null,                     side: 'left',       col: _skNeutral },
+      fe:    { name: 'Fact. Electrónica', val: feIng,       pct: null,                     side: 'left',       col: _skNeutral },
+      r:     { name: peruIngSankey>0 ? 'Random CL+PE' : 'Random', val: rndIng, pct: null, side: 'left', col: _skNeutral },
+      rx:    { name: 'REX + GeoVictoria', val: rexIng,      pct: null,                     side: 'left',       col: _skNeutral },
+      o:     { name: 'Otros',             val: otrosIng,    pct: null,                     side: 'left',       col: _skNeutral },
+      erp:   { name: 'Ingresos ERP',      val: erpIng,      pct: null,                     side: 'above-left', col: _skMuted },
+      third: { name: 'Prod. Terceros',    val: rexIng,      pct: null,                     side: 'above-left', col: _skMuted },
+      otros: { name: 'Otros ingresos',    val: otrosIng,    pct: null,                     side: 'below',      col: _skMuted },
+      rev:   { name: 'Ingresos',          val: totIng,      pct: null,                     side: 'above',      col: _skNeutral },
       mb:    { name: 'Margen Bruto',      val: totMB,       pct: pctS(totMB,   totIng),    side: 'above', col: '#40916c' },
       cost:  { name: 'Costo de Ventas',   val: totCost,     pct: pctS(totCost, totIng),    side: 'right', col: '#c25454' },
       ebt:   { name: 'EBIT',            val: ebitdaAdj,   pct: pctS(ebitdaAdj, totIng), side: 'right', col: '#40916c' },
@@ -3052,14 +3305,14 @@ function consolRenderSankey(year, month, label) {
             .attr('font-size', FS).attr('font-weight', 600).attr('fill', lbl.col).text(lbl.name);
           labelG.append('text').attr('x', TEXT_RIGHT_X).attr('y', cy + 8)
             .attr('text-anchor', 'end').attr('dominant-baseline', 'middle')
-            .attr('font-size', FS2).attr('fill', '#9ca3af').text(fmtM(lbl.val));
+            .attr('font-size', FS2).attr('fill', _skSub).text(fmtM(lbl.val));
         } else {
           labelG.append('text').attr('x', TEXT_RIGHT_X).attr('y', cy - 7)
             .attr('text-anchor', 'end').attr('dominant-baseline', 'middle')
             .attr('font-size', FS).attr('font-weight', 600).attr('fill', lbl.col).text(lbl.name);
           labelG.append('text').attr('x', TEXT_RIGHT_X).attr('y', cy + 8)
             .attr('text-anchor', 'end').attr('dominant-baseline', 'middle')
-            .attr('font-size', FS2).attr('fill', '#9ca3af').text(fmtM(lbl.val));
+            .attr('font-size', FS2).attr('fill', _skSub).text(fmtM(lbl.val));
         }
 
       } else if (lbl.side === 'above-left') {
@@ -3070,7 +3323,7 @@ function consolRenderSankey(year, month, label) {
           .attr('font-size', FS).attr('font-weight', 600).attr('fill', lbl.col).text(lbl.name);
         labelG.append('text').attr('x', x).attr('y', node.y0 - GAP)
           .attr('text-anchor', 'end').attr('dominant-baseline', 'middle')
-          .attr('font-size', FS2).attr('fill', '#9ca3af').text(fmtM(lbl.val));
+          .attr('font-size', FS2).attr('fill', _skSub).text(fmtM(lbl.val));
 
       } else if (lbl.side === 'above') {
         labelG.append('text').attr('x', cx).attr('y', node.y0 - GAP - 14)
@@ -3087,7 +3340,7 @@ function consolRenderSankey(year, month, label) {
           .attr('font-size', FS).attr('font-weight', 600).attr('fill', lbl.col).text(lbl.name);
         labelG.append('text').attr('x', cx).attr('y', node.y1 + GAP + 18)
           .attr('text-anchor', 'middle').attr('dominant-baseline', 'middle')
-          .attr('font-size', FS2).attr('fill', '#9ca3af').text(fmtM(lbl.val));
+          .attr('font-size', FS2).attr('fill', _skSub).text(fmtM(lbl.val));
 
       } else if (lbl.side === 'right') {
         const x = node.x1 + GAP;
@@ -3444,17 +3697,21 @@ function consolRenderMrrMetrics(year,month){
       insidetextanchor:"middle",
       textfont:{size:isMobile?9:12,color:"#fff",family:"'DM Mono',monospace"},
       hovertemplate:"<b>%{x}</b><br>ARR: %{text} "+unit+"<extra></extra>"};
+    var isDark=document.documentElement.getAttribute('data-theme')==='dark';
+    var bgCol=isDark?"#1a1d27":"#ffffff";
+    var tickCol=isDark?"#5a6282":"#6b7280";
+    var gridCol=isDark?"rgba(255,255,255,.05)":"rgba(0,0,0,.05)";
     var layout={
       margin:{t:16,b:isMobile?72:44,l:isMobile?42:55,r:10},
-      xaxis:{tickfont:{size:isMobile?9:11,color:"#6b7280",family:"'DM Mono',monospace"},tickangle:isMobile?-40:0,fixedrange:true,showgrid:false},
-      yaxis:{tickfont:{size:10,color:"#9ca3af"},fixedrange:true,gridcolor:"rgba(0,0,0,.05)",zeroline:false,
-             title:{text:isMobile?"":("ARR ("+unit+")"),font:{size:10,color:"#9ca3af"}}},
+      xaxis:{tickfont:{size:isMobile?9:11,color:tickCol,family:"'DM Mono',monospace"},tickangle:isMobile?-40:0,fixedrange:true,showgrid:false},
+      yaxis:{tickfont:{size:10,color:tickCol},fixedrange:true,gridcolor:gridCol,zeroline:false,
+             title:{text:isMobile?"":("ARR ("+unit+")"),font:{size:10,color:tickCol}}},
       bargap:0.4,
-      plot_bgcolor:"#ffffff",
-      paper_bgcolor:"#ffffff",
+      plot_bgcolor:bgCol,
+      paper_bgcolor:bgCol,
       showlegend:false,
-      font:{color:"#4a5568",family:"'DM Mono',monospace"},
-      shapes:[{type:"line",x0:-0.5,x1:5.5,y0:0,y1:0,line:{color:"rgba(0,0,0,.08)",width:1}}]
+      font:{color:isDark?"#9aa3bc":"#4a5568",family:"'DM Mono',monospace"},
+      shapes:[{type:"line",x0:-0.5,x1:5.5,y0:0,y1:0,line:{color:isDark?"rgba(255,255,255,.08)":"rgba(0,0,0,.08)",width:1}}]
     };
     // setTimeout fixes the half-render bug: the parent container becomes visible
     // just before this call, so we wait one tick for the browser to compute real dimensions
@@ -4004,6 +4261,1325 @@ function zipReset() {
   banner.style.display = 'flex';
   zipResetBanner();
 }
+
+// ═══════════════════════════════════════ PPTO MANAGER 2026 vs REAL
+const PPTO_MGR_2026={"ingresos":{"Time":{"total":[272716681.39223593,268986124.5100012,275077367.3638061,277796608.3122924,283952420.2735891,280519671.15975404,294132671.2105218,300394001.7622758,296709785.11186796,301019672.40699464,303350766.29741544,299981082.93824756],"ASP":[221950662.5299187,223720528.2812205,225504507.19056347,227302711.79825175,229115255.54200163,230942252.76409772,232783818.71860602,234640069.57864466,236511122.44371253,238397095.34707636,240298107.2632167,242214278.11533338],"Consultoría":[18872153.886129953,13117405.094452728,17168314.848274346,17830952.794116292,21913762.111619,16391479.939798927,27898284.70254646,32036624.869282786,26212488.81039792,28365392.67917793,28522303.05450755,22961098.935580816],"Licencias":[8109974.513687914,8174644.589334892,8239830.353246626,8305535.917593759,8371765.427337956,8438523.06049339,8505813.028390307,8573639.575940691,8642006.981906049,8710919.559167335,8780381.65499702,8850397.651333336],"Mantención":[23783890.462499406,23973546.544993043,24164714.97172168,24357407.80233062,24551637.19263048,24747415.395364013,24944754.76097906,25143667.73840767,25344166.87585143,25546264.82157304,25749974.324694227,25955308.236000005]},"Flexline":{"total":[189516033.14978758,184577429.21982577,191945157.861333,194108025.96188504,199793655.42352986,194882731.20158,207851027.97281796,211203881.97681683,214061276.7272422,218144729.9172869,220467109.86168092,213855003.10637787],"ASP":[86645386.936536,87660430.44598606,88687365.10581937,89726330.21987475,90777466.72392392,91840917.20478944,92916825.91968669,94005338.81579229,95106603.55004197,96220769.50916015,97347987.82992432,98488411.41966678],"Consultoría":[27212305.603836227,20372326.989891086,25816406.500958625,26033090.08132489,29749735.632819273,22846761.01779499,33799670.69110353,35113527.50475941,35908038.3821571,37904441.185986295,38115321.122282766,29366978.31171097],"Licencias":[6235508.246779498,6308556.70784358,6382460.925560151,6457230.925047299,6532876.848866536,6609408.958398641,6686837.635235616,6765173.38258895,6844426.826714383,6924608.718353358,7005729.93419136,7087801.478333342],"Mantención":[69422832.36263585,70236115.07610504,71058925.32899487,71891374.73563811,72733576.21792015,73585644.0205969,74447693.72679211,75319842.27367617,76202207.96832874,77094910.5037871,77998070.9752825,78911811.89666677]},"Manager+":{"total":[134647148.07220128,131812702.47983094,142608670.58421677,143587035.22328418,141681074.02695385,143200298.2645535,146158949.70073578,151889125.14580572,149327420.40808433,153716778.50151324,155370980.952517,152794574.73818374],"ASP":[120672947.92154233,122086621.48091699,123516856.10859153,124963845.81610516,126427786.88782619,127908877.907578,129407319.78557695,130923315.78568588,132457071.55298692,134008795.14167723,135578697.04329163,137166990.21525577],"Consultoría":[13974200.150658937,9726080.99891395,19091814.475625243,18623189.407179028,15253287.139127659,15291420.356975475,16751629.915158829,20965809.360119823,16870348.85509741,19707983.359836,19792283.90922537,15627584.52292797]},"Bnovus":{"total":[32964612.9,32964612.9,32964612.9,32964612.9,32964612.9,32964612.9,32964612.9,32964612.9,32964612.9,32964612.9,32964612.9,32964612.9],"ASP":[27282778.09343086,27282778.09343086,27282778.09343086,27282778.09343086,27282778.09343086,27282778.09343086,27282778.09343086,27282778.09343086,27282778.09343086,27282778.09343086,27282778.09343086,27282778.09343086],"Consultoría":[1029467.306390729,1029467.306390729,1029467.306390729,1029467.306390729,1029467.306390729,1029467.306390729,1029467.306390729,1029467.306390729,1029467.306390729,1029467.306390729,1029467.306390729,1029467.306390729],"Ptos_Terceros":[4652367.500178405,4652367.500178405,4652367.500178405,4652367.500178405,4652367.500178405,4652367.500178405,4652367.500178405,4652367.500178405,4652367.500178405,4652367.500178405,4652367.500178405,4652367.500178405]},"FE":{"total":[81195321.24706762,78218542.35370809,82462628.80868979,83294732.7070449,85310633.45033294,83175609.96413867,89620051.38357617,92818542.56138386,90318480.67379615,92484178.51850173,93231238.65118335,90295730.65673171],"Consultoría":[12027836.546221146,8446907.768202987,12081567.334675014,12298921.24818418,13694702.41520559,10934142.860123986,16747584.407190436,19309564.18503921,16167431.228949867,17685449.775164586,17779173.393755123,14184622.256131709],"FE":[69167484.70084646,69771634.5855051,70381061.47401477,70995811.45886073,71615931.03512734,72241467.10401468,72872466.97638573,73508978.37634465,74151049.44484629,74798728.74333714,75452065.25742823,76111108.4006]},"REX":{"total":[240760102.7219895,242309160.47219032,243868184.90659803,245437240.15115896,247016390.74440765,248605701.64012155,250205238.20999262,251815066.24631628,253435251.9646976,255065862.00677478,256706963.44296035,258358623.77519992],"ASP":[237039520.09776598,238564639.50733578,240099571.58110806,241644379.45405984,243199126.66738033,244763877.17108482,246338695.32664475,247923645.90963534,249518794.11239976,251124205.5467307,252739946.24656907,254366082.67072013],"Consultoría":[3720582.6242235536,3744520.9648545636,3768613.3254899764,3792860.697099139,3817264.0770273237,3841824.469036752,3866542.883347882,3891420.336680962,3916457.8522978467,3941656.4600440906,3967017.196391304,3992541.1044797874],"Licencias":[0,0,0,0,0,0,0,0,0,0,0,0]},"GeoVictoria":{"total":[19311875.856,19975549.387100548,20662030.77794335,21372103.84533237,22106579.342785016,22866295.886241477,23652120.911587052,24464951.665080797,25305716.227821283,26175374.57541928,27074919.674087197,28005378.61439684],"ASP":[19311875.856,19975549.387100548,20662030.77794335,21372103.84533237,22106579.342785016,22866295.886241477,23652120.911587052,24464951.665080797,25305716.227821283,26175374.57541928,27074919.674087197,28005378.61439684]},"Gaxu":{"total":[698446.216,701291.7723402048,704148.921829173,707017.7116988276,709898.1893735204,712790.402470816,715694.3988022787,718610.226374263,721537.9333887072,724477.5682439307,727429.1795354331,730392.8160566982],"ASP":[650198.248695282,652847.236844378,655507.0172990948,658177.6340286215,660859.1311812829,663551.5530852699,666254.9442493713,668969.349363711,671694.8133004854,674431.3811147063,677179.0980449445,679938.009514079],"Ptos_Terceros":[48247.967304717946,48444.53549582678,48641.90453007813,48840.077670206076,49039.0581922375,49238.84938554621,49439.454552907344,49640.87701055194,49843.120088221796,50046.18712922446,50250.081490488556,50454.806542619226]},"Otros":{"total":[406598.504,426928.4292,448274.85066000005,470688.59319300007,494223.0228526501,518934.1739952826,544880.8826950467,572124.9268297991,600731.173171289,630767.7318298535,662306.1184213462,695421.4243424135]}},"costos":{"8111001":[-196531074,-196531074,-180482274,-180482274,-181660374,-181660374,-181660374,-181660374,-181660374,-181660374,-181660374,-181660374],"8111002":[-1389120,-1389120,-1389120,-1444684.8,-1444684.8,-1444684.8,-1444684.8,-1444684.8,-1444684.8,-1444684.8,-1444684.8,-1444684.8],"8111003":[-4220536,-4220536,-4220536,-4389357.44,-4389357.44,-4389357.44,-4389357.44,-4389357.44,-4389357.44,-4389357.44,-4389357.44,-4389357.44],"8111004":[-5494549,-5494549,-5494549,-5714330.96,-5714330.96,-5714330.96,-5714330.96,-5714330.96,-5714330.96,-5714330.96,-5714330.96,-5714330.96],"8111007":[-6637616,-6637616,-6637616,-6903120.64,-6903120.64,-6903120.64,-6903120.64,-6903120.64,-6903120.64,-6903120.64,-6903120.64,-6903120.64],"8111008":[-7366000,-7366000,-7366000,-7660640,-7660640,-7660640,-7660640,-7660640,-7660640,-7660640,-7660640,-7660640],"8112002":[-511265.1,-504826.03,-521006.55,-525737.85,-533253.36,-529791.61,-549984.49,-561025.6,-559239.67,-568432.84,-573496.96,-566726.04],"8111006":[-3903652.43,-3828040.09,-4018043.79,-4073602.17,-4161854.84,-4121204.35,-4358324.15,-4487977.02,-4467005.33,-4574958.31,-4634424.89,-4554915.81],"8121101":[-46611208.21,-46024168.44,-47499320.8,-47930665.42,-48615842.26,-48300239.6,-50141192.36,-51147792.45,-50984972.26,-51823098.48,-52284785.63,-51667492.37],"8121104":[-11240392.82,-11098826.93,-11454563.08,-11558582.76,-11723814.63,-11647706.37,-12091656.07,-12334399.84,-12295135.41,-12497251.34,-12608588.19,-12459726.59],"8311006":[-914097.85,-902585.35,-931514.73,-939973.88,-953410.97,-947221.65,-983324.79,-1003065.34,-999872.25,-1016308.84,-1025363.04,-1013257.23],"8121102":[-54729351.8,-54040068.95,-55772144.47,-87642746.49,-74340813.56,-74340813.56,-74340813.56,-71590813.56,-71590813.56,-71590813.56,-71590813.56,-71590813.56],"8121106":[-233259687.56,-234578805.37,-235906404.72,-237242540.15,-238587266.56,-239940639.2,-241302713.68,-242673545.97,-244053192.38,-245441709.6,-246839154.69,-248245585.07],"8331001":[-1640802.48,-1620137.58,-1672065.72,-1687249.87,-1711369.38,-1700259.58,-1765064.59,-1800498.81,-1794767.23,-1824270.86,-1840523.11,-1818793.23],"8121105":[-48331976.9,-47723265.1,-49252876.38,-49700145.16,-50410617.01,-50083363.1,-51992279.2,-53036040.44,-52867209.34,-53736277.07,-54215008.55,-53574926.37]},"costos_indem":{"Indem1":[0,0,-40000000,0,0,0,0,0,0,0,0,0],"Indem2":[0,0,-12000000,0,0,0,0,0,0,0,0,0],"Indem3":[0,0,-30000000,0,0,0,0,0,0,0,0,0],"Indem4":[0,0,-15000000,0,0,0,0,0,0,0,0,0],"Indem5":[0,0,-40000000,0,0,0,0,0,0,0,0,0]},"costos_otros_hon":{"Otros Honorarios":[-3720000,-3720000,-3720000,-5750000,-5500000,-6000000,-6000000,-6000000,-6000000,-6000000,-6000000,-6000000]},"gavs":{"8333009":[-1668174.64,-1647165,-1699959.42,-1715396.87,-1739918.75,-1728623.61,-1794509.71,-1830535.05,-1824707.86,-1854703.67,-1871227.05,-1849134.66],"8333003":[0,0,0,0,0,0,0,0,0,0,0,0],"8333004":[-651073.05,-642873.18,-663478.36,-669503.45,-679074.11,-674665.72,-700380.45,-714440.81,-712166.51,-723873.6,-730322.52,-721700.06],"8351001":[-1216118.84,-1200802.56,-1239290.31,-1250544.39,-1268421.13,-1260186.84,-1308218.58,-1334481.47,-1330233.38,-1352100.68,-1364146.42,-1348040.81],"8332001":[-1084260.38,-1070604.78,-1104919.47,-1114953.32,-1130891.76,-1123550.28,-1166374.14,-1189789.47,-1186001.98,-1205498.3,-1216237.97,-1201878.62],"8332002":[0,0,0,0,0,0,0,0,0,0,0,0],"8332003":[-1000000,-1000000,-1000000,-1000000,-1000000,-1000000,-1000000,-1000000,-1000000,-1000000,-1000000,-1000000],"8333001":[-1463305.2,-1444875.77,-1491186.48,-1504728.04,-1526238.38,-1516330.4,-1574124.99,-1605726.04,-1600614.49,-1626926.5,-1641420.63,-1622041.42],"8311001":[-38641480,-38641480,-40187139.2,-40187139.2,-40187139.2,-40187139.2,-40187139.2,-40187139.2,-40187139.2,-40187139.2,-40187139.2,-40187139.2],"8311002":[548781,548781,570732.24,570732.24,570732.24,570732.24,570732.24,570732.24,570732.24,570732.24,570732.24,570732.24],"8311003":[-562000,-562000,-584480,-584480,-584480,-584480,-584480,-584480,-584480,-584480,-584480,-584480],"8311004":[-968740,-968740,-1007489.6,-1007489.6,-1007489.6,-1007489.6,-1007489.6,-1007489.6,-1007489.6,-1007489.6,-1007489.6,-1007489.6],"8311005":[-1132472,-1132472,-1177770.88,-1177770.88,-1177770.88,-1177770.88,-1177770.88,-1177770.88,-1177770.88,-1177770.88,-1177770.88,-1177770.88],"8311007":[-1499400,-1499400,-1559376,-1559376,-1559376,-1559376,-1559376,-1559376,-1559376,-1559376,-1559376,-1559376],"8312001":[-16718062.31,-16507508.5,-17036602.04,-17191312.6,-17437065.28,-17323867.94,-17984163.26,-18345200.95,-18286802.17,-18587413.26,-18753006.79,-18531601.95],"8312002":[-1650938.3,-1650938.3,-1650938.3,-1650938.3,-1650938.3,-1650938.3,-1650938.3,-1650938.3,-1650938.3,-1650938.3,-1650938.3,-1650938.3],"8321001":[-3920723,-3920723,-4077551.92,-4077551.92,-4077551.92,-4077551.92,-4077551.92,-4077551.92,-4077551.92,-4077551.92,-4077551.92,-4077551.92],"8333006":[-2094725.52,-2068343.73,-2134637.64,-2154022.43,-2184814.54,-2170631.24,-2253364.36,-2298601.35,-2291284.15,-2328949.87,-2349698.26,-2321956.87],"8352001":[14867740.02,14680489.89,15151024.39,15288611.9,15507165.15,15406496.26,15993711.4,16314790.15,16262854.82,16530194.87,16677460.84,16480560.65],"8341001":[-2239917.59,-2211707.19,-2282596.14,-2303324.56,-2336250.97,-2321084.57,-2409552.19,-2457924.7,-2450100.32,-2490376.76,-2512563.3,-2482899.06],"8342001":[-17164719.26,-16948540.08,-17491769.42,-17650613.39,-17902931.85,-17786710.21,-18464646.66,-18835330.21,-18775371.18,-19084013.71,-19254031.41,-19026711.28],"8333008":[-1034051.36,-1021028.11,-1053753.79,-1063323,-1078523.38,-1071521.86,-1112362.67,-1134693.7,-1131081.6,-1149675.1,-1159917.45,-1146223.04],"8333002":[-1590699.21,-1570665.32,-1621007.8,-1635728.28,-1659111.29,-1648340.73,-1711166.87,-1745519.08,-1739962.52,-1768565.22,-1784321.2,-1763254.86],"8333007":[-291146.58,-287479.76,-296693.97,-299388.27,-303668.08,-301696.74,-313195.84,-319483.34,-318466.32,-323701.49,-326585.32,-322729.53],"8341002":[-1245664.11,-1229975.73,-1269398.53,-1280926.03,-1299237.08,-1290802.74,-1340001.39,-1366902.34,-1362551.04,-1384949.6,-1397287.98,-1380791.09],"8333005":[-108433.04,-107067.4,-110499.09,-111502.54,-113096.48,-112362.29,-116644.95,-118986.63,-118607.86,-120557.62,-121631.66,-120195.63],"8332005":[-50440944,-50440944,-50440944,-50440944,-50440944,-50440944,-50440944,-50440944,-50440944,-50440944,-50440944,-50440944],"8332006":[-11728817,-11758139.04,-11787534.39,-11817003.23,-11846545.73,-11876162.1,-11905852.5,-11935617.13,-11965456.18,-11995369.82,-12025358.24,-12055421.64],"8332007":[-9839034,-9863631.58,-9888290.66,-9913011.39,-9937793.92,-9962638.4,-9987545,-10012513.86,-10037545.15,-10062639.01,-10087795.61,-10113015.1]},"gavs_mkt_extra":{"Evento1":[0,0,0,0,0,0,0,0,-10000000,0,0,0],"Evento2":[0,0,0,0,0,0,0,0,-10000000,0,0,0],"Evento3":[0,0,-4000000,0,0,0,0,0,0,0,0,0],"Evento4":[0,0,0,-4000000,0,0,0,0,0,0,0,0],"Contenido":[-1500000,-1500000,-1500000,-1500000,-1500000,-1500000,-1500000,-1500000,-1500000,-1500000,-1500000,-1500000],"Publicidad Rama":[0,0,-15000000,-10000000,-3125000,-3125000,-3125000,-3125000,-3125000,-3125000,-3125000,-3125000],"Publicidad M+":[0,0,-30000000,-20000000,-6250000,-6250000,-6250000,-6250000,-6250000,-6250000,-6250000,-6250000]},"castigos":[-11069204.73,-10929794.84,-11280113.23,-11382548.72,-11545264.15,-11470314.99,-11907503.47,-12146550.32,-12107883.87,-12306921.64,-12416562.85,-12269968.38],"summary":{"total_ingresos":[972216820.06,959972341.52,990741076.98,999738065.41,1014029487.37,1007446645.59,1045845247.57,1066840917.41,1063444813.12,1080926454.13,1090556327.08,1077680820.97],"costo_venta":[-626501330.17,-625679618.83,-753338035.24,-653645651.6,-644310750.4,-645383746.84,-651297860.72,-652407666.86,-653384715.27,-656845628.74,-659384666.47,-659264744.11],"margen_bruto":[345715489.89,334292722.69,237403041.74,346092413.8,369718736.97,362062898.75,394547386.85,414433250.55,410060097.85,424080825.38,431171660.61,418416076.86],"gavs":[-167107583.11,-166597628.99,-218915664.01,-204384176.29,-180471639.4,-180222952.05,-182045853.3,-183067463.98,-202965939.41,-183825998.62,-184324611.48,-183786961.01],"ebit":[178607906.78,167695093.7,18487377.72,141708237.52,189247097.57,181839946.7,212501533.54,231365786.56,207094158.44,240254826.76,246847049.13,234629115.86],"da":[1216118.84,1200802.56,1239290.31,1250544.39,1268421.13,1260186.84,1308218.58,1334481.47,1330233.38,1352100.68,1364146.42,1348040.81],"ebitda":[179824025.62,168895896.26,19726668.03,142958781.91,190515518.7,183100133.54,213809752.12,232700268.04,208424391.83,241606927.44,248211195.54,235977156.66]}};
+
+let pptoView='mes';
+const PPTO_ERPS=['Time','Flexline','Manager+','FE','REX','Otros'];
+const PPTO_REX_MERGE=['REX','GeoVictoria','Gaxu','Bnovus'];
+
+function pptoSetView(v){
+  pptoView=v;
+  ['mes','ytd','anual'].forEach(k=>document.getElementById('pptoVBtn_'+k).classList.toggle('active',k===v));
+  const ms=document.getElementById('pptoMonth'); const lbl=document.getElementById('pptoMonthLbl');
+  if(v==='anual'){ ms.style.display='none'; lbl.style.display='none'; }
+  else{ ms.style.display=''; lbl.style.display=''; lbl.textContent=v==='ytd'?'Hasta':'Mes'; }
+  pptoConsolRender();
+}
+function pptoBuildMonth(){
+  const s=document.getElementById('pptoMonth');
+  // detect latest real month available for 2026
+  const real26=mgrData.filter(d=>d.year===2026).map(d=>d.month);
+  const latest = real26.length?Math.max(...real26):12;
+  if(s.options.length){
+    // if month is out of real range, snap to latest
+    if(!s.dataset.userSet) s.value=latest;
+    return;
+  }
+  s.innerHTML=MESES.map((m,i)=>`<option value="${i+1}">${m}</option>`).join('');
+  s.value=latest;
+  s.addEventListener('change',()=>{ s.dataset.userSet='1'; });
+}
+function pptoRange(){
+  if(pptoView==='anual') return [0,12];
+  const m=parseInt(document.getElementById('pptoMonth').value)||12;
+  if(pptoView==='ytd') return [0,m];
+  return [m-1,m];
+}
+function pptoSumArr(arr,i0,i1){ let s=0; for(let i=i0;i<i1;i++){ const v=arr&&arr[i]; if(v) s+=v; } return s; }
+
+// ERPs con desglose ASP/Mantención en tab PPTO (igual que Random)
+const PPTO_DETAIL_ERPS=new Set(['Time','Flexline','Manager+']);
+// Mapeo cuenta→categoría detallada para la columna Real en tab PPTO
+const PPTO_REC_SPLIT={
+  '7114001':'ASP','7112001':'Mantención',  // Time
+  '7114005':'ASP','7112002':'Mantención',  // Flexline
+  '7114004':'ASP',                         // Manager+ (solo una cuenta recurrente)
+};
+function pptoCalcIngDetailed(rows){
+  const res={}; ERP_ORDER.forEach(e=>res[e]={});
+  rows.forEach(r=>{
+    const m=ING_MAP[r.cuenta]; if(!m) return;
+    let cat=m.cat;
+    if(PPTO_DETAIL_ERPS.has(m.erp)&&cat==='Recurrente') cat=PPTO_REC_SPLIT[r.cuenta]||'Recurrente';
+    res[m.erp][cat]=(res[m.erp][cat]||0)+(r.haber-r.debe);
+  });
+  return res;
+}
+function pptoCatMap(ppCat,erp){
+  // Para Time/Flexline/Manager+: mantener ASP y Mantención separados
+  if(erp&&PPTO_DETAIL_ERPS.has(erp)&&(ppCat==='ASP'||ppCat==='Mantención')) return ppCat;
+  if(ppCat==='ASP'||ppCat==='Mantención'||ppCat==='FE') return 'Recurrente';
+  if(ppCat==='Consultoría') return 'Consultoría';
+  if(ppCat==='Licencias') return 'Licencias';
+  if(ppCat==='Ptos_Terceros') return 'Ptos. Terceros';
+  if(ppCat==='Otros') return 'Otros';
+  return null;
+}
+function pptoIngByErp(i0,i1){
+  const res={};
+  PPTO_ERPS.forEach(e=>{
+    const sources = e==='REX' ? PPTO_REX_MERGE : [e];
+    const sub={}; let tot=0;
+    sources.forEach(src=>{
+      const d=PPTO_MGR_2026.ingresos[src]; if(!d) return;
+      Object.keys(d).forEach(k=>{
+        if(k==='total'){ tot+=pptoSumArr(d[k],i0,i1); return; }
+        const cat=pptoCatMap(k,e)||k;
+        sub[cat]=(sub[cat]||0)+pptoSumArr(d[k],i0,i1);
+      });
+    });
+    res[e]={total:tot,sub};
+  });
+  return res;
+}
+function pptoCostosAgg(i0,i1){
+  const res={};
+  for(const [cta,arr] of Object.entries(PPTO_MGR_2026.costos)){
+    const cat=COST_MAP[cta]; if(!cat) continue;
+    res[cat]=(res[cat]||0)+Math.abs(pptoSumArr(arr,i0,i1));
+  }
+  for(const arr of Object.values(PPTO_MGR_2026.costos_indem)) res['Indemnizaciones']=(res['Indemnizaciones']||0)+Math.abs(pptoSumArr(arr,i0,i1));
+  for(const arr of Object.values(PPTO_MGR_2026.costos_otros_hon)) res['Servicios Externos']=(res['Servicios Externos']||0)+Math.abs(pptoSumArr(arr,i0,i1));
+  return res;
+}
+function pptoGavsAgg(i0,i1){
+  const res={}; let c100=0,a50=0,g50=0;
+  for(const [cta,arr] of Object.entries(PPTO_MGR_2026.gavs)){
+    let cat=GAV_MAP[cta]; if(!cat) continue;
+    const v=pptoSumArr(arr,i0,i1);
+    if(cta==='8332005'){ c100+=v; cat='Corporativo'; }
+    else if(cta==='8332006'){ a50+=v; cat='Corporativo'; }
+    else if(cta==='8332007'){ g50+=v; cat='Corporativo'; }
+    res[cat]=(res[cat]||0)+(-v);
+  }
+  for(const arr of Object.values(PPTO_MGR_2026.gavs_mkt_extra)) res['Marketing']=(res['Marketing']||0)+Math.abs(pptoSumArr(arr,i0,i1));
+  res['Castigos']=(res['Castigos']||0)+Math.abs(pptoSumArr(PPTO_MGR_2026.castigos,i0,i1));
+  // ajustes EBITDA: positivos (add-back)
+  const adjHon=-c100, adjArr=-a50*0.5, adjGto=-g50*0.5;
+  return {res, adj:{hon:adjHon, arr:adjArr, gto:adjGto, total:adjHon+adjArr+adjGto}};
+}
+function pptoRealAdj(rows){
+  let c100=0,a50=0,g50=0;
+  rows.forEach(r=>{
+    const v=r.debe-r.haber;
+    if(r.cuenta==='8332005') c100+=v;
+    else if(r.cuenta==='8332006') a50+=v;
+    else if(r.cuenta==='8332007') g50+=v;
+  });
+  return {hon:c100, arr:a50*0.5, gto:g50*0.5, total:c100+a50*0.5+g50*0.5};
+}
+function pptoSummary(i0,i1){
+  const s=PPTO_MGR_2026.summary;
+  return {
+    ing: pptoSumArr(s.total_ingresos,i0,i1),
+    cv:  pptoSumArr(s.costo_venta,i0,i1),
+    mb:  pptoSumArr(s.margen_bruto,i0,i1),
+    gv:  pptoSumArr(s.gavs,i0,i1),
+    ebit:pptoSumArr(s.ebit,i0,i1),
+    da:  pptoSumArr(s.da,i0,i1),
+    ebitda: pptoSumArr(s.ebitda,i0,i1),
+  };
+}
+function pptoRealFilter(i0,i1){
+  return mgrData.filter(d=>d.year===2026 && d.month>=i0+1 && d.month<=i1);
+}
+function pptoDevHtml(real,ppto){
+  const d=real-ppto;
+  const p=ppto? d/Math.abs(ppto)*100 : 0;
+  const cls = d===0?'dev-neu':(d>0?'dev-pos':'dev-neg');
+  const chip = d===0?'neu':(d>0?'pos':'neg');
+  const sign = d>0?'▲':(d<0?'▼':'·');
+  return `<td class="${cls}">${fmtM(d)}</td><td><span class="ppto-chip ${chip}">${sign} ${ppto?(p>=0?'+':'')+p.toFixed(1)+'%':'—'}</span></td>`;
+}
+function pptoDevCostHtml(real,ppto){
+  const d=real-ppto;
+  const p=ppto? d/Math.abs(ppto)*100 : 0;
+  const cls = d===0?'dev-neu':(d<0?'dev-pos':'dev-neg');
+  const chip = d===0?'neu':(d<0?'pos':'neg');
+  const sign = d>0?'▲':(d<0?'▼':'·');
+  return `<td class="${cls}">${fmtM(d)}</td><td><span class="ppto-chip ${chip}">${sign} ${ppto?(p>=0?'+':'')+p.toFixed(1)+'%':'—'}</span></td>`;
+}
+function pptoRenderAll(){
+  if(!mgrData.length){
+    document.getElementById('pptoMgrEmpty').style.display='';
+    document.getElementById('pptoMgrDashboard').style.display='none';
+    return;
+  }
+  document.getElementById('pptoMgrEmpty').style.display='none';
+  document.getElementById('pptoMgrDashboard').style.display='block';
+  pptoBuildMonth();
+  const [i0,i1]=pptoRange();
+
+  // ─── Ingresos ───
+  const realRows=pptoRealFilter(i0,i1);
+  const realIng=pptoCalcIngDetailed(realRows);
+  const ppIng=pptoIngByErp(i0,i1);
+  const periodLbl = pptoView==='anual'?'Año 2026': (pptoView==='ytd'?`YTD · Ene–${MESES[i1-1]}`:MESES[i0]);
+
+  let html=`<div style="overflow-x:auto"><table class="ppto-tbl"><thead><tr>
+    <th>Línea de negocio · ${periodLbl}</th><th>Real</th><th>PPTO</th><th>Desv $</th><th>Desv %</th>
+  </tr></thead><tbody>`;
+  let totR=0,totP=0;
+  PPTO_ERPS.forEach((e,idx)=>{
+    const rR = realIng[e]||{};
+    // For REX, merge GeoVictoria and Gaxu real income (same as MS tab's ERP_ORDER)
+    const rTot = (e==='REX' ? PPTO_REX_MERGE : [e]).reduce((s,src)=>s+mgrErpSum(realIng,src),0);
+    const pTot = (ppIng[e]&&ppIng[e].total)||0;
+    totR+=rTot; totP+=pTot;
+    const erpName = ERP_NAMES[e]||e;
+    const rowId=`pptoIng_${idx}`;
+    html+=`<tr class="erp-tot" onclick="pptoToggleErp('${rowId}')"><td>▸ ${erpName}</td><td>${fmtM(rTot)}</td><td>${fmtM(pTot)}</td>${pptoDevHtml(rTot,pTot)}</tr>`;
+    const subs=new Set([...Object.keys(rR),...Object.keys((ppIng[e]||{}).sub||{})]);
+    subs.forEach(s=>{
+      const rv=rR[s]||0;
+      const pv=(ppIng[e]&&ppIng[e].sub[s])||0;
+      if(rv===0&&pv===0) return;
+      html+=`<tr class="erp-sub ${rowId}"><td>· ${s}</td><td>${fmtM(rv)}</td><td>${fmtM(pv)}</td>${pptoDevHtml(rv,pv)}</tr>`;
+    });
+  });
+  // Include ERPs from ERP_ORDER not covered by PPTO_ERPS/PPTO_REX_MERGE (e.g. Senegocia, Vixonic, Ptos. Terceros)
+  const pptoRealCoveredErps=new Set([...PPTO_ERPS,...PPTO_REX_MERGE]);
+  ERP_ORDER.forEach(e=>{
+    if(!pptoRealCoveredErps.has(e)){
+      const v=mgrErpSum(realIng,e);
+      if(v){ totR+=v; html+=`<tr class="erp-tot"><td>▸ ${ERP_NAMES[e]||e}</td><td>${fmtM(v)}</td><td>—</td>${pptoDevHtml(v,0)}</tr>`; }
+    }
+  });
+  html+=`<tr class="grand"><td>Total Ingresos</td><td>${fmtM(totR)}</td><td>${fmtM(totP)}</td>${pptoDevHtml(totR,totP)}</tr>`;
+  html+=`</tbody></table></div>`;
+  document.getElementById('pptoBIng').innerHTML=html;
+  document.getElementById('pptoTotIng').textContent=`Real ${fmtM(totR)} vs PPTO ${fmtM(totP)}`;
+
+  // ─── Costos y Gastos ───
+  const realCos=mgrCalcCostos(realRows);
+  const ppCos=pptoCostosAgg(i0,i1);
+  const realGavOut=mgrCalcGav(realRows);
+  const realGav=realGavOut.res;
+  const ppGavOut=pptoGavsAgg(i0,i1);
+  const ppGav=ppGavOut.res;
+
+  const costCats=[...new Set([...Object.keys(realCos),...Object.keys(ppCos)])];
+  const gavCats=[...new Set([...Object.keys(realGav),...Object.keys(ppGav)])];
+  let html2=`<div style="overflow-x:auto"><table class="ppto-tbl"><thead><tr>
+    <th>Concepto · ${periodLbl}</th><th>Real</th><th>PPTO</th><th>Desv $</th><th>Desv %</th>
+  </tr></thead><tbody>`;
+  html2+=`<tr class="section-head-red"><td colspan="5">Costos de Venta</td></tr>`;
+  let tcR=0,tcP=0;
+  costCats.sort().forEach(c=>{
+    const rv=realCos[c]||0, pv=ppCos[c]||0;
+    tcR+=rv; tcP+=pv;
+    html2+=`<tr><td style="padding-left:20px">· ${c}</td><td>${fmtM(rv)}</td><td>${fmtM(pv)}</td>${pptoDevCostHtml(rv,pv)}</tr>`;
+  });
+  html2+=`<tr class="grand"><td>Subtotal Costo de Venta</td><td>${fmtM(tcR)}</td><td>${fmtM(tcP)}</td>${pptoDevCostHtml(tcR,tcP)}</tr>`;
+  html2+=`<tr class="section-head-amber"><td colspan="5">Gastos de Administración y Ventas</td></tr>`;
+  let tgR=0,tgP=0;
+  gavCats.sort().forEach(c=>{
+    const rv=realGav[c]||0, pv=ppGav[c]||0;
+    tgR+=rv; tgP+=pv;
+    html2+=`<tr><td style="padding-left:20px">· ${c}</td><td>${fmtM(rv)}</td><td>${fmtM(pv)}</td>${pptoDevCostHtml(rv,pv)}</tr>`;
+  });
+  html2+=`<tr class="grand"><td>Subtotal GAVs</td><td>${fmtM(tgR)}</td><td>${fmtM(tgP)}</td>${pptoDevCostHtml(tgR,tgP)}</tr>`;
+  html2+=`</tbody></table></div>`;
+  document.getElementById('pptoBCos').innerHTML=html2;
+  document.getElementById('pptoTotCos').textContent=`Real ${fmtM(tcR+tgR)} vs PPTO ${fmtM(tcP+tgP)}`;
+
+  // ─── Resumen hasta EBITDA ───
+  const ppS=pptoSummary(i0,i1);
+  const realIngTot = totR;
+  const realCV = tcR;
+  const realMB = realIngTot - realCV;
+  const realGavTot = tgR;
+  const realEBIT = realMB - realGavTot;
+  const realDA = realGav['Depreciación']||0;
+  const realEBITDA = realEBIT + realDA;
+  const realAdj = pptoRealAdj(realRows);
+  const ppAdj = ppGavOut.adj;
+  const realEBITDAAdj = realEBITDA + realAdj.total;
+  const ppEBITDAAdj = ppS.ebitda + ppAdj.total;
+
+  const rows=[
+    {l:'Ingresos',r:realIngTot,p:ppS.ing,t:'i'},
+    {l:'Costo de Venta',r:-realCV,p:ppS.cv,t:'c'},
+    {l:'Margen Bruto',r:realMB,p:ppS.mb,t:'m'},
+    {l:'GAVs',r:-realGavTot,p:ppS.gv,t:'c'},
+    {l:'EBIT',r:realEBIT,p:ppS.ebit,t:'m'},
+    {l:'D&A',r:realDA,p:ppS.da,t:'i'},
+    {l:'EBITDA',r:realEBITDA,p:ppS.ebitda,t:'m'},
+    {l:'+ Honorarios Corporativo',r:realAdj.hon,p:ppAdj.hon,t:'i',sub:1},
+    {l:'+ 50% Arriendo Corporativo',r:realAdj.arr,p:ppAdj.arr,t:'i',sub:1},
+    {l:'+ 50% Gastos Corporativo',r:realAdj.gto,p:ppAdj.gto,t:'i',sub:1},
+    {l:'Total Ajustes',r:realAdj.total,p:ppAdj.total,t:'i'},
+    {l:'EBITDA Ajustado',r:realEBITDAAdj,p:ppEBITDAAdj,t:'m'},
+  ];
+  let html3=`<div style="overflow-x:auto"><table class="ppto-tbl"><thead><tr>
+    <th>${periodLbl}</th><th>Real</th><th>% Ing</th><th>PPTO</th><th>% Ing</th><th>Desv $</th><th>Desv %</th>
+  </tr></thead><tbody>`;
+  rows.forEach(r=>{
+    const pctR = realIngTot? (r.r/realIngTot*100).toFixed(1)+'%':'—';
+    const pctP = ppS.ing? (r.p/ppS.ing*100).toFixed(1)+'%':'—';
+    const d = r.r-r.p;
+    const dp = r.p? d/Math.abs(r.p)*100:0;
+    const cls = d===0?'dev-neu':((r.t==='c'?(d<0):(d>0))?'dev-pos':'dev-neg');
+    const strong = (r.t==='m'||r.l==='Ingresos'||r.l==='EBITDA'||r.l==='EBITDA Ajustado')?'grand':'';
+    const pad = r.sub?'padding-left:24px;color:var(--text3);font-size:11px':'';
+    html3+=`<tr class="${strong}"><td style="${pad}">${r.l}</td><td>${fmtM(r.r)}</td><td style="color:var(--text3);font-size:11px">${pctR}</td><td>${fmtM(r.p)}</td><td style="color:var(--text3);font-size:11px">${pctP}</td><td class="${cls}">${fmtM(d)}</td><td class="${cls}">${r.p?(dp>=0?'+':'')+dp.toFixed(1)+'%':'—'}</td></tr>`;
+  });
+  html3+=`</tbody></table></div>`;
+  document.getElementById('pptoBRes').innerHTML=html3;
+
+  // ─── KPI caluguitas ───
+  const kpiData=[
+    {label:'Ingresos', r:realIngTot, p:ppS.ing, cls:'blue', t:'i'},
+    {label:'Margen Bruto', r:realMB, p:ppS.mb, cls:'green', t:'i'},
+    {label:'EBIT', r:realEBIT, p:ppS.ebit, cls:'yellow', t:'i'},
+    {label:'EBITDA', r:realEBITDA, p:ppS.ebitda, cls:'teal', t:'i'},
+    {label:'EBITDA Ajustado', r:realEBITDAAdj, p:ppEBITDAAdj, cls:'ppto-adj', t:'i'},
+  ];
+  document.getElementById('pptoKpi').innerHTML = kpiData.map(k=>{
+    const d=k.r-k.p, dp=k.p? d/Math.abs(k.p)*100:0;
+    const chip=d===0?'neu':(d>0?'pos':'neg');
+    const sign=d>0?'▲':(d<0?'▼':'·');
+    const pctR=realIngTot?(k.r/realIngTot*100).toFixed(1)+'%':'';
+    return `<div class="kpi-card ${k.cls}">
+      <div class="kpi-label">${k.label} · ${periodLbl}</div>
+      <div class="kpi-value">${fmtM(k.r)}</div>
+      <div class="kpi-sub-split">
+        <span class="kss-r">● Real ${pctR}</span>
+        <span class="kss-p">◯ PPTO ${fmtM(k.p)}</span>
+      </div>
+      <div style="margin-top:6px"><span class="ppto-chip ${chip}">${sign} ${k.p?(dp>=0?'+':'')+dp.toFixed(1)+'%':'—'} vs PPTO</span></div>
+    </div>`;
+  }).join('');
+
+  // ─── Insights Module ───
+  try{ insightsRender(); }catch(e){ console.warn('insightsRender:',e); }
+}
+function pptoToggleErp(id){
+  document.querySelectorAll('.'+id).forEach(r=>r.classList.toggle('open'));
+}
+window.pptoRefresh=pptoRenderAll;
+
+/* ═══════════ PPTO CONSOLIDADO ═══════════ */
+let pptoComp='mgr';
+
+function pptoSetComp(c){
+  pptoComp=c;
+  ['mgr','rnd','consol'].forEach(x=>{
+    const b=document.getElementById('pptoComp_'+x); if(b) b.classList.toggle('active',x===c);
+  });
+  pptoConsolRender();
+}
+
+function pptoConsolRange(){
+  // Devuelve [i0,i1] en índices 0-based inclusivos (Ene=0, Dic=11)
+  if(pptoView==='anual') return [0,11];
+  const m=parseInt(document.getElementById('pptoMonth').value)||1;
+  return pptoView==='ytd'?[0,m-1]:[m-1,m-1];
+}
+
+function pptoConsolBuildMonth(){
+  const s=document.getElementById('pptoMonth');
+  const mgrM=mgrData.filter(d=>d.year===2026).map(d=>d.month);
+  const rndM=Object.keys((rndData||{})[2026]||{}).map(Number).filter(m=>m>=1&&m<=12);
+  const latest=[...mgrM,...rndM].reduce((a,b)=>Math.max(a,b),1);
+  if(!s.options.length){
+    s.innerHTML=MESES.map((m,i)=>`<option value="${i+1}">${m}</option>`).join('');
+    s.addEventListener('change',()=>{s.dataset.userSet='1';});
+  }
+  if(!s.dataset.userSet) s.value=latest;
+}
+
+function pptoConsolCalcOne(i0,i1){
+  // i0,i1: 0-based inclusive. Retorna {mgrReal,mgrPpto,rndReal,rndPpto}
+  // Costos/GAVs se guardan como positivos (valor absoluto del gasto)
+
+  // ── Manager real ──
+  const mgrRows=mgrData.filter(d=>d.year===2026&&d.month>=i0+1&&d.month<=i1+1);
+  let mgrReal=null;
+  if(mgrRows.length){
+    const ing=mgrIngTotal(pptoCalcIngDetailed(mgrRows));
+    const cv=sumObj(mgrCalcCostos(mgrRows));
+    const {res:gavRes,dep,adj:_}=mgrCalcGav(mgrRows);
+    const gav=sumObj(gavRes);
+    const adj=pptoRealAdj(mgrRows).total;
+    const mb=ing-cv, ebit=mb-gav, ebitda=ebit+dep;
+    mgrReal={ing,cv,mb,gav,ebit,da:dep,ebitda,adj,ebitdaAdj:ebitda+adj};
+  }
+
+  // ── Manager ppto ── (pptoSumArr usa fin exclusivo → i1+1)
+  const ppS=pptoSummary(i0,i1+1);
+  const ppAdj=pptoGavsAgg(i0,i1+1).adj.total;
+  const mgrPpto={
+    ing:ppS.ing, cv:-ppS.cv, mb:ppS.mb, gav:-ppS.gv,
+    ebit:ppS.ebit, da:ppS.da, ebitda:ppS.ebitda,
+    adj:ppAdj, ebitdaAdj:ppS.ebitda+ppAdj
+  };
+
+  // ── Random real ──
+  let rndReal=null;
+  if(Object.keys((rndData||{})[2026]||{}).length){
+    const r=pptoRndRealCalc(i0,i1);
+    const ing=Object.values(r.ing).reduce((a,b)=>a+b,0);
+    const cvN=Object.values(r.cv).reduce((a,b)=>a+b,0);   // negativo
+    const sgaN=Object.values(r.sga).reduce((a,b)=>a+b,0); // negativo
+    const mb=ing+cvN, ebitda=mb+sgaN, adj=r.adjR+r.adjC;
+    rndReal={ing,cv:-cvN,mb,gav:-sgaN,ebit:ebitda,da:0,ebitda,adj,ebitdaAdj:ebitda+adj};
+  }
+
+  // ── Random ppto ──
+  const pIngTot=PPTO_RND_ING_ORDER.reduce((s,c)=>s+pptoRndSumKeys([PPTO_RND_ING_KEY[c]],i0,i1),0);
+  const pCvN=PPTO_RND_CV_ORDER.reduce((s,c)=>s+pptoRndSumKeys(PPTO_RND_CV_KEY[c]||[],i0,i1),0);
+  const pSgaN=PPTO_RND_SGA_ORDER.reduce((s,c)=>s+pptoRndSumKeys(PPTO_RND_SGA_KEY[c]||[],i0,i1),0);
+  const pAdjR=Math.abs(pptoRndSumKeys(['arriendo'],i0,i1))*0.5;
+  const pAdjC=Math.abs(pptoRndSumKeys(['corporativo'],i0,i1));
+  const pMb=pIngTot+pCvN, pEbitda=pMb+pSgaN, pAdj=pAdjR+pAdjC;
+  const rndPpto={ing:pIngTot,cv:-pCvN,mb:pMb,gav:-pSgaN,ebit:pEbitda,da:0,ebitda:pEbitda,adj:pAdj,ebitdaAdj:pEbitda+pAdj};
+
+  return {mgrReal,mgrPpto,rndReal,rndPpto};
+}
+
+// Dispatcher principal — muestra la vista correcta y llama al render correspondiente
+function pptoConsolRender(){
+  const hasMgr=mgrData.filter(d=>d.year===2026).length>0;
+  const hasRnd=Object.keys((rndData||{})[2026]||{}).length>0;
+  const hasAny=hasMgr||hasRnd;
+
+  document.getElementById('pptoGlobalEmpty').style.display=hasAny?'none':'';
+  document.getElementById('pptoPeriodBar').style.display=hasAny?'':'none';
+  ['pptoViewMgr','pptoViewRnd','pptoViewConsol'].forEach(id=>
+    document.getElementById(id).style.display='none'
+  );
+  if(!hasAny) return;
+
+  pptoConsolBuildMonth();
+
+  // Mostrar vista activa y actualizar toggle
+  const viewId={mgr:'pptoViewMgr',rnd:'pptoViewRnd',consol:'pptoViewConsol'}[pptoComp];
+  document.getElementById(viewId).style.display='';
+  ['mgr','rnd','consol'].forEach(x=>{
+    const b=document.getElementById('pptoComp_'+x); if(b) b.classList.toggle('active',x===pptoComp);
+  });
+
+  if(pptoComp==='mgr') pptoRenderAll();
+  else if(pptoComp==='rnd') pptoRndRenderAll();
+  else pptoConsolRenderSummary();
+}
+
+// Render del P&L resumido para Consolidado
+function pptoConsolRenderSummary(){
+  const hasMgr=mgrData.filter(d=>d.year===2026).length>0;
+  const hasRnd=Object.keys((rndData||{})[2026]||{}).length>0;
+  const [i0,i1]=pptoConsolRange();
+  const {mgrReal,mgrPpto,rndReal,rndPpto}=pptoConsolCalcOne(i0,i1);
+
+  const add=(a,b)=>{
+    const x=a||{ing:0,cv:0,mb:0,gav:0,ebit:0,da:0,ebitda:0,adj:0,ebitdaAdj:0};
+    const y=b||{ing:0,cv:0,mb:0,gav:0,ebit:0,da:0,ebitda:0,adj:0,ebitdaAdj:0};
+    return{ing:x.ing+y.ing,cv:x.cv+y.cv,mb:x.mb+y.mb,gav:x.gav+y.gav,
+      ebit:x.ebit+y.ebit,da:x.da+y.da,ebitda:x.ebitda+y.ebitda,
+      adj:x.adj+y.adj,ebitdaAdj:x.ebitdaAdj+y.ebitdaAdj};
+  };
+  const real=add(mgrReal,rndReal);
+  const ppto=add(mgrPpto,rndPpto);
+
+  const periodLbl=pptoView==='anual'?'Año 2026':pptoView==='ytd'?`YTD · Ene–${MESES[i1]}`:MESES[i0];
+  document.getElementById('pptoConsolTitle').textContent=`Consolidado · ${periodLbl} — Real vs PPTO 2026`;
+
+  const rIng=real.ing, pIng=ppto.ing;
+  document.getElementById('pptoConsolKpi').innerHTML=[
+    {label:'Ingresos',f:'ing'},{label:'Margen Bruto',f:'mb'},
+    {label:'EBIT',f:'ebit'},{label:'EBITDA',f:'ebitda'},{label:'EBITDA Ajustado',f:'ebitdaAdj'}
+  ].map(k=>{
+    const r=real[k.f], p=ppto[k.f];
+    const d=r-p, dp=p?d/Math.abs(p)*100:0;
+    const chip=d===0?'neu':(d>0?'pos':'neg'), sign=d>0?'▲':(d<0?'▼':'·');
+    return `<div class="kpi-card" style="--kc:var(--grp)">
+      <div class="kpi-label">${k.label} · ${periodLbl}</div>
+      <div class="kpi-value">${fmtM(r)}</div>
+      <div class="kpi-sub-split"><span class="kss-r">● Real</span><span class="kss-p">◯ PPTO ${fmtM(p)}</span></div>
+      <div style="margin-top:6px"><span class="ppto-chip ${chip}">${sign} ${p?(dp>=0?'+':'')+dp.toFixed(1)+'%':'—'} vs PPTO</span></div>
+    </div>`;
+  }).join('');
+
+  const rows=[
+    {l:'Ingresos',f:'ing',t:'i',bold:true},
+    {l:'(-) Costos de Venta',f:'cv',t:'c',bold:false},
+    {l:'Margen Bruto',f:'mb',t:'m',bold:true},
+    {l:'(-) GAVs',f:'gav',t:'c',bold:false},
+    {l:'EBIT',f:'ebit',t:'m',bold:true},
+    {l:'(+) D&A',f:'da',t:'i',bold:false},
+    {l:'EBITDA',f:'ebitda',t:'m',bold:true},
+    {l:'(+) Ajuste EBITDA',f:'adj',t:'i',bold:false},
+    {l:'EBITDA Ajustado',f:'ebitdaAdj',t:'m',bold:true},
+  ];
+  let html=`<div style="overflow-x:auto"><table class="ppto-tbl"><thead><tr>
+    <th>Consolidado · ${periodLbl}</th>
+    <th>Real</th><th style="color:var(--text3)">% Ing</th>
+    <th>PPTO</th><th style="color:var(--text3)">% Ing</th>
+    <th>Desv $</th><th>Desv %</th>
+  </tr></thead><tbody>`;
+  rows.forEach(row=>{
+    const rv=real[row.f], pv=ppto[row.f];
+    const d=rv-pv, dp=pv?d/Math.abs(pv)*100:0;
+    const isGood=row.t==='c'?d<0:d>0;
+    const cls=d===0?'dev-neu':(isGood?'dev-pos':'dev-neg');
+    html+=`<tr class="${row.bold?'grand':''}">
+      <td>${row.l}</td>
+      <td>${fmtM(rv)}</td><td style="color:var(--text3);font-size:11px">${rIng?(rv/rIng*100).toFixed(1)+'%':'—'}</td>
+      <td>${fmtM(pv)}</td><td style="color:var(--text3);font-size:11px">${pIng?(pv/pIng*100).toFixed(1)+'%':'—'}</td>
+      <td class="${cls}">${fmtM(d)}</td><td class="${cls}">${pv?(dp>=0?'+':'')+dp.toFixed(1)+'%':'—'}</td>
+    </tr>`;
+  });
+  html+=`</tbody></table></div>`;
+  document.getElementById('pptoConsolRes').innerHTML=html;
+}
+window.pptoConsolRefresh=pptoConsolRender;
+
+/* ═══════════ PPTO RANDOM 2026 ═══════════ */
+const PPTO_RND_2026={
+  membresia:[151252549,153024460,154817129,156630799,158465716,160322128,162200289,164100452,166022875,167967819,169935548,171926329],
+  asp:[59964642,60667123,61377833,62096870,62824329,63560311,64304915,65058242,65820394,66591474,67371588,68160840],
+  cloud_ing:[30171145,30524597,30882190,31243973,31609993,31980302,32354948,32733984,33117460,33505428,33897941,34295053],
+  impl:[19400975,19628255,19858199,20090836,20326198,20564318,20805227,21048959,21295546,21545021,21797419,22052774],
+  lic_ing:[3532005,3573382,3615244,3657596,3700445,3743795,3787653,3832026,3876917,3922335,3968285,4014773],
+  ordename:[405628,405628,405628,405628,405628,405628,405628,405628,405628,405628,405628,405628],
+  personal_cv:[-28787017,-28787017,-28787017,-30226368,-30226368,-30226368,-30226368,-30226368,-32889168,-30226368,-30226368,-58226368],
+  lic_cv:[-81689,-82645,-83612,-84590,-85579,-86580,-87593,-88618,-89654,-90703,-91764,-92838],
+  cloud_cv:[-1366975,-1382964,-1399141,-1415507,-1432065,-1448817,-1465766,-1482912,-1500260,-1517811,-1535567,-1553532],
+  sales_cv:[-25007111,-25299618,-25595552,-25894953,-26197862,-26504319,-26814366,-27128045,-27445399,-27766470,-28091303,-28419942],
+  consulting_cv:[-8709906,-8811785,-8914858,-9019139,-9124641,-9231379,-9339368,-9448621,-9559155,-9670983,-9784121,-9898585],
+  extstaff_cv:[-7641484,-7730866,-7821295,-7912784,-8005345,-8098989,-8193731,-8289583,-8386558,-8484668,-8583928,-8684351],
+  incob:[-1155225,-1168738,-1182409,-1196240,-1210233,-1224390,-1238713,-1253204,-1267864,-1282696,-1297702,-1312884],
+  arriendo:[-11716180,-11745471,-11774835,-11804272,-11833782,-11863367,-11893025,-11922758,-11952565,-11982446,-12012402,-12042433],
+  marketing:[-4974333,-5032518,-5091384,-5150940,-5211193,-5272153,-5333826,-5396222,-5459349,-5523216,-5587831,-5653202],
+  oficina:[-3429757,-3469875,-3510462,-3551525,-3593070,-3635101,-3677624,-3720645,-3764171,-3808206,-3852758,-3897831],
+  personal_sga:[-45617756,-45623943,-45630202,-47890976,-47897383,-47903865,-47910423,-47917058,-47923770,-47930561,-47937432,-116544383],
+  consultoria_sga:[-948171,-959262,-970482,-981834,-993319,-1004939,-1016695,-1028588,-1040621,-1052795,-1065111,-1077572],
+  corporativo:[-22000000,-22000000,-22000000,-22000000,-22000000,-22000000,-22000000,-22000000,-22000000,-22000000,-22000000,-22000000],
+  extstaff_sga:[-10222032,-10222032,-10733134,-10733134,-10733134,-10733134,-10733134,-10733134,-10733134,-10733134,-10733134,-10733134]
+};
+const PPTO_RND_ING_ORDER=['Mantención','ASP','Cloud','Implementación','Licencias','Ordename'];
+const PPTO_RND_ING_KEY={Mantención:'membresia',ASP:'asp',Cloud:'cloud_ing',Implementación:'impl',Licencias:'lic_ing',Ordename:'ordename'};
+const PPTO_RND_CV_ORDER=['Personal','Personal Externo','Servidores / Apps','Oficina','Otros'];
+const PPTO_RND_CV_KEY={Personal:['personal_cv'],'Personal Externo':['consulting_cv','extstaff_cv'],'Servidores / Apps':['lic_cv','cloud_cv','sales_cv'],Oficina:[],Otros:[]};
+const PPTO_RND_SGA_ORDER=['Personal Externo','Incobrables','Consultoría','Marketing','Gastos Oficina','Gastos Generales','Arriendo','Personal','Corporativo','Viajes'];
+const PPTO_RND_SGA_KEY={'Personal Externo':['extstaff_sga'],Incobrables:['incob'],Consultoría:['consultoria_sga'],Marketing:['marketing'],'Gastos Oficina':['oficina'],'Gastos Generales':[],Arriendo:['arriendo'],Personal:['personal_sga'],Corporativo:['corporativo'],Viajes:[]};
+
+function pptoRndRange(){
+  // Usa el selector compartido pptoView/pptoMonth
+  if(pptoView==='anual') return [0,11];
+  const m=parseInt(document.getElementById('pptoMonth').value)-1;
+  return pptoView==='mes'?[m,m]:[0,m];
+}
+
+function pptoRndSumKeys(keys,i0,i1){
+  let s=0;
+  for(const k of keys){const a=PPTO_RND_2026[k];if(a) for(let i=i0;i<=i1;i++) s+=a[i]||0;}
+  return s;
+}
+
+function pptoRndRealCalc(i0,i1){
+  const rnd26=(rndData||{})[2026]||{};
+  const ing={},cv={},sga={};
+  let adjR=0,adjC=0;
+  for(let m=i0+1;m<=i1+1;m++){
+    const md=rnd26[m]||{};
+    for(const [acc,cat] of Object.entries(RND_ING_ACCS)) ing[cat]=(ing[cat]||0)+(md[acc]||0);
+    for(const [acc,cat] of Object.entries(RND_COGS_CATS)) cv[cat]=(cv[cat]||0)+(md[acc]||0);
+    for(const [acc,cat] of Object.entries(RND_SGA_CATS)) sga[cat]=(sga[cat]||0)+(md[acc]||0);
+    for(const acc of RND_ADJ_RENT) adjR+=Math.abs(md[acc]||0);
+    for(const acc of RND_ADJ_CORP) adjC+=Math.abs(md[acc]||0);
+  }
+  return {ing,cv,sga,adjR:adjR*0.5,adjC};
+}
+
+function pptoRndRenderAll(){
+  const rnd26=(rndData||{})[2026]||{};
+  const hasReal=Object.keys(rnd26).length>0;
+  document.getElementById('pptoRndEmpty').style.display=hasReal?'none':'block';
+  document.getElementById('pptoRndDashboard').style.display=hasReal?'block':'none';
+  if(!hasReal) return;
+  const [i0,i1]=pptoRndRange();
+  const real=pptoRndRealCalc(i0,i1);
+  const fmtM=v=>(v/1e6).toLocaleString('es-CL',{minimumFractionDigits:1,maximumFractionDigits:1})+' MM';
+  const fmtAbs=v=>(Math.abs(v)/1e6).toLocaleString('es-CL',{minimumFractionDigits:1,maximumFractionDigits:1})+' MM';
+
+  // PPTO aggregations
+  const pIng={},pCv={},pSga={};
+  for(const cat of PPTO_RND_ING_ORDER) pIng[cat]=pptoRndSumKeys([PPTO_RND_ING_KEY[cat]],i0,i1);
+  for(const cat of PPTO_RND_CV_ORDER)  pCv[cat]=pptoRndSumKeys(PPTO_RND_CV_KEY[cat]||[],i0,i1);
+  for(const cat of PPTO_RND_SGA_ORDER) pSga[cat]=pptoRndSumKeys(PPTO_RND_SGA_KEY[cat]||[],i0,i1);
+  const pAdjR=Math.abs(pptoRndSumKeys(['arriendo'],i0,i1))*0.5;
+  const pAdjC=Math.abs(pptoRndSumKeys(['corporativo'],i0,i1));
+
+  // Totals
+  const rTotIng=Object.values(real.ing).reduce((a,b)=>a+b,0);
+  const pTotIng=Object.values(pIng).reduce((a,b)=>a+b,0);
+  const rTotCv=Object.values(real.cv).reduce((a,b)=>a+b,0);
+  const pTotCv=Object.values(pCv).reduce((a,b)=>a+b,0);
+  const rMb=rTotIng+rTotCv, pMb=pTotIng+pTotCv;
+  const rTotSga=Object.values(real.sga).reduce((a,b)=>a+b,0);
+  const pTotSga=Object.values(pSga).reduce((a,b)=>a+b,0);
+  const rEbitda=rMb+rTotSga, pEbitda=pMb+pTotSga;
+  const rEbitdaAdj=rEbitda+real.adjR+real.adjC;
+  const pEbitdaAdj=pEbitda+pAdjR+pAdjC;
+
+  // Dev html helper
+  const devHtml=(r,p)=>{
+    const d=r-p, good=d>0;
+    const cls=d===0?'neu':good?'pos':'neg';
+    const arrow=d===0?'':good?'▲':'▼';
+    const pct=p?`${Math.abs(d/p*100).toFixed(1)}%`:'-';
+    return `<td>${d>=0?'+':'-'}${fmtAbs(d)}</td><td><span class="ppto-chip ${cls}">${arrow} ${pct}</span></td>`;
+  };
+
+  // KPI cards
+  document.getElementById('pptoRndKpi').innerHTML=[
+    {label:'Ingresos',r:rTotIng,p:pTotIng,cls:'blue'},
+    {label:'Margen Bruto',r:rMb,p:pMb,cls:'green'},
+    {label:'EBIT',r:rEbitda,p:pEbitda,cls:'yellow'},
+    {label:'EBITDA',r:rEbitda,p:pEbitda,cls:'teal'},
+    {label:'EBITDA Ajustado',r:rEbitdaAdj,p:pEbitdaAdj,cls:'pptorand-adj'}
+  ].map(k=>{
+    const d=k.r-k.p, good=d>0, cls2=d===0?'neu':good?'pos':'neg';
+    const pct=k.p?`${Math.abs(d/k.p*100).toFixed(1)}%`:'-';
+    return `<div class="kpi-card ${k.cls}">
+      <div class="kpi-label">${k.label}</div>
+      <div class="kpi-value">${fmtM(k.r)}</div>
+      <div class="kpi-sub">PPTO: ${fmtM(k.p)} <span class="ppto-chip ${cls2}" style="font-size:9px">${good?'▲':'▼'} ${pct}</span></div>
+    </div>`;
+  }).join('');
+
+  // Ingresos table
+  const hdr=`<thead><tr><th style="text-align:left">Categoría</th><th>Real 2026</th><th>PPTO 2026</th><th>Desv $</th><th>Desv %</th></tr></thead>`;
+  document.getElementById('pptoRndBIng').innerHTML=`<table class="ppto-tbl">${hdr}<tbody>
+    ${PPTO_RND_ING_ORDER.map(cat=>`<tr><td>${cat}</td><td>${fmtM(real.ing[cat]||0)}</td><td>${fmtM(pIng[cat]||0)}</td>${devHtml(real.ing[cat]||0,pIng[cat]||0)}</tr>`).join('')}
+    <tr class="grand"><td>Total Ingresos</td><td>${fmtM(rTotIng)}</td><td>${fmtM(pTotIng)}</td>${devHtml(rTotIng,pTotIng)}</tr>
+  </tbody></table>`;
+  document.getElementById('pptoRndTotIng').textContent=fmtM(rTotIng);
+
+  // COGS table
+  document.getElementById('pptoRndBCv').innerHTML=`<table class="ppto-tbl">${hdr}<tbody>
+    ${PPTO_RND_CV_ORDER.map(cat=>{const r=real.cv[cat]||0,p=pCv[cat]||0;return(r===0&&p===0)?'':
+      `<tr><td>${cat}</td><td>${fmtM(r)}</td><td>${fmtM(p)}</td>${devHtml(r,p)}</tr>`;}).join('')}
+    <tr class="grand"><td>Total Costos</td><td>${fmtM(rTotCv)}</td><td>${fmtM(pTotCv)}</td>${devHtml(rTotCv,pTotCv)}</tr>
+  </tbody></table>`;
+  document.getElementById('pptoRndTotCv').textContent=fmtM(rTotCv);
+
+  // SGA table
+  document.getElementById('pptoRndBSga').innerHTML=`<table class="ppto-tbl">${hdr}<tbody>
+    ${PPTO_RND_SGA_ORDER.map(cat=>{const r=real.sga[cat]||0,p=pSga[cat]||0;return(r===0&&p===0)?'':
+      `<tr><td>${cat}</td><td>${fmtM(r)}</td><td>${fmtM(p)}</td>${devHtml(r,p)}</tr>`;}).join('')}
+    <tr class="grand"><td>Total SG&amp;A</td><td>${fmtM(rTotSga)}</td><td>${fmtM(pTotSga)}</td>${devHtml(rTotSga,pTotSga)}</tr>
+  </tbody></table>`;
+  document.getElementById('pptoRndTotSga').textContent=fmtM(rTotSga);
+
+  // Resumen P&L
+  document.getElementById('pptoRndBRes').innerHTML=`<table class="ppto-tbl">${hdr}<tbody>
+    ${[
+      {label:'Ingresos Operacionales',r:rTotIng,p:pTotIng,cls:''},
+      {label:'(-) Costos Directos',r:rTotCv,p:pTotCv,cls:'section-head-red'},
+      {label:'= Margen Bruto',r:rMb,p:pMb,cls:'grand'},
+      {label:'(-) SG&amp;A',r:rTotSga,p:pTotSga,cls:'section-head-amber'},
+      {label:'= EBITDA',r:rEbitda,p:pEbitda,cls:'grand'},
+      {label:'(+) Ajuste Arriendo 50%',r:real.adjR,p:pAdjR,cls:'erp-sub open'},
+      {label:'(+) Ajuste Corporativo',r:real.adjC,p:pAdjC,cls:'erp-sub open'},
+      {label:'= EBITDA Ajustado',r:rEbitdaAdj,p:pEbitdaAdj,cls:'grand'},
+    ].map(row=>`<tr class="${row.cls}"><td>${row.label}</td><td>${fmtM(row.r)}</td><td>${fmtM(row.p)}</td>${devHtml(row.r,row.p)}</tr>`).join('')}
+  </tbody></table>`;
+
+  // ─── Insights Module ───
+  try{ insightsRender(); }catch(e){ console.warn('insightsRender(rnd):',e); }
+}
+window.pptoRndRefresh=pptoRndRenderAll;
+
+/* ═══════════ MÓDULO INSIGHTS IA ═══════════ */
+const INSIGHTS_CONFIG={
+  churnAlertPct:0.06, downsellAlertPct:0.03,
+  netRetMinPct:0.92, newMrrMinPct:0.03,
+  gapRedPct:0.10, gapYellowPct:0.05
+};
+
+function pptoGetPeriodKey(){
+  const m=parseInt(document.getElementById('pptoMonth')?.value||1);
+  return `${pptoView}_2026_${String(m).padStart(2,'0')}`;
+}
+
+function insightsRender(){
+  const container=document.getElementById('pptoInsights');
+  if(!container) return;
+  // Delegar a modo Random si corresponde
+  if(pptoComp==='rnd'){ insightsRenderRndMode(); return; }
+  if(pptoComp!=='mgr'){ container.style.display='none'; return; }
+  if(!mgrData.length){ container.style.display='none'; return; }
+  try{
+    const [i0,i1]=pptoRange();
+    const realRows=pptoRealFilter(i0,i1);
+    const realIng=pptoCalcIngDetailed(realRows);
+    const ppIng=pptoIngByErp(i0,i1);
+    const realCos=mgrCalcCostos(realRows);
+    const ppCos=pptoCostosAgg(i0,i1);
+    const gavOut=mgrCalcGav(realRows);
+    const realGav=gavOut.res;
+    const ppGavOut=pptoGavsAgg(i0,i1);
+    const ppGav=ppGavOut.res;
+
+    let totRing=0,totPing=0;
+    PPTO_ERPS.forEach(e=>{
+      totRing+=(e==='REX'?PPTO_REX_MERGE:[e]).reduce((s,src)=>s+mgrErpSum(realIng,src),0);
+      totPing+=(ppIng[e]&&ppIng[e].total)||0;
+    });
+    const covered=new Set([...PPTO_ERPS,...PPTO_REX_MERGE]);
+    ERP_ORDER.forEach(e=>{ if(!covered.has(e)) totRing+=mgrErpSum(realIng,e); });
+
+    const tcR=sumObj(realCos),tcP=sumObj(ppCos);
+    const tgR=sumObj(realGav),tgP=sumObj(ppGav);
+    const da=realGav['Depreciación']||0;
+    const ppS=pptoSummary(i0,i1);
+    const realAdj=pptoRealAdj(realRows).total;
+    const ppAdj=ppGavOut.adj.total;
+    const realEBIT=totRing-tcR-tgR;
+    const realEBITDA=realEBIT+da;
+    const realEBITDAAdj=realEBITDA+realAdj;
+    const ppEBITDAAdj=ppS.ebitda+ppAdj;
+
+    const real={totalIngresos:totRing,costos:tcR,gavs:tgR,ebitda:realEBITDAAdj,realIng,realCos,realGav};
+    const ppto_={totalIngresos:totPing,costos:tcP,gavs:tgP,ebitda:ppEBITDAAdj,ppIng,ppCos,ppGav};
+
+    container.style.display='block';
+    const periodLbl=pptoView==='anual'?'Año 2026':(pptoView==='ytd'?`YTD · Ene–${MESES[i1-1]}`:MESES[i0]);
+    const lbl=document.getElementById('insightsPeriodLabel');
+    if(lbl) lbl.textContent='· '+periodLbl;
+
+    insightsRenderSummaryBar(real,ppto_);
+    insightsRenderIngresos(real,ppto_);
+    insightsRenderCostos(real,ppto_);
+    insightsRenderSGA(real,ppto_);
+    insightsRenderBridge(real,ppto_);
+
+    // Reset AI button when period changes
+    const btn=document.getElementById('insightsAIBtn');
+    const key=insightsGetCacheKey();
+    if(btn&&btn.dataset.period!==key){
+      btn.disabled=false;
+      btn.textContent='✦ Generar análisis ejecutivo';
+      btn.dataset.period=key;
+      const res=document.getElementById('insightsAIResult');
+      if(res){ const cached=sessionStorage.getItem(key); if(cached) insightsShowAIResult(cached); else res.innerHTML=''; }
+    }
+  }catch(err){
+    console.error('insightsRender:',err);
+    const container=document.getElementById('pptoInsights');
+    if(container) container.style.display='none';
+  }
+}
+
+function insightsRenderSummaryBar(real,ppto_){
+  const el=document.getElementById('insightsSummaryBar');
+  if(!el) return;
+  const gapIng=real.totalIngresos-ppto_.totalIngresos;
+  const gapEbitda=real.ebitda-ppto_.ebitda;
+  const cumpl=ppto_.totalIngresos?real.totalIngresos/ppto_.totalIngresos:0;
+  const semCls=cumpl>=0.95?'semaforo-verde':(cumpl>=0.85?'semaforo-amarillo':'semaforo-rojo');
+  const semDot=cumpl>=0.95?'🟢':(cumpl>=0.85?'🟡':'🔴');
+  const semLbl=cumpl>=0.95?'En objetivo':(cumpl>=0.85?'Bajo objetivo':'Crítico');
+  el.innerHTML=`<div class="insights-summary-bar">
+    <div class="insights-kpi">
+      <div class="insights-kpi-label">Gap Ingresos</div>
+      <div class="insights-kpi-value ${gapIng>=0?'semaforo-verde':'semaforo-rojo'}">${fmtM(gapIng)}</div>
+      <div class="insights-kpi-sub">vs PPTO ${fmtM(ppto_.totalIngresos)}</div>
+    </div>
+    <div class="insights-kpi">
+      <div class="insights-kpi-label">Gap EBITDA Ajustado</div>
+      <div class="insights-kpi-value ${gapEbitda>=0?'semaforo-verde':'semaforo-rojo'}">${fmtM(gapEbitda)}</div>
+      <div class="insights-kpi-sub">Real ${fmtM(real.ebitda)} · PPTO ${fmtM(ppto_.ebitda)}</div>
+    </div>
+    <div class="insights-kpi">
+      <div class="insights-kpi-label">Cumplimiento Ingresos</div>
+      <div class="insights-kpi-value ${semCls}">${semDot} ${(cumpl*100).toFixed(1)}%</div>
+      <div class="insights-kpi-sub">${semLbl}</div>
+    </div>
+  </div>`;
+}
+
+function insightsRenderIngresos(real,ppto_){
+  const el=document.getElementById('insightsIngresos');
+  if(!el) return;
+  const erpData=PPTO_ERPS.map(e=>{
+    const rTot=(e==='REX'?PPTO_REX_MERGE:[e]).reduce((s,src)=>s+mgrErpSum(real.realIng,src),0);
+    const pTot=(ppto_.ppIng[e]&&ppto_.ppIng[e].total)||0;
+    const gap=rTot-pTot;
+    const gapPct=pTot?gap/Math.abs(pTot):0;
+    const rR=real.realIng[e]||{};
+    const pSub=(ppto_.ppIng[e]&&ppto_.ppIng[e].sub)||{};
+    const subs=new Set([...Object.keys(rR),...Object.keys(pSub)]);
+    const subGaps={};
+    subs.forEach(s=>{ subGaps[s]=(rR[s]||0)-(pSub[s]||0); });
+    const aspG=Math.abs((subGaps['ASP']||0)+(subGaps['Mantención']||0));
+    const consG=Math.abs(subGaps['Consultoría']||0);
+    const licG=Math.abs(subGaps['Licencias']||0);
+    const absGap=Math.abs(gap);
+    let flag='MIXTO';
+    if(absGap>0){
+      if(consG/absGap>0.5) flag='EXTRACCIÓN';
+      else if(aspG/absGap>0.5) flag='RECURRENTE';
+      else if(licG/absGap>0.5) flag='PIPELINE';
+    }
+    return{erp:e,real:rTot,ppto:pTot,gap,gapPct,flag};
+  });
+  erpData.sort((a,b)=>a.gap-b.gap);
+  const flagCls={EXTRACCIÓN:'flag-extraccion',RECURRENTE:'flag-recurrente',PIPELINE:'flag-pipeline',MIXTO:'flag-mixto'};
+  const dot=gp=>gp<-INSIGHTS_CONFIG.gapRedPct?'🔴':(gp<-INSIGHTS_CONFIG.gapYellowPct?'🟡':'🟢');
+  const rows=erpData.filter(d=>Math.abs(d.gap)>500000).map(d=>{
+    const sign=d.gapPct>=0?'+':'';
+    return `<div class="insights-row">
+      <span>${dot(d.gapPct)}</span>
+      <span class="insights-erp-name">${ERP_NAMES[d.erp]||d.erp}</span>
+      <span class="insights-gap-val ${d.gap<0?'semaforo-rojo':'semaforo-verde'}">${fmtM(d.gap)}</span>
+      <span class="insights-gap-pct">(${sign}${(d.gapPct*100).toFixed(1)}%)</span>
+      <span class="insights-flag ${flagCls[d.flag]||'flag-mixto'}">${d.flag}</span>
+    </div>`;
+  }).join('');
+  el.innerHTML=`<div class="insights-block">
+    <div class="insights-block-title">Ingresos — Drivers del Gap</div>
+    ${rows||'<div style="color:var(--text3);font-size:12px;padding:4px 0">Sin desviaciones significativas</div>'}
+  </div>`;
+}
+
+function insightsRenderCostos(real,ppto_){
+  const el=document.getElementById('insightsCostos');
+  if(!el) return;
+  const realCos=real.realCos||{},ppCos=ppto_.ppCos||{};
+  const tcR=sumObj(realCos),tcP=sumObj(ppCos);
+  const gapTot=tcR-tcP;
+  const cats=new Set([...Object.keys(realCos),...Object.keys(ppCos)]);
+  const catRows=[...cats].sort().map(c=>{
+    const rv=realCos[c]||0,pv=ppCos[c]||0;
+    const g=rv-pv,gp=pv?g/Math.abs(pv):0;
+    const flag=gp>0.2?` <span class="insights-flag flag-recurrente">SOBRE PPTO</span>`:'';
+    const d=g>0?'🔴':'🟢';
+    return `<div class="insights-row">
+      <span>${d}</span>
+      <span class="insights-erp-name">${c}</span>
+      <span class="insights-gap-val ${g>0?'semaforo-rojo':'semaforo-verde'}">${fmtM(g)}</span>
+      <span class="insights-gap-pct">${pv?(g>=0?'+':'')+((g/Math.abs(pv))*100).toFixed(1)+'%':'—'}</span>
+      ${flag}
+    </div>`;
+  }).join('');
+  const alert_=tcP&&(tcR/Math.abs(tcP)-1)>0.1?
+    `<div class="insights-row" style="background:rgba(220,38,38,.06);border-radius:6px;padding:8px 10px;margin-bottom:4px"><span>⚠️</span><span style="color:#dc2626;font-size:12px">Costos totales >10% sobre PPTO — revisión requerida</span></div>`:'';
+  el.innerHTML=`<div class="insights-block">
+    <div class="insights-block-title">Costos Directos — Gap total <span class="${gapTot>0?'semaforo-rojo':'semaforo-verde'}">${fmtM(gapTot)}</span></div>
+    ${alert_}${catRows||'<div style="color:var(--text3);font-size:12px">Sin datos de costos</div>'}
+  </div>`;
+}
+
+function insightsRenderSGA(real,ppto_){
+  const el=document.getElementById('insightsSGA');
+  if(!el) return;
+  const realGav=real.realGav||{},ppGav=ppto_.ppGav||{};
+  const cats=new Set([...Object.keys(realGav),...Object.keys(ppGav)]);
+  cats.delete('Depreciación');
+  let gapExCorp=0;
+  const catRows=[...cats].sort().map(c=>{
+    const rv=realGav[c]||0,pv=ppGav[c]||0;
+    const g=rv-pv,gp=pv?g/Math.abs(pv):0;
+    const isCorp=c.toLowerCase().includes('corporativ');
+    if(!isCorp) gapExCorp+=g;
+    const flag=!isCorp&&gp>0.2?` <span class="insights-flag flag-recurrente">SOBRE PPTO</span>`:
+               isCorp?` <span class="insights-flag flag-mixto">AJUSTE CONTABLE</span>`:'';
+    const d=isCorp?'⚪':(g>0?'🔴':'🟢');
+    return `<div class="insights-row">
+      <span>${d}</span>
+      <span class="insights-erp-name" style="${isCorp?'color:var(--text3)':''}">${c}</span>
+      <span class="insights-gap-val ${isCorp?'':g>0?'semaforo-rojo':'semaforo-verde'}">${fmtM(g)}</span>
+      <span class="insights-gap-pct">${pv?(g>=0?'+':'')+((g/Math.abs(pv))*100).toFixed(1)+'%':'—'}</span>
+      ${flag}
+    </div>`;
+  }).join('');
+  el.innerHTML=`<div class="insights-block">
+    <div class="insights-block-title">SG&A ex-Corporativo — Gap neto <span class="${gapExCorp<=0?'semaforo-verde':'semaforo-rojo'}">${fmtM(gapExCorp)}</span></div>
+    ${catRows||'<div style="color:var(--text3);font-size:12px">Sin datos de GAVs</div>'}
+  </div>`;
+}
+
+function insightsRenderBridge(real,ppto_){
+  const el=document.getElementById('insightsBridge');
+  if(!el) return;
+  if(typeof brgAllDataLoaded!=='function'||!brgAllDataLoaded()){ el.innerHTML=''; return; }
+  try{
+    const [i0,i1]=pptoRange();
+    // brgGetErpMetrics usa strings "YYYY-MM"
+    const startM=`2026-${String(i0+1).padStart(2,'0')}`;
+    const endM=`2026-${String(i1).padStart(2,'0')}`;
+    const cards=PPTO_ERPS.filter(e=>e!=='Otros').map(erp=>{
+      try{
+        const m=brgGetErpMetrics(erp,startM,endM,true);
+        if(!m||!m.bop) return '';
+        const bop=Math.abs(m.bop);
+        const churnPct=bop?Math.abs(m.churn)/bop:0;
+        const downsellPct=bop?Math.abs(m.downsell)/bop:0;
+        const netRetPct=bop?m.netRet/bop:0;
+        const newMrrPct=bop?Math.abs(m.newMRR)/bop:0;
+        const diags=[];
+        if(churnPct>INSIGHTS_CONFIG.churnAlertPct) diags.push(`Churn elevado (${(churnPct*100).toFixed(1)}%) → impacto en base recurrente`);
+        if(downsellPct>INSIGHTS_CONFIG.downsellAlertPct) diags.push(`Downsell significativo (${(downsellPct*100).toFixed(1)}%) — clientes reduciendo ticket`);
+        if(netRetPct>INSIGHTS_CONFIG.netRetMinPct){
+          const erpGap=(erp==='REX'?PPTO_REX_MERGE:[erp]).reduce((s,src)=>s+mgrErpSum(real.realIng,src),0)-((ppto_.ppIng[erp]&&ppto_.ppIng[erp].total)||0);
+          if(erpGap<0) diags.push(`Base estable (Net Ret ${(netRetPct*100).toFixed(1)}%) — gap en consultoría/extracción`);
+        }
+        if(newMrrPct<INSIGHTS_CONFIG.newMrrMinPct) diags.push(`New MRR débil (${(newMrrPct*100).toFixed(1)}%) — adquisición insuficiente`);
+        if(m.eop<m.bop) diags.push(`⚠️ MRR encogió en el período — base recurrente en contracción`);
+        const metrics=[
+          `Churn ${(churnPct*100).toFixed(1)}%${churnPct>INSIGHTS_CONFIG.churnAlertPct?' ⚠️':''}`,
+          `Net Ret ${(netRetPct*100).toFixed(1)}%`,
+          `New MRR ${(newMrrPct*100).toFixed(1)}%${newMrrPct<INSIGHTS_CONFIG.newMrrMinPct?' ⚠️':''}`
+        ].join(' · ');
+        return `<div class="insights-bridge-card">
+          <div class="insights-bridge-erp">${ERP_NAMES[erp]||erp}</div>
+          <div class="insights-bridge-metrics">${metrics}</div>
+          ${diags.length?`<div class="insights-bridge-diag">→ ${diags.join('; ')}</div>`:''}
+        </div>`;
+      }catch(e){ return ''; }
+    }).filter(Boolean).join('');
+    if(!cards){ el.innerHTML=''; return; }
+    el.innerHTML=`<div class="insights-block">
+      <div class="insights-block-title">MRR Bridge — Diagnóstico por ERP</div>
+      ${cards}
+    </div>`;
+  }catch(e){ el.innerHTML=''; }
+}
+
+function insightsRenderRndMode(){
+  const container=document.getElementById('pptoInsights');
+  if(!container) return;
+  const hasRnd=Object.keys((rndData||{})[2026]||{}).length>0;
+  if(!hasRnd){ container.style.display='none'; return; }
+  try{
+    const [i0,i1]=pptoRndRange(); // 0-based inclusive
+    const real=pptoRndRealCalc(i0,i1);
+
+    // Totales real
+    const rTotIng=Object.values(real.ing).reduce((a,b)=>a+b,0);
+    const rTotCv=Object.values(real.cv).reduce((a,b)=>a+b,0);   // negativo
+    const rTotSga=Object.values(real.sga).reduce((a,b)=>a+b,0); // negativo
+    const rEbitdaAdj=rTotIng+rTotCv+rTotSga+real.adjR+real.adjC;
+
+    // PPTO aggregations
+    const pIng={},pCv={},pSga={};
+    PPTO_RND_ING_ORDER.forEach(c=>pIng[c]=pptoRndSumKeys([PPTO_RND_ING_KEY[c]],i0,i1));
+    PPTO_RND_CV_ORDER.forEach(c=>pCv[c]=pptoRndSumKeys(PPTO_RND_CV_KEY[c]||[],i0,i1));
+    PPTO_RND_SGA_ORDER.forEach(c=>pSga[c]=pptoRndSumKeys(PPTO_RND_SGA_KEY[c]||[],i0,i1));
+    const pTotIng=Object.values(pIng).reduce((a,b)=>a+b,0);
+    const pTotCv=Object.values(pCv).reduce((a,b)=>a+b,0);
+    const pTotSga=Object.values(pSga).reduce((a,b)=>a+b,0);
+    const pAdjR=Math.abs(pptoRndSumKeys(['arriendo'],i0,i1))*0.5;
+    const pAdjC=Math.abs(pptoRndSumKeys(['corporativo'],i0,i1));
+    const pEbitdaAdj=pTotIng+pTotCv+pTotSga+pAdjR+pAdjC;
+
+    // Objetos normalizados para funciones genéricas
+    // costos y gavs como positivos (valor absoluto del gasto)
+    const realNorm={
+      totalIngresos:rTotIng, costos:-rTotCv, gavs:-rTotSga, ebitda:rEbitdaAdj,
+      realCos: Object.fromEntries(PPTO_RND_CV_ORDER.map(c=>[c,Math.abs(real.cv[c]||0)])),
+      realGav: Object.fromEntries(PPTO_RND_SGA_ORDER.map(c=>[c,Math.abs(real.sga[c]||0)]))
+    };
+    const pptoNorm={
+      totalIngresos:pTotIng, costos:-pTotCv, gavs:-pTotSga, ebitda:pEbitdaAdj,
+      ppCos: Object.fromEntries(PPTO_RND_CV_ORDER.map(c=>[c,Math.abs(pCv[c]||0)])),
+      ppGav: Object.fromEntries(PPTO_RND_SGA_ORDER.map(c=>[c,Math.abs(pSga[c]||0)]))
+    };
+
+    container.style.display='block';
+    const periodLbl=pptoView==='anual'?'Año 2026':(pptoView==='ytd'?`YTD · Ene–${MESES[i1]}`:MESES[i0]);
+    const lbl=document.getElementById('insightsPeriodLabel');
+    if(lbl) lbl.textContent=`· ${periodLbl} (Random)`;
+
+    insightsRenderSummaryBar(realNorm, pptoNorm);
+
+    // Ingresos por categoría (en lugar de ERPs)
+    const ingEl=document.getElementById('insightsIngresos');
+    if(ingEl){
+      const cats=PPTO_RND_ING_ORDER;
+      const dot=gp=>gp<-INSIGHTS_CONFIG.gapRedPct?'🔴':(gp<-INSIGHTS_CONFIG.gapYellowPct?'🟡':'🟢');
+      const rows=cats.map(c=>{
+        const rv=real.ing[c]||0, pv=pIng[c]||0;
+        const gap=rv-pv, gapPct=pv?gap/Math.abs(pv):0;
+        if(Math.abs(gap)<500000) return '';
+        // Flag según categoría
+        const isRec=(c==='Mantención'||c==='ASP');
+        const isExtr=(c==='Implementación'||c==='Cloud');
+        const isLic=(c==='Licencias');
+        const flag=isRec?'RECURRENTE':isExtr?'EXTRACCIÓN':isLic?'PIPELINE':'MIXTO';
+        const flagCls={RECURRENTE:'flag-recurrente',EXTRACCIÓN:'flag-extraccion',PIPELINE:'flag-pipeline',MIXTO:'flag-mixto'}[flag];
+        const sign=gapPct>=0?'+':'';
+        return `<div class="insights-row">
+          <span>${dot(gapPct)}</span>
+          <span class="insights-erp-name">${c}</span>
+          <span class="insights-gap-val ${gap<0?'semaforo-rojo':'semaforo-verde'}">${fmtM(gap)}</span>
+          <span class="insights-gap-pct">(${sign}${(gapPct*100).toFixed(1)}%)</span>
+          <span class="insights-flag ${flagCls}">${flag}</span>
+        </div>`;
+      }).join('');
+      ingEl.innerHTML=`<div class="insights-block">
+        <div class="insights-block-title">Ingresos — Drivers del Gap</div>
+        ${rows||'<div style="color:var(--text3);font-size:12px;padding:4px 0">Sin desviaciones significativas</div>'}
+      </div>`;
+    }
+
+    // Costos y SGA (reusar funciones genéricas con datos normalizados)
+    insightsRenderCostos(realNorm, pptoNorm);
+    insightsRenderSGA(realNorm, pptoNorm);
+
+    // Bridge con ERP "Random"
+    const bridgeEl=document.getElementById('insightsBridge');
+    if(bridgeEl){
+      if(typeof brgAllDataLoaded==='function'&&brgAllDataLoaded()){
+        try{
+          const startM=`2026-${String(i0+1).padStart(2,'0')}`;
+          const endM=`2026-${String(i1+1).padStart(2,'0')}`;
+          const m=brgGetErpMetrics('Random',startM,endM,true);
+          if(m&&m.bop){
+            const bp=Math.abs(m.bop);
+            const churnPct=Math.abs(m.churn)/bp, netRetPct=m.netRet/bp, newMrrPct=Math.abs(m.newMRR)/bp;
+            const diags=[];
+            if(churnPct>INSIGHTS_CONFIG.churnAlertPct) diags.push(`Churn elevado (${(churnPct*100).toFixed(1)}%)`);
+            if(m.downsell&&Math.abs(m.downsell)/bp>INSIGHTS_CONFIG.downsellAlertPct) diags.push(`Downsell significativo (${(Math.abs(m.downsell)/bp*100).toFixed(1)}%)`);
+            if(netRetPct>INSIGHTS_CONFIG.netRetMinPct) diags.push(`Base estable (Net Ret ${(netRetPct*100).toFixed(1)}%)`);
+            if(newMrrPct<INSIGHTS_CONFIG.newMrrMinPct) diags.push(`New MRR débil (${(newMrrPct*100).toFixed(1)}%)`);
+            if(m.eop<m.bop) diags.push('⚠️ MRR encogió en el período');
+            const metrics=[
+              `Churn ${(churnPct*100).toFixed(1)}%${churnPct>INSIGHTS_CONFIG.churnAlertPct?' ⚠️':''}`,
+              `Net Ret ${(netRetPct*100).toFixed(1)}%`,
+              `New MRR ${(newMrrPct*100).toFixed(1)}%${newMrrPct<INSIGHTS_CONFIG.newMrrMinPct?' ⚠️':''}`
+            ].join(' · ');
+            bridgeEl.innerHTML=`<div class="insights-block">
+              <div class="insights-block-title">MRR Bridge — Random Chile</div>
+              <div class="insights-bridge-card">
+                <div class="insights-bridge-erp">Random Chile</div>
+                <div class="insights-bridge-metrics">${metrics}</div>
+                ${diags.length?`<div class="insights-bridge-diag">→ ${diags.join('; ')}</div>`:''}
+              </div>
+            </div>`;
+          } else { bridgeEl.innerHTML=''; }
+        }catch(e){ bridgeEl.innerHTML=''; }
+      } else { bridgeEl.innerHTML=''; }
+    }
+
+    // Reset AI button
+    const btn=document.getElementById('insightsAIBtn');
+    const key=insightsGetCacheKey();
+    if(btn&&btn.dataset.period!==key){
+      btn.disabled=false; btn.textContent='✦ Generar análisis ejecutivo'; btn.dataset.period=key;
+      const res=document.getElementById('insightsAIResult');
+      if(res){ const cached=sessionStorage.getItem(key); if(cached) insightsShowAIResult(cached); else res.innerHTML=''; }
+    }
+  }catch(err){
+    console.error('insightsRenderRndMode:',err);
+    document.getElementById('pptoInsights').style.display='none';
+  }
+}
+
+function insightsBuildSummary(){
+  const [i0,i1]=pptoRange();
+  const realRows=pptoRealFilter(i0,i1);
+  const realIng=pptoCalcIngDetailed(realRows);
+  const ppIng=pptoIngByErp(i0,i1);
+  const realCos=mgrCalcCostos(realRows);
+  const ppCos=pptoCostosAgg(i0,i1);
+  const gavOut=mgrCalcGav(realRows);
+  const realGav=gavOut.res;
+  const ppGavOut=pptoGavsAgg(i0,i1);
+  const ppGav=ppGavOut.res;
+  let totRing=0,totPing=0;
+  PPTO_ERPS.forEach(e=>{
+    totRing+=(e==='REX'?PPTO_REX_MERGE:[e]).reduce((s,src)=>s+mgrErpSum(realIng,src),0);
+    totPing+=(ppIng[e]&&ppIng[e].total)||0;
+  });
+  const covered=new Set([...PPTO_ERPS,...PPTO_REX_MERGE]);
+  ERP_ORDER.forEach(e=>{ if(!covered.has(e)) totRing+=mgrErpSum(realIng,e); });
+  const tcR=sumObj(realCos),tcP=sumObj(ppCos);
+  const tgR=sumObj(realGav),tgP=sumObj(ppGav);
+  const da=realGav['Depreciación']||0;
+  const ppS=pptoSummary(i0,i1);
+  const realAdj=pptoRealAdj(realRows).total;
+  const ppAdj=ppGavOut.adj.total;
+  const realEBITDAAdj=totRing-tcR-tgR+da+realAdj;
+  const ppEBITDAAdj=ppS.ebitda+ppAdj;
+  const periodLbl=pptoView==='anual'?'Año 2026':(pptoView==='ytd'?`YTD Ene–${MESES[i1-1]}`:MESES[i0]);
+  const driversIng=PPTO_ERPS.map(e=>{
+    const rTot=(e==='REX'?PPTO_REX_MERGE:[e]).reduce((s,src)=>s+mgrErpSum(realIng,src),0);
+    const pTot=(ppIng[e]&&ppIng[e].total)||0;
+    const gap=rTot-pTot,gapPct=pTot?gap/Math.abs(pTot):0;
+    const rR=realIng[e]||{},pSub=(ppIng[e]&&ppIng[e].sub)||{};
+    const subs=new Set([...Object.keys(rR),...Object.keys(pSub)]);
+    const subGaps={};subs.forEach(s=>{subGaps[s]=(rR[s]||0)-(pSub[s]||0);});
+    const aspG=Math.abs((subGaps['ASP']||0)+(subGaps['Mantención']||0));
+    const consG=Math.abs(subGaps['Consultoría']||0);
+    const licG=Math.abs(subGaps['Licencias']||0);
+    const absGap=Math.abs(gap);
+    let flag='MIXTO';
+    if(absGap>0){if(consG/absGap>0.5)flag='EXTRACCIÓN';else if(aspG/absGap>0.5)flag='RECURRENTE';else if(licG/absGap>0.5)flag='PIPELINE';}
+    let diag='';
+    try{
+      if(typeof brgAllDataLoaded==='function'&&brgAllDataLoaded()){
+        const bm=brgGetErpMetrics(e,`2026-${String(i0+1).padStart(2,'0')}`,`2026-${String(i1).padStart(2,'0')}`,true);
+        if(bm&&Math.abs(bm.bop)){const bp=Math.abs(bm.bop);if(Math.abs(bm.churn)/bp>INSIGHTS_CONFIG.churnAlertPct)diag+=`Churn ${(Math.abs(bm.churn)/bp*100).toFixed(1)}% elevado. `;if(Math.abs(bm.newMRR)/bp<INSIGHTS_CONFIG.newMrrMinPct)diag+=`New MRR ${(Math.abs(bm.newMRR)/bp*100).toFixed(1)}% débil.`;}
+      }
+    }catch(err){}
+    return{erp:ERP_NAMES[e]||e,gap:(gap/1e6).toFixed(1)+' MM',gapPct:(gapPct*100).toFixed(1)+'%',flag,diagnostico:diag.trim()||'—'};
+  }).sort((a,b)=>parseFloat(a.gap)-parseFloat(b.gap));
+  let bridgeSummary=null;
+  try{
+    if(typeof brgAllDataLoaded==='function'&&brgAllDataLoaded()){
+      const startM=`2026-${String(i0+1).padStart(2,'0')}`,endM=`2026-${String(i1).padStart(2,'0')}`;
+      bridgeSummary=PPTO_ERPS.filter(e=>e!=='Otros').map(e=>{
+        const m=brgGetErpMetrics(e,startM,endM,true);
+        if(!m||!m.bop) return null;
+        const bp=Math.abs(m.bop);
+        const churnP=(Math.abs(m.churn)/bp*100).toFixed(1);
+        const netRetP=(m.netRet/bp*100).toFixed(1);
+        const newMrrP=(Math.abs(m.newMRR)/bp*100).toFixed(1);
+        const ds=[];
+        if(Math.abs(m.churn)/bp>INSIGHTS_CONFIG.churnAlertPct)ds.push(`Churn ${churnP}% elevado`);
+        if(Math.abs(m.newMRR)/bp<INSIGHTS_CONFIG.newMrrMinPct)ds.push('New MRR débil');
+        if(m.eop<m.bop)ds.push('MRR en contracción');
+        return{erp:ERP_NAMES[e]||e,netRet:netRetP,churn:churnP,newMrr:newMrrP,diagnostico:ds.join('; ')||'Normal'};
+      }).filter(Boolean);
+    }
+  }catch(err){}
+  const topCostCat=Object.entries(realCos).sort((a,b)=>b[1]-a[1])[0];
+  const gavCats=new Set([...Object.keys(realGav),...Object.keys(ppGav)]);gavCats.delete('Depreciación');
+  let sgaGap=0,ahorros=0,sobrePpto=0;
+  gavCats.forEach(c=>{if(c.toLowerCase().includes('corporativ'))return;const g=(realGav[c]||0)-(ppGav[c]||0);sgaGap+=g;if(g<0)ahorros+=Math.abs(g);else sobrePpto+=g;});
+  return{
+    periodo:periodLbl,
+    ingresos:{real:(totRing/1e6).toFixed(1)+' MM',ppto:(totPing/1e6).toFixed(1)+' MM',gapPct:totPing?((totRing-totPing)/Math.abs(totPing)*100).toFixed(1):'—'},
+    ebitda:{real:(realEBITDAAdj/1e6).toFixed(1)+' MM',ppto:(ppEBITDAAdj/1e6).toFixed(1)+' MM',gap:((realEBITDAAdj-ppEBITDAAdj)/1e6).toFixed(1)+' MM'},
+    driversIngresos:driversIng,
+    costos:{gap:((tcR-tcP)/1e6).toFixed(1)+' MM',gapPct:tcP?((tcR-tcP)/Math.abs(tcP)*100).toFixed(1)+'%':'—',topDriver:topCostCat?topCostCat[0]:'—'},
+    sga:{gapExCorp:(sgaGap/1e6).toFixed(1)+' MM',ahorros:(ahorros/1e6).toFixed(1)+' MM',sobrePpto:(sobrePpto/1e6).toFixed(1)+' MM'},
+    bridge:bridgeSummary
+  };
+}
+
+function insightsBuildSummaryRnd(){
+  const [i0,i1]=pptoRndRange(); // 0-based inclusive
+  const real=pptoRndRealCalc(i0,i1);
+  const pIng={},pCv={},pSga={};
+  PPTO_RND_ING_ORDER.forEach(c=>pIng[c]=pptoRndSumKeys([PPTO_RND_ING_KEY[c]],i0,i1));
+  PPTO_RND_CV_ORDER.forEach(c=>pCv[c]=pptoRndSumKeys(PPTO_RND_CV_KEY[c]||[],i0,i1));
+  PPTO_RND_SGA_ORDER.forEach(c=>pSga[c]=pptoRndSumKeys(PPTO_RND_SGA_KEY[c]||[],i0,i1));
+  const pAdjR=Math.abs(pptoRndSumKeys(['arriendo'],i0,i1))*0.5;
+  const pAdjC=Math.abs(pptoRndSumKeys(['corporativo'],i0,i1));
+
+  const rTotIng=Object.values(real.ing).reduce((a,b)=>a+b,0);
+  const rTotCv=Object.values(real.cv).reduce((a,b)=>a+b,0);
+  const rTotSga=Object.values(real.sga).reduce((a,b)=>a+b,0);
+  const rEbitdaAdj=rTotIng+rTotCv+rTotSga+real.adjR+real.adjC;
+  const pTotIng=Object.values(pIng).reduce((a,b)=>a+b,0);
+  const pTotCv=Object.values(pCv).reduce((a,b)=>a+b,0);
+  const pTotSga=Object.values(pSga).reduce((a,b)=>a+b,0);
+  const pEbitdaAdj=pTotIng+pTotCv+pTotSga+pAdjR+pAdjC;
+
+  const periodLbl=pptoView==='anual'?'Año 2026':(pptoView==='ytd'?`YTD Ene–${MESES[i1]}`:MESES[i0]);
+
+  // Drivers de ingresos por categoría
+  const driversIngresos=PPTO_RND_ING_ORDER.map(c=>{
+    const rv=real.ing[c]||0, pv=pIng[c]||0;
+    const gap=rv-pv, gapPct=pv?gap/Math.abs(pv):0;
+    const isRec=(c==='Mantención'||c==='ASP');
+    const isExtr=(c==='Implementación'||c==='Cloud');
+    const flag=isRec?'RECURRENTE':isExtr?'EXTRACCIÓN':c==='Licencias'?'PIPELINE':'MIXTO';
+    return{erp:c,gap:(gap/1e6).toFixed(1)+' MM',gapPct:(gapPct*100).toFixed(1)+'%',flag,diagnostico:'—'};
+  }).sort((a,b)=>parseFloat(a.gap)-parseFloat(b.gap));
+
+  // Bridge Random
+  let bridgeSummary=null;
+  try{
+    if(typeof brgAllDataLoaded==='function'&&brgAllDataLoaded()){
+      const startM=`2026-${String(i0+1).padStart(2,'0')}`;
+      const endM=`2026-${String(i1+1).padStart(2,'0')}`;
+      const m=brgGetErpMetrics('Random',startM,endM,true);
+      if(m&&m.bop){
+        const bp=Math.abs(m.bop);
+        const churnP=(Math.abs(m.churn)/bp*100).toFixed(1);
+        const netRetP=(m.netRet/bp*100).toFixed(1);
+        const newMrrP=(Math.abs(m.newMRR)/bp*100).toFixed(1);
+        const ds=[];
+        if(Math.abs(m.churn)/bp>INSIGHTS_CONFIG.churnAlertPct) ds.push(`Churn ${churnP}% elevado`);
+        if(Math.abs(m.newMRR)/bp<INSIGHTS_CONFIG.newMrrMinPct) ds.push('New MRR débil');
+        if(m.eop<m.bop) ds.push('MRR en contracción');
+        bridgeSummary=[{erp:'Random Chile',netRet:netRetP,churn:churnP,newMrr:newMrrP,diagnostico:ds.join('; ')||'Normal'}];
+      }
+    }
+  }catch(e){}
+
+  // Top cost driver (CV)
+  const topCv=Object.entries(real.cv).sort((a,b)=>a[1]-b[1])[0]; // más negativo = mayor costo
+  // SGA ex-corp
+  let sgaGap=0,ahorros=0,sobrePpto=0;
+  PPTO_RND_SGA_ORDER.forEach(c=>{
+    if(c==='Corporativo') return;
+    const rv=Math.abs(real.sga[c]||0), pv=Math.abs(pSga[c]||0);
+    const g=rv-pv;
+    sgaGap+=g;
+    if(g<0) ahorros+=Math.abs(g); else sobrePpto+=g;
+  });
+
+  return{
+    periodo:periodLbl+' (Random Chile)',
+    ingresos:{real:(rTotIng/1e6).toFixed(1)+' MM',ppto:(pTotIng/1e6).toFixed(1)+' MM',
+      gapPct:pTotIng?((rTotIng-pTotIng)/Math.abs(pTotIng)*100).toFixed(1):'—'},
+    ebitda:{real:(rEbitdaAdj/1e6).toFixed(1)+' MM',ppto:(pEbitdaAdj/1e6).toFixed(1)+' MM',
+      gap:((rEbitdaAdj-pEbitdaAdj)/1e6).toFixed(1)+' MM'},
+    driversIngresos,
+    costos:{gap:((-rTotCv+pTotCv)/1e6).toFixed(1)+' MM',
+      gapPct:pTotCv?((rTotCv-pTotCv)/Math.abs(pTotCv)*100).toFixed(1)+'%':'—',
+      topDriver:topCv?topCv[0]:'—'},
+    sga:{gapExCorp:(sgaGap/1e6).toFixed(1)+' MM',ahorros:(ahorros/1e6).toFixed(1)+' MM',sobrePpto:(sobrePpto/1e6).toFixed(1)+' MM'},
+    bridge:bridgeSummary
+  };
+}
+
+function insightsBuildPrompt(summary){
+  return `Eres el analista financiero de Grupo Sable, empresa chilena de software ERP.
+Analiza el desempeño financiero del período ${summary.periodo} y genera un informe estructurado.
+
+INSTRUCCIONES DE TONO (obligatorias):
+- Usa lenguaje estrictamente descriptivo y neutro. Sin adjetivos calificativos ni dramatismo.
+- Nunca uses palabras como: crítico, severo, brutal, colapso, crisis, deterioro, alarmante, preocupante.
+- Describe lo que muestran los números, no lo que implican emocionalmente.
+- Un gap vs ppto es una desviación respecto al plan, no un problema del negocio necesariamente.
+- Correcto: "MANTENCIÓN se ubica 13.7% bajo presupuesto". Incorrecto: "Crisis de retención" o "deterioro del 13%".
+- Cuando menciones categorías de ingresos o tipos de problema, escríbelas siempre en MAYÚSCULAS: RETENCIÓN, EXTRACCIÓN, ADQUISICIÓN, MANTENCIÓN, IMPLEMENTACIÓN, ASP.
+- NO hacer recomendaciones sobre pricing, tarifas ni renovaciones contractuales.
+- La sección FOCO SUGERIDO se limita a acciones comerciales y operacionales concretas: pipeline, capacidad de delivery, foco del equipo comercial.
+- Correcto: "Evaluar pipeline de IMPLEMENTACIÓN". Incorrecto: "Revisar pricing y renovaciones".
+
+DATOS DEL PERÍODO:
+- Ingresos reales: ${summary.ingresos.real} vs PPTO ${summary.ingresos.ppto} (${summary.ingresos.gapPct}%)
+- EBITDA real: ${summary.ebitda.real} vs PPTO ${summary.ebitda.ppto}
+- Gap EBITDA: ${summary.ebitda.gap}
+
+DATOS POR LÍNEA (ingresos):
+${summary.driversIngresos.map(d=>`- ${d.erp}: ${d.gap} (${d.gapPct} vs ppto) — tipo: ${d.flag}${d.diagnostico!=='—'?' — '+d.diagnostico:''}`).join('\n')}
+
+COSTOS:
+- Gap costos directos: ${summary.costos.gap} (${summary.costos.gapPct})
+- Principal categoría: ${summary.costos.topDriver}
+
+SG&A:
+- Gap SG&A (ex corporativo): ${summary.sga.gapExCorp}
+- Bajo presupuesto: ${summary.sga.ahorros} / Sobre presupuesto: ${summary.sga.sobrePpto}
+
+MÉTRICAS MRR BRIDGE (${summary.bridge?'disponible':'no disponible'}):
+${summary.bridge?summary.bridge.map(b=>`- ${b.erp}: Net Ret ${b.netRet}%, Churn ${b.churn}%, New MRR ${b.newMrr}% → ${b.diagnostico}`).join('\n'):'Sin datos de bridge cargados'}
+${summary.bridge&&summary.bridge.length>1?'\nAnalizar cada ERP del bridge de forma individual en la sección TIPO DE DESVIACIÓN — no consolidar como grupo.':''}
+
+ESTRUCTURA OBLIGATORIA DEL OUTPUT (en este orden, con estos títulos exactos):
+
+## Resumen del período
+2-3 oraciones descriptivas con los números principales. Neutro, sin juicios.
+
+## Drivers del gap
+Exactamente los 4 ítems que más explican la diferencia vs presupuesto, ordenados de mayor a menor impacto absoluto. Formato obligatorio para cada uno:
+1. [Ítem]: [monto MM] · [% del gap total de ingresos] · [% desviación vs ppto]
+
+## Tipo de desviación
+Para cada ERP con datos de bridge disponibles, indicar individualmente si la desviación es RETENCIÓN (ASP/MANTENCIÓN bajo ppto), EXTRACCIÓN (CONSULTORÍA/IMPLEMENTACIÓN bajo ppto) o ADQUISICIÓN (New MRR bajo). Puede haber más de un tipo activo por ERP.
+
+## Foco sugerido
+1-2 acciones concretas derivadas de los datos. Sin retórica. Sin mencionar pricing ni renovaciones.
+
+Máximo 300 palabras en total. Usa markdown (** para negritas, ## para títulos).`;
+}
+
+async function insightsCallAPI(cacheKey){
+  const btn=document.getElementById('insightsAIBtn');
+  const result=document.getElementById('insightsAIResult');
+  btn.disabled=true; btn.textContent='⏳ Analizando...';
+  result.innerHTML='<div class="insights-loading">Generando análisis ejecutivo con Claude AI...</div>';
+  try{
+    const summary=pptoComp==='rnd'?insightsBuildSummaryRnd():insightsBuildSummary();
+    const prompt=insightsBuildPrompt(summary);
+    const res=await fetch('https://dashboardfinanciero.pnovoav.workers.dev/claude',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,messages:[{role:'user',content:prompt}]})
+    });
+    if(!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data=await res.json();
+    const text=data.content?.[0]?.text||'Sin respuesta del modelo';
+    sessionStorage.setItem(cacheKey,text);
+    insightsShowAIResult(text);
+  }catch(err){
+    result.innerHTML=`<div class="insights-error">Error al generar análisis: ${err.message}</div>`;
+  }finally{
+    btn.disabled=false; btn.textContent='✦ Regenerar análisis';
+  }
+}
+
+function insightsMdToHtml(text){
+  return text
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/^## (.+)$/gm,'<div class="ai-h2">$1</div>')
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/^- (.+)$/gm,'<div class="ai-bullet">· $1</div>')
+    .replace(/\n\n/g,'<br><br>')
+    .replace(/\n/g,'<br>');
+}
+
+function insightsShowAIResult(text){
+  const result=document.getElementById('insightsAIResult');
+  if(result) result.innerHTML=`<div class="insights-ai-result">${insightsMdToHtml(text)}</div>`;
+}
+
+function insightsGetCacheKey(){
+  return `insights_cache_${pptoGetPeriodKey()}${pptoComp==='rnd'?'_rnd':''}`;
+}
+
+function insightsAIGenerate(){
+  const key=insightsGetCacheKey();
+  const cached=sessionStorage.getItem(key);
+  if(cached){ insightsShowAIResult(cached); return; }
+  insightsCallAPI(key);
+}
+
+/* ═══════════ THEME TOGGLE ═══════════ */
+function toggleTheme(){
+  const isDark=document.documentElement.getAttribute('data-theme')==='dark';
+  const next=isDark?'light':'dark';
+  applyTheme(next);
+  localStorage.setItem('dashTheme',next);
+}
+function applyTheme(t){
+  if(t==='dark'){
+    document.documentElement.setAttribute('data-theme','dark');
+    document.getElementById('themeIcon').innerHTML='<svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" fill="none" stroke-width="1.5" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+    document.getElementById('themeLabel').textContent='Oscuro';
+  } else {
+    document.documentElement.removeAttribute('data-theme');
+    document.getElementById('themeIcon').innerHTML='<svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" fill="none" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.22" y1="4.22" x2="6.34" y2="6.34"/><line x1="17.66" y1="17.66" x2="19.78" y2="19.78"/><line x1="19.78" y1="4.22" x2="17.66" y2="6.34"/><line x1="6.34" y1="17.66" x2="4.22" y2="19.78"/></svg>';
+    document.getElementById('themeLabel').textContent='Claro';
+  }
+}
+// Init — default light, override only if user explicitly chose dark
+(function(){
+  const saved=localStorage.getItem('dashTheme');
+  applyTheme(saved==='dark'?'dark':'light');
+})();
 
 </script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
