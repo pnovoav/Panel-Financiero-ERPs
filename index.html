@@ -4674,7 +4674,7 @@ function pptoConsolRender(){
 
   if(pptoComp==='mgr') pptoRenderAll();
   else if(pptoComp==='rnd') pptoRndRenderAll();
-  else pptoConsolRenderSummary();
+  else { pptoConsolRenderSummary(); const c=document.getElementById('pptoInsights'); if(c) c.style.display='none'; }
 }
 
 // Render del P&L resumido para Consolidado
