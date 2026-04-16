@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard Financiero — Grupo</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
 <style>
 :root{
   /* Vida de Clientes palette — light, clean */
@@ -660,6 +662,15 @@ table.brg-bridge tbody tr.pct.B td{font-weight:700;color:var(--text2);background
 
   /* Buscador */
   .bus-kv{grid-template-columns:130px 1fr}
+
+  /* PPTO — tablas con scroll horizontal */
+  #tab-ppto .sec-body { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  #tab-ppto .ppto-tbl { min-width: 520px; }
+
+  /* Insights */
+  .insights-summary-bar { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .insights-row { flex-wrap: wrap; gap: 6px; }
+  .insights-diag { flex-basis: 100%; }
 }
 
 @media(max-width:480px){
@@ -819,7 +830,213 @@ table.brg-bridge tbody tr.pct.B td{font-weight:700;color:var(--text2);background
     background:var(--surface);
     box-shadow:2px 0 4px rgba(0,0,0,.06);
   }
+
+  /* PPTO — period bar */
+  #pptoPeriodBar { flex-wrap: wrap; gap: 6px 8px; padding: 8px 10px; }
+  #pptoPeriodBar .period-label { font-size: 9px; }
+  #pptoPeriodBar .view-toggle { flex-wrap: wrap; gap: 4px; }
+  #pptoPeriodBar .divider { display: none; }
+  #pptoPeriodBar select.sel { width: 100%; }
+  /* PPTO — ocultar col PPTO$ en tablas angostas */
+  .ppto-tbl th:nth-child(3), .ppto-tbl td:nth-child(3) { display: none; }
+  /* PPTO — KPI cards */
+  #pptoKpi .kpi-card, #pptoRndKpi .kpi-card { min-width: 0; overflow: hidden; }
+  #pptoKpi .kpi-sub-split, #pptoRndKpi .kpi-sub-split { flex-direction: column; gap: 2px; }
+  /* PPTO — chips */
+  .ppto-chip { padding: 1px 5px; font-size: 9px; }
+  /* Insights */
+  .insights-summary-bar { grid-template-columns: 1fr; }
+  .insights-bridge-metrics { flex-wrap: wrap; gap: 6px; }
+  #insightsLayer2 button { width: 100%; justify-content: center; }
+
+  /* KM/LTV responsive 480px */
+  .vc-km-cards { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .km-val { font-size: 20px; }
+  .margin-label { width: 80px; font-size: 10px; }
+  .margin-input { width: 60px; }
+  .vc-lookup-btn { font-size: 12px; padding: 11px; }
+  #vida-bucket-legend-table { font-size: 10px; }
+  #vida-bucket-legend-table td { padding: 4px 6px; }
+  #tab-km, #tab-ltv { padding: 12px 10px; }
+  #tab-km .section-title, #tab-ltv .section-title { font-size: 18px; }
+  #tab-km .method-note, #tab-ltv .method-note { font-size: 10.5px; padding: 8px 12px; }
+  .result-confidence { font-size: 10.5px; padding: 7px 10px; }
 }
+
+/* ══════════════ KM / LTV TAB STYLES ══════════════ */
+
+/* Section header */
+#tab-km .vc-section-hd, #tab-ltv .vc-section-hd { margin-bottom: 20px; }
+#tab-km .section-eyebrow, #tab-ltv .section-eyebrow {
+  font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--mgr); margin-bottom: 4px;
+}
+#tab-km .section-title, #tab-ltv .section-title {
+  font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 700; color: var(--text);
+}
+#tab-km .section-sub, #tab-ltv .section-sub {
+  font-size: 12px; color: var(--text3); margin-top: 4px;
+}
+.method-note {
+  background: var(--mgr-dim); border: 1px solid var(--mgr3);
+  border-radius: 10px; padding: 10px 14px;
+  font-size: 11.5px; color: var(--mgr); margin-bottom: 20px; line-height: 1.6;
+}
+.method-note strong { color: var(--mgr); }
+
+/* KM summary cards */
+.vc-km-cards { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 20px; }
+.km-card {
+  background: var(--surface2); border-radius: 10px; padding: 14px 16px;
+  border-left: 3px solid; border-top: 1px solid var(--border);
+  border-right: 1px solid var(--border); border-bottom: 1px solid var(--border);
+}
+.km-card.time    { border-left-color: #0ea472; }
+.km-card.manager { border-left-color: var(--mgr); }
+.km-card.flexline{ border-left-color: var(--yellow); }
+.km-card.random  { border-left-color: var(--rnd); }
+.km-erp { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; }
+.km-erp.time    { color: #0ea472; }
+.km-erp.manager { color: var(--mgr); }
+.km-erp.flexline{ color: var(--yellow); }
+.km-erp.random  { color: var(--rnd); }
+.km-nums { display: flex; gap: 14px; flex-wrap: wrap; }
+.km-val { font-family: 'Syne', sans-serif; font-size: 24px; font-weight: 700; color: var(--text); line-height: 1; }
+.km-unit { font-size: 10px; color: var(--text3); font-weight: 600; }
+.km-note { font-size: 10px; color: var(--text3); margin-top: 6px; }
+
+/* Chart box */
+.vc-chart-box {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 14px; padding: 20px; margin-bottom: 16px;
+}
+.vc-chart-title { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text3); margin-bottom: 2px; }
+.vc-chart-subtitle { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 16px; }
+
+/* ERP filter buttons */
+.vc-erp-filters { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
+.vc-erp-btn {
+  padding: 4px 13px; border-radius: 100px; font-family: inherit;
+  font-size: 11px; font-weight: 600; cursor: pointer;
+  border: 1.5px solid; transition: all .15s;
+}
+.vc-erp-btn.time    { border-color: #a7f3d0; color: #0ea472; background: transparent; }
+.vc-erp-btn.time.on { background: #0ea472; color: #fff; border-color: #0ea472; }
+.vc-erp-btn.manager    { border-color: var(--mgr3); color: var(--mgr); background: transparent; }
+.vc-erp-btn.manager.on { background: var(--mgr); color: #fff; border-color: var(--mgr); }
+.vc-erp-btn.flexline    { border-color: #fcd34d; color: var(--yellow); background: transparent; }
+.vc-erp-btn.flexline.on { background: var(--yellow); color: #fff; border-color: var(--yellow); }
+.vc-erp-btn.random    { border-color: var(--rnd3); color: var(--rnd); background: transparent; }
+.vc-erp-btn.random.on { background: var(--rnd); color: #fff; border-color: var(--rnd); }
+
+/* NAR table */
+.vc-nar-wrap { overflow-x: auto; }
+table.vc-nar-table { width: 100%; border-collapse: collapse; font-size: 11px; font-family: 'DM Mono', monospace; }
+table.vc-nar-table td { padding: 4px 8px; text-align: center; }
+table.vc-nar-table td:first-child { text-align: left; white-space: nowrap; padding-right: 12px; font-weight: 500; }
+
+/* Empty state */
+.vc-empty-pane {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 80px 20px; color: var(--text3); text-align: center; gap: 12px;
+}
+.vc-empty-icon  { font-size: 48px; opacity: .5; }
+.vc-empty-title { font-size: 18px; font-weight: 700; color: var(--text2); }
+.vc-empty-desc  { font-size: 13px; max-width: 320px; line-height: 1.6; }
+
+/* Lookup / LTV form */
+.vc-lookup-wrap { display: grid; grid-template-columns: 380px 1fr; gap: 20px; align-items: start; }
+.vc-lookup-form {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 14px; padding: 24px;
+}
+.vc-form-title { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.vc-form-desc { font-size: 11.5px; color: var(--text3); margin-bottom: 20px; line-height: 1.6; }
+.vc-field { margin-bottom: 14px; }
+.vc-field label { display: block; font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text3); margin-bottom: 5px; }
+.vc-field select, .vc-field input[type="number"] {
+  width: 100%; background: var(--surface); border: 1.5px solid var(--border2);
+  border-radius: 7px; padding: 9px 12px; color: var(--text);
+  font-family: inherit; font-size: 13px; appearance: none; cursor: pointer;
+  transition: border-color .15s;
+}
+.vc-field select:focus, .vc-field input:focus {
+  outline: none; border-color: var(--mgr);
+  box-shadow: 0 0 0 3px var(--mgr-dim);
+}
+.vc-lookup-btn {
+  width: 100%; padding: 12px; background: var(--mgr); color: #fff;
+  border: none; border-radius: 8px; font-family: inherit; font-size: 14px;
+  font-weight: 700; cursor: pointer; transition: all .15s; margin-top: 6px;
+  letter-spacing: .3px;
+}
+.vc-lookup-btn:hover { background: var(--mgr2); }
+
+/* Result panel */
+.vc-result-panel {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 14px; padding: 24px; min-height: 280px;
+  min-width: 0; overflow-x: hidden;
+}
+
+/* Margin row (LTV form) */
+.margin-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.margin-label { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; width: 90px; }
+.margin-input {
+  width: 70px; background: var(--surface); border: 1.5px solid var(--border2);
+  border-radius: 7px; padding: 7px 10px; color: var(--text);
+  font-family: inherit; font-size: 12px; transition: border-color .15s;
+}
+.margin-input:focus { outline: none; border-color: var(--mgr); }
+.margin-suffix { font-size: 11px; color: var(--text3); font-weight: 500; }
+
+/* Stat warnings */
+.vc-stat-warn {
+  display: flex; align-items: flex-start; gap: 8px;
+  background: rgba(217,119,6,.08); border: 1px solid #fde68a;
+  border-radius: 8px; padding: 10px 14px; margin-bottom: 14px;
+  font-size: 11.5px; color: #92400e; line-height: 1.6;
+}
+.vc-stat-warn-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+.vc-stat-err {
+  background: rgba(220,38,38,.08); border: 1px solid #fecaca;
+  border-radius: 8px; padding: 10px 14px; margin-bottom: 14px;
+  font-size: 11.5px; color: #991b1b; line-height: 1.6;
+}
+.result-confidence {
+  display: flex; align-items: center; gap: 8px;
+  padding: 9px 13px; border-radius: 6px; font-size: 11.5px; margin-bottom: 14px;
+  font-weight: 500;
+}
+.result-confidence.high { background: rgba(5,150,105,.08); border: 1px solid #a7f3d0; color: var(--green); }
+.result-confidence.med  { background: rgba(217,119,6,.08);  border: 1px solid #fde68a; color: var(--yellow); }
+.result-confidence.low  { background: rgba(220,38,38,.08);  border: 1px solid #fecaca; color: var(--red); }
+.result-metric { background: var(--surface2); border-radius: 8px; padding: 16px; text-align: center; border: 1px solid var(--border); }
+.result-metric-val { font-family: 'Syne', sans-serif; font-size: 44px; font-weight: 700; line-height: 1; }
+.result-metric-unit { font-size: 12px; color: var(--text3); font-weight: 600; }
+.result-metric-lbl { font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--text3); margin-top: 4px; font-weight: 600; }
+.result-note {
+  font-size: 11px; color: var(--text3); line-height: 1.7; padding: 11px 14px;
+  background: var(--surface2); border-radius: 7px; border: 1px solid var(--border);
+}
+
+/* KM/LTV responsive 768px */
+@media(max-width:768px){
+  .vc-km-cards { grid-template-columns: repeat(2, 1fr); }
+  #tab-km canvas { max-width: 100%; }
+  #tab-km .vc-chart-box { padding: 14px 10px; }
+  .vc-nar-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table.vc-nar-table { min-width: 480px; font-size: 10px; }
+  #vida-ltv-result table { min-width: 400px; font-size: 10px; }
+  .vc-lookup-wrap { grid-template-columns: 1fr; }
+  #tab-km, #tab-ltv { padding: 16px 12px; }
+  /* Métricas LTV: 4 cols → 2x2 */
+  #vida-ltv-result > div[style*="grid-template-columns:1fr 1fr 1fr 1fr"] {
+    grid-template-columns: 1fr 1fr !important;
+  }
+  .result-metric-val { font-size: 30px !important; }
+}
+
 </style>
 </head>
 <body>
@@ -880,6 +1097,7 @@ async function doLogin(){
         overlay.style.display = 'none';
         document.getElementById('cloudBar').style.display = 'flex';
         cloudLoad(false);
+        vidaCloudLoad();
       }, 500);
     } else {
       throw new Error('invalid');
@@ -1256,6 +1474,8 @@ function cloudAutoSave() {
     <button class="tab-btn consol" onclick="switchTab('consol')">◈ Consolidado</button>
     <button class="tab-btn bridge" onclick="switchTab('bridge')">⇌ MRR Bridge</button>
     <button class="tab-btn ppto" onclick="switchTab('ppto')">🎯 PPTO</button>
+    <button class="tab-btn" id="tab-btn-km" onclick="switchTab('km')">SUPERVIVENCIA KM</button>
+    <button class="tab-btn" id="tab-btn-ltv" onclick="switchTab('ltv')">CALCULADOR LTV</button>
   </div>
 
   
@@ -1818,6 +2038,182 @@ function cloudAutoSave() {
     </div>
   </div>
 
+  <!-- ══════════════════════════════════════════ SUPERVIVENCIA KM TAB -->
+  <div id="tab-km" class="tab-content" style="display:none; padding:24px 0">
+
+    <div class="vc-section-hd">
+      <div class="section-eyebrow">Kaplan-Meier</div>
+      <div class="section-title">Curvas de supervivencia</div>
+      <div class="section-sub">Terminados = evento · Activos = censurados. Estimación corregida de vida real.</div>
+    </div>
+    <div class="method-note"><strong>Metodología KM:</strong> Incluye todos los clientes. Los activos aportan información censurada. La mediana KM es siempre mayor a la media de solo terminados.</div>
+
+    <!-- KM Summary Cards -->
+    <div class="vc-km-cards" id="vida-km-cards">
+      <div class="km-card time"><div class="km-erp time">TIME</div><div class="km-nums">
+        <div><div class="km-val" id="vida-km-time-med">—</div><div class="km-unit">años · mediana KM</div></div>
+        <div><div class="km-val" id="vida-km-time-rmst">—</div><div class="km-unit">años · RMST</div></div>
+        <div><div class="km-val" id="vida-km-time-n">—</div><div class="km-unit">clientes totales</div></div>
+      </div><div class="km-note" id="vida-km-time-note"></div></div>
+      <div class="km-card manager"><div class="km-erp manager">MANAGER+</div><div class="km-nums">
+        <div><div class="km-val" id="vida-km-mgr-med">—</div><div class="km-unit">años · mediana KM</div></div>
+        <div><div class="km-val" id="vida-km-mgr-rmst">—</div><div class="km-unit">años · RMST</div></div>
+        <div><div class="km-val" id="vida-km-mgr-n">—</div><div class="km-unit">clientes totales</div></div>
+      </div><div class="km-note" id="vida-km-mgr-note"></div></div>
+      <div class="km-card flexline"><div class="km-erp flexline">FLEXLINE</div><div class="km-nums">
+        <div><div class="km-val" id="vida-km-flx-med">—</div><div class="km-unit">años · mediana KM</div></div>
+        <div><div class="km-val" id="vida-km-flx-rmst">—</div><div class="km-unit">años · RMST</div></div>
+        <div><div class="km-val" id="vida-km-flx-n">—</div><div class="km-unit">clientes totales</div></div>
+      </div><div class="km-note" id="vida-km-flx-note"></div></div>
+      <div class="km-card random"><div class="km-erp random">RANDOM</div><div class="km-nums">
+        <div><div class="km-val" id="vida-km-rnd-med">—</div><div class="km-unit">años · mediana KM</div></div>
+        <div><div class="km-val" id="vida-km-rnd-rmst">—</div><div class="km-unit">años · RMST</div></div>
+        <div><div class="km-val" id="vida-km-rnd-n">—</div><div class="km-unit">clientes totales</div></div>
+      </div><div class="km-note" id="vida-km-rnd-note"></div></div>
+    </div>
+
+    <!-- Empty state -->
+    <div id="vida-empty-km" class="vc-empty-pane">
+      <div class="vc-empty-icon">📂</div>
+      <div class="vc-empty-title">Sin datos cargados</div>
+      <div class="vc-empty-desc">Carga los archivos Excel de Vida de Clientes mediante el ZIP para ver las curvas de supervivencia</div>
+    </div>
+
+    <!-- KM Content (hidden until data) -->
+    <div id="vida-content-km" style="display:none">
+
+      <!-- KM Global -->
+      <div class="vc-chart-box">
+        <div class="vc-chart-title">Global · los 4 ERPs comparados</div>
+        <div class="vc-chart-subtitle">% de clientes que siguen activos según año de vida</div>
+        <canvas id="vida-chartKM" height="70"></canvas>
+        <div style="margin-top:16px">
+          <div class="vc-chart-title" style="margin-bottom:8px">Number at Risk</div>
+          <div class="vc-nar-wrap"><table class="vc-nar-table" id="vida-nar-global-table"></table></div>
+          <div style="font-size:10.5px;color:var(--text3);margin-top:6px">En rojo cuando baja de 15 — curva pierde confianza estadística.</div>
+        </div>
+      </div>
+
+      <!-- KM By Sector -->
+      <div class="vc-chart-box">
+        <div class="vc-chart-title">Por sector · curvas comparadas</div>
+        <div class="vc-chart-subtitle">Selecciona ERP y sectores para comparar</div>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px">
+          <div class="vc-erp-filters" id="vida-km-sector-erp-filters" style="margin-bottom:0">
+            <button class="vc-erp-btn time on" onclick="vidaSwitchKMSector('Time',this)">Time</button>
+            <button class="vc-erp-btn manager" onclick="vidaSwitchKMSector('Manager+',this)">Manager+</button>
+            <button class="vc-erp-btn flexline" onclick="vidaSwitchKMSector('Flexline',this)">Flexline</button>
+            <button class="vc-erp-btn random" onclick="vidaSwitchKMSector('Random',this)">Random</button>
+          </div>
+        </div>
+        <div id="vida-km-sector-filters" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px"></div>
+        <div id="vida-warn-km-sector" style="margin-bottom:10px"></div>
+        <canvas id="vida-chartKMSector" height="70"></canvas>
+        <div style="font-size:10.5px;color:var(--text3);margin-top:10px">La línea punteada marca el 50%.</div>
+        <div style="margin-top:16px">
+          <div class="vc-chart-title" style="margin-bottom:8px">Number at Risk · sectores</div>
+          <div class="vc-nar-wrap"><table class="vc-nar-table" id="vida-nar-sector-table"></table></div>
+        </div>
+      </div>
+
+      <!-- KM By Bucket -->
+      <div class="vc-chart-box">
+        <div class="vc-chart-title">KM por bucket de ticket</div>
+        <div class="vc-chart-subtitle">Supervivencia segmentada por rango de ticket mensual — buckets fijos por ERP</div>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px">
+          <div class="vc-erp-filters" id="vida-bucket-erp-filters" style="margin-bottom:0">
+            <button class="vc-erp-btn time on" onclick="vidaSwitchKMBucket('Time',this)">Time</button>
+            <button class="vc-erp-btn manager" onclick="vidaSwitchKMBucket('Manager+',this)">Manager+</button>
+            <button class="vc-erp-btn flexline" onclick="vidaSwitchKMBucket('Flexline',this)">Flexline</button>
+            <button class="vc-erp-btn random" onclick="vidaSwitchKMBucket('Random',this)">Random</button>
+          </div>
+        </div>
+        <canvas id="vida-chartKMBucket" height="70"></canvas>
+        <div style="font-size:10.5px;color:var(--text3);margin-top:10px">Línea punteada = 50%. NR = curva no cruzó el 50%.</div>
+        <div style="margin-top:16px">
+          <div class="vc-chart-title" style="margin-bottom:8px">Resumen por bucket</div>
+          <div style="overflow-x:auto;border:1px solid var(--border);border-radius:8px">
+            <table style="width:100%;border-collapse:collapse;font-size:11px;font-family:inherit">
+              <thead><tr style="background:var(--surface2)">
+                <th style="padding:7px 10px;text-align:left;font-size:10px;color:var(--text3);font-weight:700">Bucket</th>
+                <th style="padding:7px 10px;text-align:center;font-size:10px;color:var(--text3);font-weight:700">n</th>
+                <th style="padding:7px 10px;text-align:center;font-size:10px;color:var(--text3);font-weight:700">Eventos</th>
+                <th style="padding:7px 10px;text-align:center;font-size:10px;color:var(--text3);font-weight:700">Mediana KM</th>
+                <th style="padding:7px 10px;text-align:center;font-size:10px;color:var(--text3);font-weight:700">RMST</th>
+              </tr></thead>
+              <tbody id="vida-bucket-legend-table"></tbody>
+            </table>
+          </div>
+        </div>
+        <div style="margin-top:16px">
+          <div class="vc-chart-title" style="margin-bottom:8px">Number at Risk · buckets</div>
+          <div class="vc-nar-wrap"><table class="vc-nar-table" id="vida-nar-bucket-table"></table></div>
+        </div>
+      </div>
+
+    </div><!-- /vida-content-km -->
+  </div><!-- /tab-km -->
+
+  <!-- ══════════════════════════════════════════ CALCULADOR LTV TAB -->
+  <div id="tab-ltv" class="tab-content" style="display:none; padding:24px 0">
+
+    <div class="vc-section-hd">
+      <div class="section-eyebrow">Kaplan-Meier</div>
+      <div class="section-title">Calculador de LTV</div>
+      <div class="section-sub">LTV = Σ ticket × 12 × margen × S(t) / (1+r)^t usando curva KM del segmento más específico.</div>
+    </div>
+    <div class="method-note">
+      <strong>Fórmula:</strong> LTV = Σ ticket × 12 × margen × S(t) / (1+r)^t<br>
+      Segmentación: <strong>ERP + Rubro + Bucket → ERP + Rubro → ERP + Bucket → ERP solo</strong><br>
+      Time &lt;2/2–5/5–10/≥10 UF · Manager+ &lt;2.5/2.5–5/5–8/≥8 UF · Flex/Random &lt;5/5–10/10–20/≥20 UF
+    </div>
+
+    <!-- Empty state -->
+    <div id="vida-empty-ltv" class="vc-empty-pane">
+      <div class="vc-empty-icon">📂</div>
+      <div class="vc-empty-title">Sin datos cargados</div>
+      <div class="vc-empty-desc">Carga los archivos Excel de Vida de Clientes mediante el ZIP para activar el calculador LTV</div>
+    </div>
+
+    <!-- LTV Content -->
+    <div id="vida-content-ltv" style="display:none">
+      <div class="vc-lookup-wrap">
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div class="vc-lookup-form">
+            <div class="vc-form-title" style="margin-bottom:4px">Márgenes y descuento</div>
+            <div class="margin-row"><span class="margin-label" style="color:#0ea472">TIME</span>
+              <input type="number" id="vida-margin-time" value="40" min="1" max="100" class="margin-input"><span class="margin-suffix">% margen</span></div>
+            <div class="margin-row"><span class="margin-label" style="color:var(--mgr)">MANAGER+</span>
+              <input type="number" id="vida-margin-mgr" value="40" min="1" max="100" class="margin-input"><span class="margin-suffix">% margen</span></div>
+            <div class="margin-row"><span class="margin-label" style="color:var(--yellow)">FLEXLINE</span>
+              <input type="number" id="vida-margin-flx" value="40" min="1" max="100" class="margin-input"><span class="margin-suffix">% margen</span></div>
+            <div class="margin-row"><span class="margin-label" style="color:var(--rnd)">RANDOM</span>
+              <input type="number" id="vida-margin-rnd" value="40" min="1" max="100" class="margin-input"><span class="margin-suffix">% margen</span></div>
+            <div class="margin-row" style="margin-top:8px;padding-top:12px;border-top:1px solid var(--border)">
+              <span class="margin-label" style="color:var(--text2)">DESCUENTO</span>
+              <input type="number" id="vida-discount-rate" value="10" min="0" max="50" step="0.5" class="margin-input"><span class="margin-suffix">% anual</span></div>
+          </div>
+          <div class="vc-lookup-form">
+            <div class="vc-form-title" style="margin-bottom:4px">Perfil del Cliente</div>
+            <div class="vc-field"><label>ERP</label>
+              <select id="vida-ltv-erp" onchange="vidaPopulateLTVSectors()"><option value="">— Seleccionar —</option></select></div>
+            <div class="vc-field"><label>Sector <span style="color:var(--text3);font-size:9px">(opcional)</span></label>
+              <select id="vida-ltv-sector"><option value="">— Sin filtro —</option></select></div>
+            <div class="vc-field"><label>Ticket Mensual (UF)</label>
+              <input type="number" id="vida-ltv-ticket" placeholder="ej: 8.5" min="0.1" step="0.1"></div>
+            <button class="vc-lookup-btn" onclick="vidaCalcularLTV()">CALCULAR LTV</button>
+          </div>
+        </div>
+        <div id="vida-ltv-result" class="vc-result-panel">
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:260px;color:var(--text3);text-align:center;gap:10px">
+            <div style="font-size:36px;opacity:.25">∫</div>
+            <div style="font-size:11px;letter-spacing:1px;font-weight:500">Ingresa ERP, ticket y margen para calcular</div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /vida-content-ltv -->
+  </div><!-- /tab-ltv -->
+
 </div>
 
 <script>
@@ -1849,13 +2245,37 @@ function closeUploadPanel(id){
 }
 function toggleSec(b,a){ document.getElementById(b).classList.toggle('collapsed'); document.getElementById(a).classList.toggle('r'); }
 function switchTab(t){
+  // Deactivate all buttons
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
-  document.querySelector(`.tab-btn.${t}`).classList.add('active');
-  document.getElementById('tab-'+t).classList.add('active');
+  // Hide all tab-content panels (CSS class + inline style for KM/LTV which have inline style="display:none")
+  document.querySelectorAll('.tab-content').forEach(c=>{
+    c.classList.remove('active');
+    // Only force inline style if the panel uses it (km/ltv). Regular panels rely on CSS .active rule.
+    if(c.id==='tab-km'||c.id==='tab-ltv') c.style.display='none';
+  });
+  // Activate the chosen tab
+  const tabEl = document.getElementById('tab-'+t);
+  if(tabEl){
+    tabEl.classList.add('active');
+    if(t==='km'||t==='ltv') tabEl.style.display='block';
+  }
+  // Activate button — try class selector first, fall back to id
+  const btnByClass = document.querySelector(`.tab-btn.${t}`);
+  if(btnByClass){ btnByClass.classList.add('active'); }
+  else { const btnById = document.getElementById('tab-btn-'+t); if(btnById) btnById.classList.add('active'); }
   if(t==='consol') consolRefresh();
   if(t==='bridge' && typeof window.brgRefresh==='function') setTimeout(window.brgRefresh,80);
   if(t==='ppto' && typeof window.pptoConsolRefresh==='function') setTimeout(window.pptoConsolRefresh,40);
+  if(t==='km'){
+    setTimeout(()=>{
+      if(!vidaSTATE) return;
+      vidaBuildKMChart();
+      vidaBuildKMSectorChart();
+      vidaBuildKMBucketChart();
+      [vidaChartKM, vidaChartKMSector, vidaChartKMBucket]
+        .forEach(ch=>{ try{ if(ch) ch.resize(); }catch(e){} });
+    }, 60);
+  }
 }
 
 const MESES_FULL=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
@@ -2278,8 +2698,12 @@ function peruLoadFile(file, type){
         const KEY=[
           {idx:11,field:'ing',sign:1},
           {idx:21,field:'cogs',sign:-1},   // stored negative, display positive
+          {idx:32,field:'cogs_extStaff',sign:-1}, // External Staff → Personal Externo
           {idx:45,field:'mb',sign:1},
           {idx:50,field:'sga',sign:-1},    // stored negative, display positive
+          {idx:53,field:'sga_da',sign:-1}, // Depreciation & Amortization
+          {idx:58,field:'sga_gastos',sign:-1}, // Office Expenses → Gastos Generales
+          {idx:61,field:'sga_otros',sign:-1},  // Other Expenses → Otros
           {idx:80,field:'ebit',sign:1},
           {idx:86,field:'ebitda',sign:1},
           {idx:96,field:'noop',sign:1}
@@ -2388,7 +2812,11 @@ function peruCalc(year,month){
     sga:    md.sga||0,    // ya positivo (abs)
     ebit:   md.ebit||0,
     ebitda: md.ebitda||0,
-    noop:   md.noop||0
+    noop:   md.noop||0,
+    cogs_extStaff: md.cogs_extStaff||0,
+    sga_da:        md.sga_da||0,
+    sga_gastos:    md.sga_gastos||0,
+    sga_otros:     md.sga_otros||0,
   };
 }
 
@@ -2411,11 +2839,23 @@ function peruRenderAll(){
     <div class="kpi-card green"><div class="kpi-label">Margen Bruto</div><div class="kpi-value">${fmtM(r.mb)}</div><div class="kpi-sub">${pct(r.mb,r.ing)} margen</div></div>
     <div class="kpi-card blue"><div class="kpi-label">EBITDA</div><div class="kpi-value">${fmtM(r.ebitda)}</div><div class="kpi-sub">${pct(r.ebitda,r.ing)} margen</div></div>`;
 
+  // Cost breakdown sub-rows
+  const peruCogsCats=[
+    {label:'Personal Externo',v:r.cogs_extStaff||0},
+  ].filter(x=>x.v);
+  const peruSgaCats=[
+    {label:'D&A',v:r.sga_da||0},
+    {label:'Gastos Generales',v:r.sga_gastos||0},
+    {label:'Otros',v:r.sga_otros||0},
+  ].filter(x=>x.v);
+
   let rh=`
     <div class="pnl-row"><span class="pn">Ingresos Operacionales</span><span class="pv">${fmt(r.ing)}</span></div>
     <div class="pnl-row"><span class="pn">(-) Costo de Ventas</span><span class="pv">${fmt(r.cogs)}</span></div>
+    ${peruCogsCats.map(c=>`<div class="pnl-row sub-row"><span class="pn" style="padding-left:20px;color:var(--text3)">· ${c.label}</span><span class="pv" style="color:var(--text3)">${fmt(c.v)}</span></div>`).join('')}
     <div class="pnl-row hl"><span class="pn">= Margen Bruto</span><span class="pv">${fmtSign(r.mb)} <small>(${pct(r.mb,r.ing)})</small></span></div>
     <div class="pnl-row"><span class="pn">(-) Gastos de Admin. y Ventas (SG&A)</span><span class="pv">${fmt(r.sga)}</span></div>
+    ${peruSgaCats.map(c=>`<div class="pnl-row sub-row"><span class="pn" style="padding-left:20px;color:var(--text3)">· ${c.label}</span><span class="pv" style="color:var(--text3)">${fmt(c.v)}</span></div>`).join('')}
     <div class="pnl-row eb"><span class="pn">= EBIT</span><span class="pv">${fmtSign(r.ebit)} <small>(${pct(r.ebit,r.ing)})</small></span></div>
     <div class="pnl-row eb"><span class="pn">= EBITDA</span><span class="pv">${fmtSign(r.ebitda)} <small>(${pct(r.ebitda,r.ing)})</small></span></div>
     <div class="pnl-row"><span class="pn">Resultado No Operacional</span><span class="pv">${fmtSign(r.noop)}</span></div>
@@ -2693,16 +3133,32 @@ function rndRenderAll(){
     if(rPrev.totalIng) rndPrevYear=rPrev;
   }
 
-  // Ingresos
-  const ingOrder=['Mantención','ASP','Cloud','Implementación','Licencias','Ordename'];
+  // Ingresos — agrupados en Recurrente / No Recurrente
+  const ingRecCats=['Mantención','ASP','Cloud'];
+  const ingNoRecCats=['Implementación','Licencias','Ordename'];
+  const rndRecTotal=ingRecCats.reduce((s,c)=>s+(r.ingCats[c]||0),0);
+  const rndNoRecTotal=ingNoRecCats.reduce((s,c)=>s+(r.ingCats[c]||0),0);
+  const rndRecPrev=rndPrevYear?ingRecCats.reduce((s,c)=>s+(rndPrevYear.ingCats[c]||0),0):0;
+  const rndNoRecPrev=rndPrevYear?ingNoRecCats.reduce((s,c)=>s+(rndPrevYear.ingCats[c]||0),0):0;
+
   let ih=`<table><thead><tr><th>Línea</th><th>Monto</th><th>% Total</th>${showYoYRnd?'<th>vs Mismo Mes AA</th>':''}<th>Tipo</th></tr></thead><tbody>`;
-  ingOrder.forEach(cat=>{
-    const v=r.ingCats[cat]||0;if(!v) return;
+  // Sección Recurrente
+  ih+=`<tr style="background:rgba(37,99,235,.04)"><td colspan="${showYoYRnd?5:4}" style="padding:6px 14px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--mgr2)">Recurrente · Mantención · ASP · Cloud</td></tr>`;
+  ingRecCats.forEach(cat=>{
+    const v=r.ingCats[cat]||0; if(!v) return;
     const vPrev=rndPrevYear?.ingCats[cat]||0;
-    const isRec=RND_REC_ACCS.some(a=>RND_ING_ACCS[a]===cat);
-    const chip=isRec?'<span class="chip chip-rec">REC</span>':'<span class="chip chip-lic">—</span>';
-    ih+=`<tr class="erp-row"><td><strong>${cat}</strong>${chip}</td><td>${fmt(v)}</td><td><span class="pct-badge">${pct(v,r.totalIng)}</span></td>${showYoYRnd?`<td>${growHtml(v,vPrev)}</td>`:''}<td>${isRec?'Recurrente':'Variable'}</td></tr>`;
+    ih+=`<tr class="erp-row"><td><strong>${cat}</strong><span class="chip chip-rec">REC</span></td><td>${fmt(v)}</td><td><span class="pct-badge">${pct(v,r.totalIng)}</span></td>${showYoYRnd?`<td>${growHtml(v,vPrev)}</td>`:''}<td>Recurrente</td></tr>`;
   });
+  ih+=`<tr class="sub-row" style="background:rgba(37,99,235,.06)"><td style="padding-left:14px"><strong>Subtotal Recurrente</strong></td><td><strong>${fmt(rndRecTotal)}</strong></td><td><span class="pct-badge">${pct(rndRecTotal,r.totalIng)}</span></td>${showYoYRnd?`<td>${growHtml(rndRecTotal,rndRecPrev)}</td>`:''}<td></td></tr>`;
+  // Sección No Recurrente
+  ih+=`<tr style="background:rgba(124,58,237,.04)"><td colspan="${showYoYRnd?5:4}" style="padding:6px 14px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--rnd2)">No Recurrente · Implementación · Licencias · Ordename</td></tr>`;
+  ingNoRecCats.forEach(cat=>{
+    const v=r.ingCats[cat]||0; if(!v) return;
+    const vPrev=rndPrevYear?.ingCats[cat]||0;
+    ih+=`<tr class="erp-row"><td><strong>${cat}</strong><span class="chip chip-lic">—</span></td><td>${fmt(v)}</td><td><span class="pct-badge">${pct(v,r.totalIng)}</span></td>${showYoYRnd?`<td>${growHtml(v,vPrev)}</td>`:''}<td>Variable</td></tr>`;
+  });
+  ih+=`<tr class="sub-row" style="background:rgba(124,58,237,.06)"><td style="padding-left:14px"><strong>Subtotal No Recurrente</strong></td><td><strong>${fmt(rndNoRecTotal)}</strong></td><td><span class="pct-badge">${pct(rndNoRecTotal,r.totalIng)}</span></td>${showYoYRnd?`<td>${growHtml(rndNoRecTotal,rndNoRecPrev)}</td>`:''}<td></td></tr>`;
+  // Total
   ih+=`<tr class="total-row"><td><strong>TOTAL</strong></td><td><strong>${fmt(r.totalIng)}</strong></td><td><span class="pct-badge">100%</span></td>${showYoYRnd?`<td>${growHtml(r.totalIng,rndPrevYear?.totalIng||0)}</td>`:''}<td>${pct(r.recurrente,r.totalIng)} rec.</td></tr></tbody></table>`;
   document.getElementById('rndBIng').innerHTML=ih;
   document.getElementById('rndTotIng').textContent=fmt(r.totalIng);
@@ -2824,7 +3280,14 @@ function consolGetMgr(year,month){
   const mb=tIng-tCost, ebitda=mb-tGav, ebitdaAdj=ebitda+dep+adj;
   const erpGrupo=['Time','Flexline','Manager+','FE'];
   const erpGrupoIng=erpGrupo.reduce((a,e)=>a+mgrErpSum(ing,e),0);
-  return{tIng,mb,ebitda,ebitdaAdj,rec:mgrRecurrenteRows(rows),erpGrupoIng};
+  // 5 buckets de ingresos para consolRender
+  const _rERP=(e,c)=>(ing[e]||{})[c]||0;
+  const ingRec=_rERP('Time','Recurrente')+_rERP('Flexline','Recurrente')+_rERP('Manager+','Recurrente')+_rERP('FE','Recurrente');
+  const ingRecTerc=_rERP('REX','Recurrente')+_rERP('GeoVictoria','Recurrente');
+  const ingNoRec=(_rERP('Time','Consultoría')+_rERP('Time','Licencias'))+(_rERP('Flexline','Consultoría')+_rERP('Flexline','Licencias'))+_rERP('Manager+','Consultoría')+_rERP('FE','Consultoría');
+  const ingNoRecTerc=_rERP('REX','REX');
+  const ingOtros=mgrErpSum(ing,'Senegocia')+mgrErpSum(ing,'Ptos. Terceros')+mgrErpSum(ing,'Vixonic');
+  return{tIng,mb,ebitda,ebitdaAdj,rec:mgrRecurrenteRows(rows),erpGrupoIng,ingRec,ingRecTerc,ingNoRec,ingNoRecTerc,ingOtros};
 }
 
 function consolGetRnd(year,month){
@@ -2852,7 +3315,7 @@ function consolGetRnd(year,month){
     if(re&&reBak!==undefined) re.value=reBak;
   }
   if(!r.totalIng) return null;
-  return{tIng:r.totalIng,mb:r.mb,ebitda:r.ebitda,ebitdaAdj:r.ebitdaAdj,rec:r.recurrente};
+  return{tIng:r.totalIng,mb:r.mb,ebitda:r.ebitda,ebitdaAdj:r.ebitdaAdj,rec:r.recurrente,noRec:r.totalIng-r.recurrente};
 }
 
 function consolGetPeru(year,month){
@@ -2924,11 +3387,11 @@ function consolRender(){
 
   // Table — columnas: Manager | % | Random CL | % | Random PE | % | Consolidado | % | vs AA
   const rows2=[
-    {label:'Ingresos',         mgr:mgr?.tIng,   rnd:rnd?.tIng,   pe:peru?.tIng,   mgrY:mgrYoY?.tIng,   rndY:rndYoY?.tIng,   peY:peruYoY?.tIng},
-    {label:'Recurrentes',      mgr:mgr?.rec,    rnd:rnd?.rec,    pe:peru?.rec,    mgrY:mgrYoY?.rec,    rndY:rndYoY?.rec,    peY:peruYoY?.rec},
-    {label:'Margen Bruto',     mgr:mgr?.mb,     rnd:rnd?.mb,     pe:peru?.mb,     mgrY:mgrYoY?.mb,     rndY:rndYoY?.mb,     peY:peruYoY?.mb},
-    {label:'EBITDA',           mgr:mgr?.ebitda, rnd:rnd?.ebitda, pe:peru?.ebitda, mgrY:mgrYoY?.ebitda, rndY:rndYoY?.ebitda, peY:peruYoY?.ebitda},
-    {label:'EBITDA Ajustado',  mgr:mgr?.ebitdaAdj,rnd:rnd?.ebitdaAdj,pe:peru?.ebitdaAdj,mgrY:mgrYoY?.ebitdaAdj,rndY:rndYoY?.ebitdaAdj,peY:peruYoY?.ebitdaAdj},
+    {label:'Ingresos',        mgr:mgr?.tIng,      rnd:rnd?.tIng,      pe:peru?.tIng,      mgrY:mgrYoY?.tIng,      rndY:rndYoY?.tIng,      peY:peruYoY?.tIng,      bold:true},
+    {label:'Recurrentes',     mgr:mgr?.rec,        rnd:rnd?.rec,       pe:peru?.tIng,      mgrY:mgrYoY?.rec,       rndY:rndYoY?.rec,       peY:peruYoY?.tIng},
+    {label:'Margen Bruto',    mgr:mgr?.mb,         rnd:rnd?.mb,        pe:peru?.mb,        mgrY:mgrYoY?.mb,        rndY:rndYoY?.mb,        peY:peruYoY?.mb,        bold:true},
+    {label:'EBITDA',          mgr:mgr?.ebitda,     rnd:rnd?.ebitda,    pe:peru?.ebitda,    mgrY:mgrYoY?.ebitda,    rndY:rndYoY?.ebitda,    peY:peruYoY?.ebitda},
+    {label:'EBITDA Ajustado', mgr:mgr?.ebitdaAdj,  rnd:rnd?.ebitdaAdj, pe:peru?.ebitdaAdj, mgrY:mgrYoY?.ebitdaAdj, rndY:rndYoY?.ebitdaAdj, peY:peruYoY?.ebitdaAdj, bold:true},
   ];
 
   let th=`<table class="consol-tbl"><thead><tr>
@@ -2944,20 +3407,23 @@ function consolRender(){
     ${showYoYConsol?'<th style="color:var(--text3)">vs AA</th>':''}
   </tr></thead><tbody>`;
 
+  const mI=mgr?.tIng||0, rI=rnd?.tIng||0, pI=peru?.tIng||0;
   rows2.forEach(r=>{
-    const mv=r.mgr||0, rv=r.rnd||0, pv=r.pe||0, tv=mv+rv+pv;
-    const myv=(r.mgrY||0)+(r.rndY||0)+(r.peY||0);
-    const mI=mgr?.tIng||0, rI=rnd?.tIng||0, pI=peru?.tIng||0;
-    th+=`<tr>
-      <td>${r.label}</td>
-      <td style="color:var(--mgr2)">${mgr?fmt(mv):'—'}</td>
-      <td style="color:var(--text3)">${mgr?pct(mv,mI):'—'}</td>
-      <td style="color:var(--rnd2)">${rnd?fmt(rv):'—'}</td>
-      <td style="color:var(--text3)">${rnd?pct(rv,rI):'—'}</td>
-      <td style="color:var(--peru2)">${peru?fmt(pv):'—'}</td>
-      <td style="color:var(--text3)">${peru?pct(pv,pI):'—'}</td>
-      <td style="color:var(--grp2)">${fmt(tv)}</td>
-      <td style="color:var(--text3)">${pct(tv,totIng)}</td>
+    const mv=r.mgr, rv=r.rnd, pv=r.pe;
+    const tv=(mv??0)+(rv??0)+(pv??0);
+    const myv=(r.mgrY??0)+(r.rndY??0)+(r.peY??0);
+    const labelStyle=r.bold?' style="font-weight:600"':'';
+    const rowBorder=r.bold?' style="border-top:1px solid rgba(0,0,0,.1)"':'';
+    th+=`<tr${rowBorder}>
+      <td${labelStyle}>${r.label}</td>
+      <td style="color:var(--mgr2)">${fmt(mv??0)}</td>
+      <td style="color:var(--text3)">${mI?pct(mv??0,mI):'—'}</td>
+      <td style="color:var(--rnd2)">${fmt(rv??0)}</td>
+      <td style="color:var(--text3)">${rI?pct(rv??0,rI):'—'}</td>
+      <td style="color:var(--peru2)">${fmt(pv??0)}</td>
+      <td style="color:var(--text3)">${pI?pct(pv??0,pI):'—'}</td>
+      <td style="color:var(--grp2)${r.bold?';font-weight:600':''}">${fmt(tv)}</td>
+      <td style="color:var(--text3)">${totIng?pct(tv,totIng):'—'}</td>
       ${showYoYConsol?`<td style="color:var(--text3)">${myv?growHtml(tv,myv):'—'}</td>`:''}
     </tr>`;
   });
@@ -4095,6 +4561,10 @@ function zipClassifyFile(name) {
   if (isPeru && n.includes('eerr')) return 'perulong';
   if (isPeru) return 'peru2025';
 
+  // Vida clientes files
+  if (n.includes('vida') && n.includes('random')) return 'vidaRandom';
+  if (n.includes('vida')) return 'vidaManager';
+
   // Random Chile
   if (n.includes('random') || n.includes('balance') || n.includes('eerr') || n.includes('construccion') || n.includes('construcción')) return 'random';
 
@@ -4108,11 +4578,13 @@ function zipStatusChip(name, type, ok) {
     random:    { bg: 'var(--rnd-dim)', border: 'var(--rnd)', text: 'var(--rnd2)' },
     peru2025:  { bg: 'var(--peru-dim)', border: 'var(--peru)', text: 'var(--peru2)' },
     perulong:  { bg: 'var(--peru-dim)', border: 'var(--peru)', text: 'var(--peru2)' },
-    bridge:    { bg: '#eff6ff',        border: 'var(--accent)', text: 'var(--accent2)' },
-    users:     { bg: 'rgba(5,150,105,.08)', border: 'rgba(5,150,105,.3)', text: 'var(--green2)' },
-    unknown:   { bg: 'var(--surface2)', border: 'var(--border2)', text: 'var(--text3)' },
+    bridge:      { bg: '#eff6ff',               border: 'var(--accent)',  text: 'var(--accent2)' },
+    users:       { bg: 'rgba(5,150,105,.08)',   border: 'rgba(5,150,105,.3)', text: 'var(--green2)' },
+    vidaManager: { bg: 'rgba(37,99,235,.08)',   border: 'var(--mgr)',     text: 'var(--mgr2)' },
+    vidaRandom:  { bg: 'rgba(124,58,237,.08)',  border: 'var(--rnd)',     text: 'var(--rnd2)' },
+    unknown:     { bg: 'var(--surface2)',        border: 'var(--border2)', text: 'var(--text3)' },
   };
-  const label = { manager: 'Manager', random: 'Random', peru2025: 'Perú 2025', perulong: 'Perú 2026+', bridge: 'Bridge', users: 'Usuarios', unknown: '?' };
+  const label = { manager: 'Manager', random: 'Random', peru2025: 'Perú 2025', perulong: 'Perú 2026+', bridge: 'Bridge', users: 'Usuarios', vidaManager: 'Vida Manager', vidaRandom: 'Vida Random', unknown: '?' };
   const c = colors[type] || colors.unknown;
   const icon = ok ? '✓' : '✕';
   const iconColor = ok ? 'var(--ok)' : 'var(--danger)';
@@ -4175,6 +4647,10 @@ async function zipHandleFile(zipFile) {
           console.log('ZIP: intentando cargar bridge:', task.name);
           await brgLoadFileExternal(file);
           console.log('ZIP: bridge cargado, brgAllData rows:', (typeof brgGetAllData==='function'?brgGetAllData().length:'N/A'));
+        } else if (task.type === 'vidaManager') {
+          vidaLoadFile(file, 'manager');
+        } else if (task.type === 'vidaRandom') {
+          vidaLoadFile(file, 'random');
         } else if (task.type === 'users') {
           usrHandleFiles([file]);
         } else if (task.type === 'random') {
@@ -4428,35 +4904,97 @@ function pptoRenderAll(){
   const ppIng=pptoIngByErp(i0,i1);
   const periodLbl = pptoView==='anual'?'Año 2026': (pptoView==='ytd'?`YTD · Ene–${MESES[i1-1]}`:MESES[i0]);
 
+  // ── Helpers de cálculo ──
+  const ppIR=(src,key)=>{ const d=PPTO_MGR_2026.ingresos[src]; return d?pptoSumArr(d[key]||[],i0,i1):0; };
+  const rERP=(e,c)=>(realIng[e]||{})[c]||0;
+
+  // 1. RECURRENTES MANAGER S.A.
+  const r1Time=rERP('Time','ASP')+rERP('Time','Mantención');
+  const r1Flex=rERP('Flexline','ASP')+rERP('Flexline','Mantención');
+  const r1Mpl=rERP('Manager+','ASP');
+  const r1FE=rERP('FE','Recurrente');
+  const p1Time=ppIR('Time','ASP')+ppIR('Time','Mantención');
+  const p1Flex=ppIR('Flexline','ASP')+ppIR('Flexline','Mantención');
+  const p1Mpl=ppIR('Manager+','ASP');
+  const p1FE=ppIR('FE','FE');
+  const r1=r1Time+r1Flex+r1Mpl+r1FE, p1=p1Time+p1Flex+p1Mpl+p1FE;
+
+  // 2. RECURRENTES TERCEROS
+  const r2Rex=rERP('REX','Recurrente');
+  const r2Geo=rERP('GeoVictoria','Recurrente');
+  const p2Rex=ppIR('REX','ASP')+ppIR('Gaxu','ASP')+ppIR('Bnovus','ASP');
+  const p2Geo=ppIR('GeoVictoria','ASP');
+  const r2=r2Rex+r2Geo, p2=p2Rex+p2Geo;
+
+  // 3. NO RECURRENTES MANAGER S.A.
+  const r3Time=rERP('Time','Consultoría')+rERP('Time','Licencias');
+  const r3Flex=rERP('Flexline','Consultoría')+rERP('Flexline','Licencias');
+  const r3Mpl=rERP('Manager+','Consultoría');
+  const r3FE=rERP('FE','Consultoría');
+  const p3Time=ppIR('Time','Consultoría')+ppIR('Time','Licencias');
+  const p3Flex=ppIR('Flexline','Consultoría')+ppIR('Flexline','Licencias');
+  const p3Mpl=ppIR('Manager+','Consultoría');
+  const p3FE=ppIR('FE','Consultoría');
+  const r3=r3Time+r3Flex+r3Mpl+r3FE, p3=p3Time+p3Flex+p3Mpl+p3FE;
+
+  // 4. NO RECURRENTES TERCEROS (REX cat no-rec + Gaxu/Bnovus Ptos_Terceros)
+  const r4Rex=rERP('REX','REX');
+  const p4Rex=ppIR('REX','Consultoría')+ppIR('Bnovus','Consultoría')+ppIR('REX','Licencias');
+  const p4PT=ppIR('Gaxu','Ptos_Terceros')+ppIR('Bnovus','Ptos_Terceros');
+  const r4=r4Rex, p4=p4Rex+p4PT;
+
+  // 5. OTROS (Senegocia + Ptos.Terceros + Vixonic / PPTO: Otros)
+  const r5=mgrErpSum(realIng,'Senegocia')+mgrErpSum(realIng,'Ptos. Terceros')+mgrErpSum(realIng,'Vixonic');
+  const p5=pptoSumArr((PPTO_MGR_2026.ingresos.Otros||{}).total||[],i0,i1);
+
+  let totR=r1+r2+r3+r4+r5, totP=p1+p2+p3+p4+p5;
+
+  // ── Sub-row helper ──
+  const sRow=(lbl,r,p,indent=true)=>r||p?`<tr class="erp-sub open"><td style="${indent?'padding-left:24px;':''}">${lbl}</td><td>${fmtM(r)}</td><td>${p?fmtM(p):'—'}</td>${pptoDevHtml(r,p)}</tr>`:'';
+
+  let mgrSec=0, mgrCurrSec='';
+  const mkSecMgr=(label)=>{const id=`ms${++mgrSec}`;mgrCurrSec=id;return`<tr class="section-head" onclick="pptoSecToggle('${id}')" style="cursor:pointer" data-open="0" id="${id}"><td colspan="5"><span id="${id}ico" style="font-size:9px;margin-right:5px;opacity:.7">▶</span><span style="text-transform:none">${label}</span></td></tr>`;};
+  const sTot=(lbl,r,p)=>`<tr class="erp-tot" data-sec="${mgrCurrSec}" style="display:none"><td>${lbl}</td><td>${fmtM(r)}</td><td>${fmtM(p)}</td>${pptoDevHtml(r,p)}</tr>`;
+  const sRowAcc=(lbl,r,p,indent=true)=>r||p?`<tr class="erp-sub open" data-sec="${mgrCurrSec}" style="display:none"><td style="${indent?'padding-left:24px;':''}">${lbl}</td><td>${fmtM(r)}</td><td>${p?fmtM(p):'—'}</td>${pptoDevHtml(r,p)}</tr>`:'';
+
   let html=`<div style="overflow-x:auto"><table class="ppto-tbl"><thead><tr>
     <th>Línea de negocio · ${periodLbl}</th><th>Real</th><th>PPTO</th><th>Desv $</th><th>Desv %</th>
   </tr></thead><tbody>`;
-  let totR=0,totP=0;
-  PPTO_ERPS.forEach((e,idx)=>{
-    const rR = realIng[e]||{};
-    // For REX, merge GeoVictoria and Gaxu real income (same as MS tab's ERP_ORDER)
-    const rTot = (e==='REX' ? PPTO_REX_MERGE : [e]).reduce((s,src)=>s+mgrErpSum(realIng,src),0);
-    const pTot = (ppIng[e]&&ppIng[e].total)||0;
-    totR+=rTot; totP+=pTot;
-    const erpName = ERP_NAMES[e]||e;
-    const rowId=`pptoIng_${idx}`;
-    html+=`<tr class="erp-tot" onclick="pptoToggleErp('${rowId}')"><td>▸ ${erpName}</td><td>${fmtM(rTot)}</td><td>${fmtM(pTot)}</td>${pptoDevHtml(rTot,pTot)}</tr>`;
-    const subs=new Set([...Object.keys(rR),...Object.keys((ppIng[e]||{}).sub||{})]);
-    subs.forEach(s=>{
-      const rv=rR[s]||0;
-      const pv=(ppIng[e]&&ppIng[e].sub[s])||0;
-      if(rv===0&&pv===0) return;
-      html+=`<tr class="erp-sub ${rowId}"><td>· ${s}</td><td>${fmtM(rv)}</td><td>${fmtM(pv)}</td>${pptoDevHtml(rv,pv)}</tr>`;
-    });
-  });
-  // Include ERPs from ERP_ORDER not covered by PPTO_ERPS/PPTO_REX_MERGE (e.g. Senegocia, Vixonic, Ptos. Terceros)
-  const pptoRealCoveredErps=new Set([...PPTO_ERPS,...PPTO_REX_MERGE]);
-  ERP_ORDER.forEach(e=>{
-    if(!pptoRealCoveredErps.has(e)){
-      const v=mgrErpSum(realIng,e);
-      if(v){ totR+=v; html+=`<tr class="erp-tot"><td>▸ ${ERP_NAMES[e]||e}</td><td>${fmtM(v)}</td><td>—</td>${pptoDevHtml(v,0)}</tr>`; }
-    }
-  });
+
+  // ── Sección 1: Recurrentes Manager S.A. ──
+  html+=mkSecMgr('Ingresos Recurrentes · Manager S.A.');
+  html+=sTot('Recurrentes Manager S.A.',r1,p1);
+  html+=sRowAcc('· Time',r1Time,p1Time);
+  html+=sRowAcc('· Flexline',r1Flex,p1Flex);
+  html+=sRowAcc('· Manager+',r1Mpl,p1Mpl);
+  html+=sRowAcc('· FE Recurrente',r1FE,p1FE);
+
+  // ── Sección 2: Recurrentes Terceros ──
+  html+=mkSecMgr('Ingresos Recurrentes · Terceros');
+  html+=sTot('Recurrentes Terceros',r2,p2);
+  html+=sRowAcc('· REX+',r2Rex,p2Rex);
+  html+=sRowAcc('· GeoVictoria',r2Geo,p2Geo);
+
+  // ── Sección 3: No Recurrentes Manager S.A. ──
+  html+=mkSecMgr('Ingresos No Recurrentes · Manager S.A.');
+  html+=sTot('No Recurrentes Manager S.A.',r3,p3);
+  html+=sRowAcc('· Time',r3Time,p3Time);
+  html+=sRowAcc('· Flexline',r3Flex,p3Flex);
+  html+=sRowAcc('· Manager+',r3Mpl,p3Mpl);
+  html+=sRowAcc('· FE Consultoría',r3FE,p3FE);
+
+  // ── Sección 4: No Recurrentes Terceros ──
+  if(r4||p4){
+    html+=mkSecMgr('Ingresos No Recurrentes · Terceros');
+    html+=sTot('No Recurrentes Terceros',r4,p4);
+    html+=sRowAcc('· REX+ (no rec.)',r4Rex,p4Rex);
+    if(p4PT) html+=sRowAcc('· Ptos. Terceros Terceros',0,p4PT);
+  }
+
+  // ── Sección 5: Otros ──
+  html+=mkSecMgr('Otros Ingresos');
+  html+=sTot('Otros (Senegocia · Ptos. Terceros · Varios)',r5,p5||0);
+
   html+=`<tr class="grand"><td>Total Ingresos</td><td>${fmtM(totR)}</td><td>${fmtM(totP)}</td>${pptoDevHtml(totR,totP)}</tr>`;
   html+=`</tbody></table></div>`;
   document.getElementById('pptoBIng').innerHTML=html;
@@ -4469,6 +5007,10 @@ function pptoRenderAll(){
   const realGav=realGavOut.res;
   const ppGavOut=pptoGavsAgg(i0,i1);
   const ppGav=ppGavOut.res;
+
+  // Castigos e Incobrables → merge into Incobrables
+  if('Castigos' in realGav){ realGav['Incobrables']=(realGav['Incobrables']||0)+realGav['Castigos']; delete realGav['Castigos']; }
+  if('Castigos' in ppGav){ ppGav['Incobrables']=(ppGav['Incobrables']||0)+ppGav['Castigos']; delete ppGav['Castigos']; }
 
   const costCats=[...new Set([...Object.keys(realCos),...Object.keys(ppCos)])];
   const gavCats=[...new Set([...Object.keys(realGav),...Object.keys(ppGav)])];
@@ -4510,31 +5052,25 @@ function pptoRenderAll(){
   const ppEBITDAAdj = ppS.ebitda + ppAdj.total;
 
   const rows=[
-    {l:'Ingresos',r:realIngTot,p:ppS.ing,t:'i'},
-    {l:'Costo de Venta',r:-realCV,p:ppS.cv,t:'c'},
-    {l:'Margen Bruto',r:realMB,p:ppS.mb,t:'m'},
-    {l:'GAVs',r:-realGavTot,p:ppS.gv,t:'c'},
-    {l:'EBIT',r:realEBIT,p:ppS.ebit,t:'m'},
-    {l:'D&A',r:realDA,p:ppS.da,t:'i'},
-    {l:'EBITDA',r:realEBITDA,p:ppS.ebitda,t:'m'},
-    {l:'+ Honorarios Corporativo',r:realAdj.hon,p:ppAdj.hon,t:'i',sub:1},
-    {l:'+ 50% Arriendo Corporativo',r:realAdj.arr,p:ppAdj.arr,t:'i',sub:1},
-    {l:'+ 50% Gastos Corporativo',r:realAdj.gto,p:ppAdj.gto,t:'i',sub:1},
-    {l:'Total Ajustes',r:realAdj.total,p:ppAdj.total,t:'i'},
-    {l:'EBITDA Ajustado',r:realEBITDAAdj,p:ppEBITDAAdj,t:'m'},
+    {l:'Ingresos',         r:realIngTot,    p:ppS.ing,        t:'i', cls:'grand'},
+    {l:'(-) Costo de Venta',r:-realCV,      p:ppS.cv,         t:'c', cls:'section-head-red'},
+    {l:'= Margen Bruto',   r:realMB,        p:ppS.mb,         t:'m', cls:'grand'},
+    {l:'(-) GAVs',         r:-realGavTot,   p:ppS.gv,         t:'c', cls:'section-head-amber'},
+    {l:'= EBIT',           r:realEBIT,      p:ppS.ebit,       t:'m', cls:'grand'},
+    {l:'(+) D&amp;A',      r:realDA,        p:ppS.da,         t:'i', cls:'erp-sub open'},
+    {l:'= EBITDA',         r:realEBITDA,    p:ppS.ebitda,     t:'m', cls:'grand'},
+    {l:'+ Honorarios Corp.',r:realAdj.hon,  p:ppAdj.hon,      t:'i', cls:'erp-sub open'},
+    {l:'+ 50% Arriendo',   r:realAdj.arr,   p:ppAdj.arr,      t:'i', cls:'erp-sub open'},
+    {l:'+ 50% Gastos Corp.',r:realAdj.gto,  p:ppAdj.gto,      t:'i', cls:'erp-sub open'},
+    {l:'Total Ajustes',    r:realAdj.total,  p:ppAdj.total,   t:'i', cls:''},
+    {l:'= EBITDA Ajustado',r:realEBITDAAdj, p:ppEBITDAAdj,   t:'m', cls:'grand'},
   ];
+  const devHtmlRes=(r,p,t)=>{const d=r-p,good=t==='c'?d<0:d>0,cls=d===0?'neu':good?'pos':'neg',arr=d===0?'·':good?'▲':'▼',pct=p?Math.abs(d/p*100).toFixed(1)+'%':'-';return`<td>${d>=0?'+':'-'}${fmtM(Math.abs(d))}</td><td><span class="ppto-chip ${cls}">${arr} ${pct}</span></td>`;};
   let html3=`<div style="overflow-x:auto"><table class="ppto-tbl"><thead><tr>
-    <th>${periodLbl}</th><th>Real</th><th>% Ing</th><th>PPTO</th><th>% Ing</th><th>Desv $</th><th>Desv %</th>
+    <th>${periodLbl}</th><th>Real</th><th>PPTO</th><th>Desv $</th><th>Desv %</th>
   </tr></thead><tbody>`;
   rows.forEach(r=>{
-    const pctR = realIngTot? (r.r/realIngTot*100).toFixed(1)+'%':'—';
-    const pctP = ppS.ing? (r.p/ppS.ing*100).toFixed(1)+'%':'—';
-    const d = r.r-r.p;
-    const dp = r.p? d/Math.abs(r.p)*100:0;
-    const cls = d===0?'dev-neu':((r.t==='c'?(d<0):(d>0))?'dev-pos':'dev-neg');
-    const strong = (r.t==='m'||r.l==='Ingresos'||r.l==='EBITDA'||r.l==='EBITDA Ajustado')?'grand':'';
-    const pad = r.sub?'padding-left:24px;color:var(--text3);font-size:11px':'';
-    html3+=`<tr class="${strong}"><td style="${pad}">${r.l}</td><td>${fmtM(r.r)}</td><td style="color:var(--text3);font-size:11px">${pctR}</td><td>${fmtM(r.p)}</td><td style="color:var(--text3);font-size:11px">${pctP}</td><td class="${cls}">${fmtM(d)}</td><td class="${cls}">${r.p?(dp>=0?'+':'')+dp.toFixed(1)+'%':'—'}</td></tr>`;
+    html3+=`<tr class="${r.cls}"><td>${r.l}</td><td>${fmtM(r.r)}</td><td>${fmtM(r.p)}</td>${devHtmlRes(r.r,r.p,r.t)}</tr>`;
   });
   html3+=`</tbody></table></div>`;
   document.getElementById('pptoBRes').innerHTML=html3;
@@ -4627,13 +5163,19 @@ function pptoConsolCalcOne(i0,i1){
     adj:ppAdj, ebitdaAdj:ppS.ebitda+ppAdj
   };
 
-  // ── Random real ──
+  // ── Random real (incluye Perú si está disponible) ──
   let rndReal=null;
   if(Object.keys((rndData||{})[2026]||{}).length){
     const r=pptoRndRealCalc(i0,i1);
-    const ing=Object.values(r.ing).reduce((a,b)=>a+b,0);
-    const cvN=Object.values(r.cv).reduce((a,b)=>a+b,0);   // negativo
-    const sgaN=Object.values(r.sga).reduce((a,b)=>a+b,0); // negativo
+    let ing=Object.values(r.ing).reduce((a,b)=>a+b,0);
+    let cvN=Object.values(r.cv).reduce((a,b)=>a+b,0);   // negativo
+    let sgaN=Object.values(r.sga).reduce((a,b)=>a+b,0); // negativo
+    const peruRng=pptoGetPeruRng(i0,i1);
+    if(peruRng){
+      ing+=peruRng.ing;
+      cvN-=peruRng.cogs_extStaff; // cogs_extStaff ya positivo, cv es negativo
+      sgaN-=(peruRng.sga_da+peruRng.sga_gastos+peruRng.sga_otros);
+    }
     const mb=ing+cvN, ebitda=mb+sgaN, adj=r.adjR+r.adjC;
     rndReal={ing,cv:-cvN,mb,gav:-sgaN,ebit:ebitda,da:0,ebitda,adj,ebitdaAdj:ebitda+adj};
   }
@@ -4678,6 +5220,24 @@ function pptoConsolRender(){
 }
 
 // Render del P&L resumido para Consolidado
+window.pptoSecToggle=function(id){
+  const hdr=document.getElementById(id);
+  if(!hdr) return;
+  const open=hdr.dataset.open==='1';
+  document.querySelectorAll(`[data-sec="${id}"]`).forEach(r=>r.style.display=open?'none':'');
+  hdr.dataset.open=open?'0':'1';
+  const ico=document.getElementById(id+'ico');
+  if(ico) ico.textContent=open?'▶':'▼';
+};
+window.pptoConsolSecToggle=function(id){
+  const hdr=document.getElementById(id);
+  if(!hdr) return;
+  const open=hdr.dataset.consolOpen==='1';
+  document.querySelectorAll(`[data-consol-sec="${id}"]`).forEach(r=>r.style.display=open?'none':'');
+  hdr.dataset.consolOpen=open?'0':'1';
+  const ico=document.getElementById(id+'ico');
+  if(ico) ico.textContent=open?'▶':'▼';
+};
 function pptoConsolRenderSummary(){
   const hasMgr=mgrData.filter(d=>d.year===2026).length>0;
   const hasRnd=Object.keys((rndData||{})[2026]||{}).length>0;
@@ -4699,13 +5259,13 @@ function pptoConsolRenderSummary(){
 
   const rIng=real.ing, pIng=ppto.ing;
   document.getElementById('pptoConsolKpi').innerHTML=[
-    {label:'Ingresos',f:'ing'},{label:'Margen Bruto',f:'mb'},
-    {label:'EBIT',f:'ebit'},{label:'EBITDA',f:'ebitda'},{label:'EBITDA Ajustado',f:'ebitdaAdj'}
+    {label:'Ingresos',f:'ing',cls:'blue'},{label:'Margen Bruto',f:'mb',cls:'green'},
+    {label:'EBIT',f:'ebit',cls:'yellow'},{label:'EBITDA',f:'ebitda',cls:'teal'},{label:'EBITDA Ajustado',f:'ebitdaAdj',cls:'ppto-adj'}
   ].map(k=>{
     const r=real[k.f], p=ppto[k.f];
     const d=r-p, dp=p?d/Math.abs(p)*100:0;
     const chip=d===0?'neu':(d>0?'pos':'neg'), sign=d>0?'▲':(d<0?'▼':'·');
-    return `<div class="kpi-card" style="--kc:var(--grp)">
+    return `<div class="kpi-card ${k.cls}" style="--kc:var(--grp)">
       <div class="kpi-label">${k.label} · ${periodLbl}</div>
       <div class="kpi-value">${fmtM(r)}</div>
       <div class="kpi-sub-split"><span class="kss-r">● Real</span><span class="kss-p">◯ PPTO ${fmtM(p)}</span></div>
@@ -4713,34 +5273,127 @@ function pptoConsolRenderSummary(){
     </div>`;
   }).join('');
 
-  const rows=[
-    {l:'Ingresos',f:'ing',t:'i',bold:true},
-    {l:'(-) Costos de Venta',f:'cv',t:'c',bold:false},
-    {l:'Margen Bruto',f:'mb',t:'m',bold:true},
-    {l:'(-) GAVs',f:'gav',t:'c',bold:false},
-    {l:'EBIT',f:'ebit',t:'m',bold:true},
-    {l:'(+) D&A',f:'da',t:'i',bold:false},
-    {l:'EBITDA',f:'ebitda',t:'m',bold:true},
-    {l:'(+) Ajuste EBITDA',f:'adj',t:'i',bold:false},
-    {l:'EBITDA Ajustado',f:'ebitdaAdj',t:'m',bold:true},
-  ];
+  // ── Income buckets — real por ERP ──
+  const mgrRows=mgrData.filter(d=>d.year===2026&&d.month>=i0+1&&d.month<=i1+1);
+  const realIngDet=pptoCalcIngDetailed(mgrRows);
+  const rERP=(e,c)=>(realIngDet[e]||{})[c]||0;
+  // pptoConsolRange devuelve inclusive; pptoSumArr usa fin exclusivo → i1+1
+  const ppIR=(src,key)=>{ const d=PPTO_MGR_2026.ingresos[src]; return d?pptoSumArr(d[key]||[],i0,i1+1):0; };
+
+  const rndCalcC=hasRnd?pptoRndRealCalc(i0,i1):null;
+  const RND_REC=['Mantención','ASP','Cloud'], RND_NOREC=['Implementación','Licencias','Ordename'];
+  const rRndRec=rndCalcC?RND_REC.reduce((s,c)=>s+(rndCalcC.ing[c]||0),0):0;
+  const rRndNoRec=rndCalcC?RND_NOREC.reduce((s,c)=>s+(rndCalcC.ing[c]||0),0):0;
+  const peruRngC=pptoGetPeruRng(i0,i1);
+  const rRndRecFull=rRndRec+(peruRngC?peruRngC.ing:0);
+  const pRndRec=pptoRndSumKeys(['membresia','asp','cloud_ing'],i0,i1);
+  const pRndNoRec=pptoRndSumKeys(['impl','lic_ing','ordename'],i0,i1);
+
+  // Bucket 1: Recurrente ERPs Sable
+  const r1Time=rERP('Time','ASP')+rERP('Time','Mantención');
+  const r1Flex=rERP('Flexline','ASP')+rERP('Flexline','Mantención');
+  const r1Mp=rERP('Manager+','ASP');
+  const r1FE=rERP('FE','Recurrente');
+  const r1Rnd=rRndRecFull;
+  const p1Time=ppIR('Time','ASP')+ppIR('Time','Mantención');
+  const p1Flex=ppIR('Flexline','ASP')+ppIR('Flexline','Mantención');
+  const p1Mp=ppIR('Manager+','ASP');
+  const p1FE=ppIR('FE','FE');
+  const p1Rnd=pRndRec;
+  const r1=r1Time+r1Flex+r1Mp+r1FE+r1Rnd, p1=p1Time+p1Flex+p1Mp+p1FE+p1Rnd;
+  // Bucket 2: Recurrente Terceros
+  const r2=rERP('REX','Recurrente')+rERP('GeoVictoria','Recurrente');
+  const p2=ppIR('REX','ASP')+ppIR('Gaxu','ASP')+ppIR('Bnovus','ASP')+ppIR('GeoVictoria','ASP');
+  // Bucket 3: No Recurrente ERPs Sable
+  const r3Time=rERP('Time','Consultoría')+rERP('Time','Licencias');
+  const r3Flex=rERP('Flexline','Consultoría')+rERP('Flexline','Licencias');
+  const r3Mp=rERP('Manager+','Consultoría');
+  const r3FE=rERP('FE','Consultoría');
+  const r3Rnd=rRndNoRec;
+  const p3Time=ppIR('Time','Consultoría')+ppIR('Time','Licencias');
+  const p3Flex=ppIR('Flexline','Consultoría')+ppIR('Flexline','Licencias');
+  const p3Mp=ppIR('Manager+','Consultoría');
+  const p3FE=ppIR('FE','Consultoría');
+  const p3Rnd=pRndNoRec;
+  const r3=r3Time+r3Flex+r3Mp+r3FE+r3Rnd, p3=p3Time+p3Flex+p3Mp+p3FE+p3Rnd;
+  // Bucket 4: No Recurrente Terceros
+  const r4=rERP('REX','REX');
+  const p4=ppIR('REX','Consultoría')+ppIR('Bnovus','Consultoría')+ppIR('REX','Licencias')+ppIR('Gaxu','Ptos_Terceros')+ppIR('Bnovus','Ptos_Terceros');
+  // Bucket 5: Otros
+  const r5=mgrErpSum(realIngDet,'Senegocia')+mgrErpSum(realIngDet,'Ptos. Terceros')+mgrErpSum(realIngDet,'Vixonic');
+  const p5=pptoSumArr((PPTO_MGR_2026.ingresos.Otros||{}).total||[],i0,i1+1);
+
+  const totIngR=r1+r2+r3+r4+r5, totIngP=p1+p2+p3+p4+p5;
+
+  // ── HTML helpers ──
+  const iDev=(rv,pv)=>{const d=rv-pv,dp=pv?d/Math.abs(pv)*100:0,good=d>0,cls=d===0?'neu':good?'pos':'neg',arr=d===0?'·':good?'▲':'▼';return`<td>${d>=0?'+':'-'}${fmtM(Math.abs(d))}</td><td><span class="ppto-chip ${cls}">${arr} ${pv?Math.abs(dp).toFixed(1)+'%':'-'}</span></td>`;};
+  const cDev=(rv,pv)=>{const d=rv-pv,dp=pv?d/Math.abs(pv)*100:0,good=d<0,cls=d===0?'neu':good?'pos':'neg',arr=d===0?'·':good?'▼':'▲';return`<td>${d>=0?'+':'-'}${fmtM(Math.abs(d))}</td><td><span class="ppto-chip ${cls}">${arr} ${pv?Math.abs(dp).toFixed(1)+'%':'-'}</span></td>`;};
+  const mkRow=(label,rv,pv,rowCls,labelStyle)=>
+    `<tr class="${rowCls}"><td style="${labelStyle}">${label}</td>`+
+    `<td>${fmtM(rv)}</td><td>${fmtM(pv)}</td>`+
+    iDev(rv,pv)+`</tr>`;
+  let secCnt=0; let currSec='';
+  const mkSec=(label,cls='section-head')=>{
+    const id=`ccs${++secCnt}`;
+    currSec=id;
+    return `<tr class="${cls}" onclick="pptoConsolSecToggle('${id}')" style="cursor:pointer" data-consol-open="0" id="${id}">
+      <td colspan="5" style="text-transform:none"><span id="${id}ico" style="font-size:9px;margin-right:5px;opacity:.7">▶</span>${label}</td>
+    </tr>`;
+  };
+  const mkSub=(label,rv,pv)=>{
+    if(!rv&&!pv) return '';
+    return `<tr data-consol-sec="${currSec}" style="display:none"><td style="padding-left:20px;color:var(--text3);font-size:11px">${label}</td>`+
+      `<td>${fmtM(rv)}</td><td>${fmtM(pv)}</td>`+iDev(rv,pv)+`</tr>`;
+  };
+  const mkGrand=(label,rv,pv)=>mkRow(label,rv,pv,'grand','');
+
   let html=`<div style="overflow-x:auto"><table class="ppto-tbl"><thead><tr>
     <th>Consolidado · ${periodLbl}</th>
-    <th>Real</th><th style="color:var(--text3)">% Ing</th>
-    <th>PPTO</th><th style="color:var(--text3)">% Ing</th>
+    <th>Real</th><th>PPTO</th>
     <th>Desv $</th><th>Desv %</th>
   </tr></thead><tbody>`;
-  rows.forEach(row=>{
-    const rv=real[row.f], pv=ppto[row.f];
-    const d=rv-pv, dp=pv?d/Math.abs(pv)*100:0;
-    const isGood=row.t==='c'?d<0:d>0;
-    const cls=d===0?'dev-neu':(isGood?'dev-pos':'dev-neg');
-    html+=`<tr class="${row.bold?'grand':''}">
-      <td>${row.l}</td>
-      <td>${fmtM(rv)}</td><td style="color:var(--text3);font-size:11px">${rIng?(rv/rIng*100).toFixed(1)+'%':'—'}</td>
-      <td>${fmtM(pv)}</td><td style="color:var(--text3);font-size:11px">${pIng?(pv/pIng*100).toFixed(1)+'%':'—'}</td>
-      <td class="${cls}">${fmtM(d)}</td><td class="${cls}">${pv?(dp>=0?'+':'')+dp.toFixed(1)+'%':'—'}</td>
-    </tr>`;
+
+  html+=mkSec('Recurrente ERPs Sable');
+  html+=mkSub('Time',r1Time,p1Time);
+  html+=mkSub('Flexline',r1Flex,p1Flex);
+  html+=mkSub('Manager+',r1Mp,p1Mp);
+  html+=mkSub('FE',r1FE,p1FE);
+  if(hasRnd) html+=mkSub('Random'+(peruRngC?' · CL+PE':''),r1Rnd,p1Rnd);
+  html+=mkGrand('Subtotal',r1,p1);
+
+  html+=mkSec('Recurrente Terceros');
+  html+=mkSub('REX · GeoVictoria',r2,p2);
+
+  html+=mkSec('No Recurrente ERPs Sable');
+  html+=mkSub('Time',r3Time,p3Time);
+  html+=mkSub('Flexline',r3Flex,p3Flex);
+  html+=mkSub('Manager+',r3Mp,p3Mp);
+  html+=mkSub('FE',r3FE,p3FE);
+  if(hasRnd) html+=mkSub('Random',r3Rnd,p3Rnd);
+  html+=mkGrand('Subtotal',r3,p3);
+
+  html+=mkSec('No Recurrente Terceros');
+  html+=mkSub('REX · Bnovus · Gaxu',r4,p4);
+
+  html+=mkSec('Otros');
+  html+=mkSub('Otros Ingresos',r5,p5);
+
+  html+=mkGrand('Total Ingresos',totIngR,totIngP);
+
+  // ── Resto del P&L ──
+  const plRows=[
+    {l:'(-) Costos de Venta',rv:real.cv,pv:ppto.cv,t:'c',cls:'section-head-red'},
+    {l:'= Margen Bruto',     rv:real.mb,pv:ppto.mb,t:'m',cls:'grand'},
+    {l:'(-) GAVs',           rv:real.gav,pv:ppto.gav,t:'c',cls:'section-head-amber'},
+    {l:'= EBIT',             rv:real.ebit,pv:ppto.ebit,t:'m',cls:'grand'},
+    {l:'(+) D&amp;A',        rv:real.da,pv:ppto.da,t:'i',cls:''},
+    {l:'= EBITDA',           rv:real.ebitda,pv:ppto.ebitda,t:'m',cls:'grand'},
+    {l:'(+) Ajuste EBITDA',  rv:real.adj,pv:ppto.adj,t:'i',cls:''},
+    {l:'= EBITDA Ajustado',  rv:real.ebitdaAdj,pv:ppto.ebitdaAdj,t:'m',cls:'grand'},
+  ];
+  plRows.forEach(row=>{
+    const dev=row.t==='c'?cDev(row.rv,row.pv):iDev(row.rv,row.pv);
+    html+=`<tr class="${row.cls}"><td>${row.l}</td><td>${fmtM(row.rv)}</td><td>${fmtM(row.pv)}</td>${dev}</tr>`;
   });
   html+=`</tbody></table></div>`;
   document.getElementById('pptoConsolRes').innerHTML=html;
@@ -4790,6 +5443,22 @@ function pptoRndSumKeys(keys,i0,i1){
   return s;
 }
 
+// Helper: agrega datos de Perú 2026 para el rango 0-based inclusivo [i0,i1]
+function pptoGetPeruRng(i0,i1){
+  const peru26=(peruData||{})[2026]||{};
+  if(!Object.keys(peru26).length) return null;
+  const agg={ing:0,cogs_extStaff:0,sga_da:0,sga_gastos:0,sga_otros:0};
+  for(let m=i0+1;m<=i1+1;m++){
+    const md=peru26[m]||{};
+    agg.ing+=(md.ing||0);
+    agg.cogs_extStaff+=(md.cogs_extStaff||0);
+    agg.sga_da+=(md.sga_da||0);
+    agg.sga_gastos+=(md.sga_gastos||0);
+    agg.sga_otros+=(md.sga_otros||0);
+  }
+  return agg.ing||agg.cogs_extStaff?agg:null;
+}
+
 function pptoRndRealCalc(i0,i1){
   const rnd26=(rndData||{})[2026]||{};
   const ing={},cv={},sga={};
@@ -4816,27 +5485,46 @@ function pptoRndRenderAll(){
   const fmtM=v=>(v/1e6).toLocaleString('es-CL',{minimumFractionDigits:1,maximumFractionDigits:1})+' MM';
   const fmtAbs=v=>(Math.abs(v)/1e6).toLocaleString('es-CL',{minimumFractionDigits:1,maximumFractionDigits:1})+' MM';
 
-  // PPTO aggregations
-  const pIng={},pCv={},pSga={};
-  for(const cat of PPTO_RND_ING_ORDER) pIng[cat]=pptoRndSumKeys([PPTO_RND_ING_KEY[cat]],i0,i1);
-  for(const cat of PPTO_RND_CV_ORDER)  pCv[cat]=pptoRndSumKeys(PPTO_RND_CV_KEY[cat]||[],i0,i1);
-  for(const cat of PPTO_RND_SGA_ORDER) pSga[cat]=pptoRndSumKeys(PPTO_RND_SGA_KEY[cat]||[],i0,i1);
+  // ── Perú integration ──
+  const peruRng=pptoGetPeruRng(i0,i1);
+  const hasPeru=!!peruRng;
+  const peruLabel=hasPeru?' · Chile + Perú':'';
+
+  // ── Income groups: Recurrente / No Recurrente ──
+  const RND_REC_CATS=['Mantención','ASP','Cloud'];
+  const RND_NOREC_CATS=['Implementación','Licencias','Ordename'];
+  const rRec=RND_REC_CATS.reduce((s,c)=>s+(real.ing[c]||0),0);
+  const rNoRec=RND_NOREC_CATS.reduce((s,c)=>s+(real.ing[c]||0),0);
+  const pRec=pptoRndSumKeys(['membresia','asp','cloud_ing'],i0,i1);
+  const pNoRec=pptoRndSumKeys(['impl','lic_ing','ordename'],i0,i1);
+  // Sumar Perú al recurrente real
+  const rRecFull=rRec+(hasPeru?peruRng.ing:0);
+  const rTotIngFull=rRecFull+rNoRec;
+  const pTotIng=pRec+pNoRec;
+
+  // ── Cost totals ──
+  const rTotCv=Object.values(real.cv).reduce((a,b)=>a+b,0);
+  const peruCv=hasPeru?peruRng.cogs_extStaff:0;
+  const rTotCvFull=rTotCv-peruCv; // cv es negativo; extStaff positivo → restar
+  const pCv={}; for(const cat of PPTO_RND_CV_ORDER) pCv[cat]=pptoRndSumKeys(PPTO_RND_CV_KEY[cat]||[],i0,i1);
+  const pTotCv=Object.values(pCv).reduce((a,b)=>a+b,0);
+  const rMbFull=rTotIngFull+rTotCvFull;
+  const pMb=pTotIng+pTotCv;
+
+  // ── SGA totals ──
+  const pSga={}; for(const cat of PPTO_RND_SGA_ORDER) pSga[cat]=pptoRndSumKeys(PPTO_RND_SGA_KEY[cat]||[],i0,i1);
+  const rTotSga=Object.values(real.sga).reduce((a,b)=>a+b,0);
+  const peruSga=hasPeru?(peruRng.sga_da+peruRng.sga_gastos+peruRng.sga_otros):0;
+  const rTotSgaFull=rTotSga-peruSga;
+  const pTotSga=Object.values(pSga).reduce((a,b)=>a+b,0);
   const pAdjR=Math.abs(pptoRndSumKeys(['arriendo'],i0,i1))*0.5;
   const pAdjC=Math.abs(pptoRndSumKeys(['corporativo'],i0,i1));
-
-  // Totals
-  const rTotIng=Object.values(real.ing).reduce((a,b)=>a+b,0);
-  const pTotIng=Object.values(pIng).reduce((a,b)=>a+b,0);
-  const rTotCv=Object.values(real.cv).reduce((a,b)=>a+b,0);
-  const pTotCv=Object.values(pCv).reduce((a,b)=>a+b,0);
-  const rMb=rTotIng+rTotCv, pMb=pTotIng+pTotCv;
-  const rTotSga=Object.values(real.sga).reduce((a,b)=>a+b,0);
-  const pTotSga=Object.values(pSga).reduce((a,b)=>a+b,0);
-  const rEbitda=rMb+rTotSga, pEbitda=pMb+pTotSga;
-  const rEbitdaAdj=rEbitda+real.adjR+real.adjC;
+  const rEbitdaFull=rMbFull+rTotSgaFull;
+  const pEbitda=pMb+pTotSga;
+  const rEbitdaAdj=rEbitdaFull+real.adjR+real.adjC;
   const pEbitdaAdj=pEbitda+pAdjR+pAdjC;
 
-  // Dev html helper
+  // Dev html helper (income: positive=good; cost: caller decides)
   const devHtml=(r,p)=>{
     const d=r-p, good=d>0;
     const cls=d===0?'neu':good?'pos':'neg';
@@ -4844,14 +5532,22 @@ function pptoRndRenderAll(){
     const pct=p?`${Math.abs(d/p*100).toFixed(1)}%`:'-';
     return `<td>${d>=0?'+':'-'}${fmtAbs(d)}</td><td><span class="ppto-chip ${cls}">${arrow} ${pct}</span></td>`;
   };
+  const devHtmlCost=(r,p)=>{
+    // r y p son negativos (costos); d>0 → real gastó menos que ppto → bueno
+    const d=r-p, good=d>0;
+    const cls=d===0?'neu':good?'pos':'neg';
+    const arrow=d===0?'':good?'▼':'▲';
+    const pct=p?`${Math.abs(d/p*100).toFixed(1)}%`:'-';
+    return `<td class="${cls}">${d>=0?'+':'-'}${fmtAbs(d)}</td><td><span class="ppto-chip ${cls}">${arrow} ${pct}</span></td>`;
+  };
 
-  // KPI cards
+  // KPI cards (usando totales con Perú)
   document.getElementById('pptoRndKpi').innerHTML=[
-    {label:'Ingresos',r:rTotIng,p:pTotIng,cls:'blue'},
-    {label:'Margen Bruto',r:rMb,p:pMb,cls:'green'},
-    {label:'EBIT',r:rEbitda,p:pEbitda,cls:'yellow'},
-    {label:'EBITDA',r:rEbitda,p:pEbitda,cls:'teal'},
-    {label:'EBITDA Ajustado',r:rEbitdaAdj,p:pEbitdaAdj,cls:'pptorand-adj'}
+    {label:'Ingresos'+peruLabel,r:rTotIngFull,p:pTotIng,cls:'blue'},
+    {label:'Margen Bruto',r:rMbFull,p:pMb,cls:'green'},
+    {label:'EBIT',r:rEbitdaFull,p:pEbitda,cls:'yellow'},
+    {label:'EBITDA',r:rEbitdaFull,p:pEbitda,cls:'teal'},
+    {label:'EBITDA Ajustado',r:rEbitdaAdj,p:pEbitdaAdj,cls:'ppto-adj'}
   ].map(k=>{
     const d=k.r-k.p, good=d>0, cls2=d===0?'neu':good?'pos':'neg';
     const pct=k.p?`${Math.abs(d/k.p*100).toFixed(1)}%`:'-';
@@ -4862,38 +5558,63 @@ function pptoRndRenderAll(){
     </div>`;
   }).join('');
 
-  // Ingresos table
+  // ── Ingresos table: 2 filas (Rec / No Rec) ──
   const hdr=`<thead><tr><th style="text-align:left">Categoría</th><th>Real 2026</th><th>PPTO 2026</th><th>Desv $</th><th>Desv %</th></tr></thead>`;
   document.getElementById('pptoRndBIng').innerHTML=`<table class="ppto-tbl">${hdr}<tbody>
-    ${PPTO_RND_ING_ORDER.map(cat=>`<tr><td>${cat}</td><td>${fmtM(real.ing[cat]||0)}</td><td>${fmtM(pIng[cat]||0)}</td>${devHtml(real.ing[cat]||0,pIng[cat]||0)}</tr>`).join('')}
-    <tr class="grand"><td>Total Ingresos</td><td>${fmtM(rTotIng)}</td><td>${fmtM(pTotIng)}</td>${devHtml(rTotIng,pTotIng)}</tr>
+    <tr class="section-head" onclick="pptoSecToggle('rs1')" style="cursor:pointer" data-open="0" id="rs1">
+      <td colspan="5"><span id="rs1ico" style="font-size:9px;margin-right:5px;opacity:.7">▶</span><span style="text-transform:none">Ingresos Recurrentes (Mantención · ASP · Cloud${hasPeru?' · Perú':''})</span></td>
+    </tr>
+    <tr data-sec="rs1" style="display:none"><td>Recurrente${peruLabel}</td><td>${fmtM(rRecFull)}</td><td>${fmtM(pRec)}</td>${devHtml(rRecFull,pRec)}</tr>
+    <tr class="section-head" onclick="pptoSecToggle('rs2')" style="cursor:pointer" data-open="0" id="rs2">
+      <td colspan="5"><span id="rs2ico" style="font-size:9px;margin-right:5px;opacity:.7">▶</span><span style="text-transform:none">Ingresos No Recurrentes (Implementación · Licencias · Ordename)</span></td>
+    </tr>
+    <tr data-sec="rs2" style="display:none"><td>No Recurrente</td><td>${fmtM(rNoRec)}</td><td>${fmtM(pNoRec)}</td>${devHtml(rNoRec,pNoRec)}</tr>
+    <tr class="grand"><td>Total Ingresos${peruLabel}</td><td>${fmtM(rTotIngFull)}</td><td>${fmtM(pTotIng)}</td>${devHtml(rTotIngFull,pTotIng)}</tr>
   </tbody></table>`;
-  document.getElementById('pptoRndTotIng').textContent=fmtM(rTotIng);
+  document.getElementById('pptoRndTotIng').textContent=fmtM(rTotIngFull);
 
-  // COGS table
+  // ── COGS table (Peru PE merged into Personal Externo row) ──
+  const cvRows=PPTO_RND_CV_ORDER.map(cat=>{
+    let r=real.cv[cat]||0;
+    if(hasPeru && cat==='Personal Externo') r-=peruRng.cogs_extStaff; // extStaff positivo → restar para más costo
+    const p=pCv[cat]||0;
+    return(r===0&&p===0)?'':
+      `<tr><td>${cat}${hasPeru&&cat==='Personal Externo'?'&nbsp;<small style="color:var(--text3)">CL+PE</small>':''}</td><td>${fmtM(r)}</td><td>${fmtM(p)}</td>${devHtmlCost(r,p)}</tr>`;
+  }).join('');
   document.getElementById('pptoRndBCv').innerHTML=`<table class="ppto-tbl">${hdr}<tbody>
-    ${PPTO_RND_CV_ORDER.map(cat=>{const r=real.cv[cat]||0,p=pCv[cat]||0;return(r===0&&p===0)?'':
-      `<tr><td>${cat}</td><td>${fmtM(r)}</td><td>${fmtM(p)}</td>${devHtml(r,p)}</tr>`;}).join('')}
-    <tr class="grand"><td>Total Costos</td><td>${fmtM(rTotCv)}</td><td>${fmtM(pTotCv)}</td>${devHtml(rTotCv,pTotCv)}</tr>
+    ${cvRows}
+    <tr class="grand"><td>Total Costos${hasPeru?' <small style="color:var(--text3)">CL+PE</small>':''}</td><td>${fmtM(rTotCvFull)}</td><td>${fmtM(pTotCv)}</td>${devHtmlCost(rTotCvFull,pTotCv)}</tr>
   </tbody></table>`;
-  document.getElementById('pptoRndTotCv').textContent=fmtM(rTotCv);
+  document.getElementById('pptoRndTotCv').textContent=fmtM(rTotCvFull);
 
-  // SGA table
+  // ── SGA table ──
+  // ── SGA table (Peru GG merged; D&A y Otros PE como filas planas sin sección separada) ──
+  const sgaRows=PPTO_RND_SGA_ORDER.map(cat=>{
+    let r=real.sga[cat]||0;
+    if(hasPeru && cat==='Gastos Generales') r-=peruRng.sga_gastos;
+    const p=pSga[cat]||0;
+    return(r===0&&p===0)?'':
+      `<tr><td>${cat}${hasPeru&&cat==='Gastos Generales'?'&nbsp;<small style="color:var(--text3)">CL+PE</small>':''}</td><td>${fmtM(r)}</td><td>${fmtM(p)}</td>${devHtmlCost(r,p)}</tr>`;
+  }).join('');
+  const sgaPeruExtra=hasPeru?[
+    peruRng.sga_da   ?`<tr><td>D&amp;A&nbsp;<small style="color:var(--text3)">PE</small></td><td>${fmtM(-peruRng.sga_da)}</td><td>—</td><td>—</td><td>—</td></tr>`:'',
+    peruRng.sga_otros?`<tr><td>Otros&nbsp;<small style="color:var(--text3)">PE</small></td><td>${fmtM(-peruRng.sga_otros)}</td><td>—</td><td>—</td><td>—</td></tr>`:'',
+  ].join(''):'';
   document.getElementById('pptoRndBSga').innerHTML=`<table class="ppto-tbl">${hdr}<tbody>
-    ${PPTO_RND_SGA_ORDER.map(cat=>{const r=real.sga[cat]||0,p=pSga[cat]||0;return(r===0&&p===0)?'':
-      `<tr><td>${cat}</td><td>${fmtM(r)}</td><td>${fmtM(p)}</td>${devHtml(r,p)}</tr>`;}).join('')}
-    <tr class="grand"><td>Total SG&amp;A</td><td>${fmtM(rTotSga)}</td><td>${fmtM(pTotSga)}</td>${devHtml(rTotSga,pTotSga)}</tr>
+    ${sgaRows}
+    ${sgaPeruExtra}
+    <tr class="grand"><td>Total SG&amp;A${hasPeru?' <small style="color:var(--text3)">CL+PE</small>':''}</td><td>${fmtM(rTotSgaFull)}</td><td>${fmtM(pTotSga)}</td>${devHtmlCost(rTotSgaFull,pTotSga)}</tr>
   </tbody></table>`;
-  document.getElementById('pptoRndTotSga').textContent=fmtM(rTotSga);
+  document.getElementById('pptoRndTotSga').textContent=fmtM(rTotSgaFull);
 
-  // Resumen P&L
+  // ── Resumen P&L ──
   document.getElementById('pptoRndBRes').innerHTML=`<table class="ppto-tbl">${hdr}<tbody>
     ${[
-      {label:'Ingresos Operacionales',r:rTotIng,p:pTotIng,cls:''},
-      {label:'(-) Costos Directos',r:rTotCv,p:pTotCv,cls:'section-head-red'},
-      {label:'= Margen Bruto',r:rMb,p:pMb,cls:'grand'},
-      {label:'(-) SG&amp;A',r:rTotSga,p:pTotSga,cls:'section-head-amber'},
-      {label:'= EBITDA',r:rEbitda,p:pEbitda,cls:'grand'},
+      {label:'Ingresos Operacionales'+peruLabel,r:rTotIngFull,p:pTotIng,cls:''},
+      {label:'(-) Costos Directos',r:rTotCvFull,p:pTotCv,cls:'section-head-red'},
+      {label:'= Margen Bruto',r:rMbFull,p:pMb,cls:'grand'},
+      {label:'(-) SG&amp;A',r:rTotSgaFull,p:pTotSga,cls:'section-head-amber'},
+      {label:'= EBITDA',r:rEbitdaFull,p:pEbitda,cls:'grand'},
       {label:'(+) Ajuste Arriendo 50%',r:real.adjR,p:pAdjR,cls:'erp-sub open'},
       {label:'(+) Ajuste Corporativo',r:real.adjC,p:pAdjC,cls:'erp-sub open'},
       {label:'= EBITDA Ajustado',r:rEbitdaAdj,p:pEbitdaAdj,cls:'grand'},
@@ -5027,29 +5748,26 @@ function insightsRenderIngresos(real,ppto_){
     const subs=new Set([...Object.keys(rR),...Object.keys(pSub)]);
     const subGaps={};
     subs.forEach(s=>{ subGaps[s]=(rR[s]||0)-(pSub[s]||0); });
-    const aspG=Math.abs((subGaps['ASP']||0)+(subGaps['Mantención']||0));
-    const consG=Math.abs(subGaps['Consultoría']||0);
-    const licG=Math.abs(subGaps['Licencias']||0);
-    const absGap=Math.abs(gap);
-    let flag='MIXTO';
-    if(absGap>0){
-      if(consG/absGap>0.5) flag='EXTRACCIÓN';
-      else if(aspG/absGap>0.5) flag='RECURRENTE';
-      else if(licG/absGap>0.5) flag='PIPELINE';
-    }
-    return{erp:e,real:rTot,ppto:pTot,gap,gapPct,flag};
+    const recCats=['ASP','Mantención','Recurrente'];
+    const rRec=recCats.reduce((s,c)=>s+(rR[c]||0),0);
+    const pRec=recCats.reduce((s,c)=>s+(pSub[c]||0),0);
+    const recGap=rRec-pRec;
+    const noRecGap=gap-recGap;
+    return{erp:e,real:rTot,ppto:pTot,gap,gapPct,recGap,noRecGap};
   });
   erpData.sort((a,b)=>a.gap-b.gap);
-  const flagCls={EXTRACCIÓN:'flag-extraccion',RECURRENTE:'flag-recurrente',PIPELINE:'flag-pipeline',MIXTO:'flag-mixto'};
   const dot=gp=>gp<-INSIGHTS_CONFIG.gapRedPct?'🔴':(gp<-INSIGHTS_CONFIG.gapYellowPct?'🟡':'🟢');
   const rows=erpData.filter(d=>Math.abs(d.gap)>500000).map(d=>{
     const sign=d.gapPct>=0?'+':'';
+    const recSign=d.recGap>=0?'+':'';
+    const noRecSign=d.noRecGap>=0?'+':'';
     return `<div class="insights-row">
       <span>${dot(d.gapPct)}</span>
       <span class="insights-erp-name">${ERP_NAMES[d.erp]||d.erp}</span>
       <span class="insights-gap-val ${d.gap<0?'semaforo-rojo':'semaforo-verde'}">${fmtM(d.gap)}</span>
       <span class="insights-gap-pct">(${sign}${(d.gapPct*100).toFixed(1)}%)</span>
-      <span class="insights-flag ${flagCls[d.flag]||'flag-mixto'}">${d.flag}</span>
+      <span class="insights-gap-pct" style="color:var(--text3);font-size:10px">Rec:&nbsp;<span class="${d.recGap<0?'semaforo-rojo':'semaforo-verde'}">${recSign}${fmtM(d.recGap)}</span></span>
+      <span class="insights-gap-pct" style="color:var(--text3);font-size:10px">NoRec:&nbsp;<span class="${d.noRecGap<0?'semaforo-rojo':'semaforo-verde'}">${noRecSign}${fmtM(d.noRecGap)}</span></span>
     </div>`;
   }).join('');
   el.innerHTML=`<div class="insights-block">
@@ -5089,7 +5807,9 @@ function insightsRenderCostos(real,ppto_){
 function insightsRenderSGA(real,ppto_){
   const el=document.getElementById('insightsSGA');
   if(!el) return;
-  const realGav=real.realGav||{},ppGav=ppto_.ppGav||{};
+  const realGav={...real.realGav||{}},ppGav={...ppto_.ppGav||{}};
+  if('Castigos' in realGav){ realGav['Incobrables']=(realGav['Incobrables']||0)+realGav['Castigos']; delete realGav['Castigos']; }
+  if('Castigos' in ppGav){ ppGav['Incobrables']=(ppGav['Incobrables']||0)+ppGav['Castigos']; delete ppGav['Castigos']; }
   const cats=new Set([...Object.keys(realGav),...Object.keys(ppGav)]);
   cats.delete('Depreciación');
   let gapExCorp=0;
@@ -5209,30 +5929,29 @@ function insightsRenderRndMode(){
 
     insightsRenderSummaryBar(realNorm, pptoNorm);
 
-    // Ingresos por categoría (en lugar de ERPs)
+    // Ingresos por Recurrente / No Recurrente
     const ingEl=document.getElementById('insightsIngresos');
     if(ingEl){
-      const cats=PPTO_RND_ING_ORDER;
       const dot=gp=>gp<-INSIGHTS_CONFIG.gapRedPct?'🔴':(gp<-INSIGHTS_CONFIG.gapYellowPct?'🟡':'🟢');
-      const rows=cats.map(c=>{
-        const rv=real.ing[c]||0, pv=pIng[c]||0;
-        const gap=rv-pv, gapPct=pv?gap/Math.abs(pv):0;
+      const REC_CATS=['Mantención','ASP','Cloud'];
+      const NOREC_CATS=['Implementación','Licencias','Ordename'];
+      const rRec=REC_CATS.reduce((s,c)=>s+(real.ing[c]||0),0);
+      const pRec=REC_CATS.reduce((s,c)=>s+(pIng[c]||0),0);
+      const recGap=rRec-pRec, recGapPct=pRec?recGap/Math.abs(pRec):0;
+      const rNoRec=NOREC_CATS.reduce((s,c)=>s+(real.ing[c]||0),0);
+      const pNoRec=NOREC_CATS.reduce((s,c)=>s+(pIng[c]||0),0);
+      const noRecGap=rNoRec-pNoRec, noRecGapPct=pNoRec?noRecGap/Math.abs(pNoRec):0;
+      const mkRow=(label,gap,gapPct)=>{
         if(Math.abs(gap)<500000) return '';
-        // Flag según categoría
-        const isRec=(c==='Mantención'||c==='ASP');
-        const isExtr=(c==='Implementación'||c==='Cloud');
-        const isLic=(c==='Licencias');
-        const flag=isRec?'RECURRENTE':isExtr?'EXTRACCIÓN':isLic?'PIPELINE':'MIXTO';
-        const flagCls={RECURRENTE:'flag-recurrente',EXTRACCIÓN:'flag-extraccion',PIPELINE:'flag-pipeline',MIXTO:'flag-mixto'}[flag];
         const sign=gapPct>=0?'+':'';
         return `<div class="insights-row">
           <span>${dot(gapPct)}</span>
-          <span class="insights-erp-name">${c}</span>
+          <span class="insights-erp-name">${label}</span>
           <span class="insights-gap-val ${gap<0?'semaforo-rojo':'semaforo-verde'}">${fmtM(gap)}</span>
           <span class="insights-gap-pct">(${sign}${(gapPct*100).toFixed(1)}%)</span>
-          <span class="insights-flag ${flagCls}">${flag}</span>
         </div>`;
-      }).join('');
+      };
+      const rows=[mkRow('Recurrente',recGap,recGapPct),mkRow('No Recurrente',noRecGap,noRecGapPct)].join('');
       ingEl.innerHTML=`<div class="insights-block">
         <div class="insights-block-title">Ingresos — Drivers del Gap</div>
         ${rows||'<div style="color:var(--text3);font-size:12px;padding:4px 0">Sin desviaciones significativas</div>'}
@@ -5557,6 +6276,616 @@ function insightsAIGenerate(){
   insightsCallAPI(key);
 }
 
+/* ═══════════════════════════════════════════════════════════
+   VIDA DE CLIENTES — KM + LTV integration
+   ═══════════════════════════════════════════════════════════ */
+
+// ── Global state ──────────────────────────────────────────
+let vidaRAW_ROWS = [];
+let vidaSTATE   = null;
+let vidaChartKM        = null;
+let vidaChartKMSector  = null;
+let vidaChartKMBucket  = null;
+let vidaCurrentKMSectorERP = 'Time';
+let vidaCurrentBucketERP   = 'Time';
+let vidaActiveSectors      = {};
+
+const VIDA_GIST_ID   = '84673c2a1010100bdd0e134d5462249d';
+const VIDA_GIST_FILE = 'gistfile1.txt';
+
+// ── Constants ─────────────────────────────────────────────
+const VIDA_ERPS         = ['Time','Manager+','Flexline','Random'];
+const VIDA_MAX_YR       = 22;
+const VIDA_MIN_SAMPLE   = 10;
+const VIDA_MIN_BUCKET_N = 15;
+const VIDA_LTV_CONF_HIGH = 15;
+const VIDA_LTV_CONF_MED  = 8;
+
+const VIDA_COLORS = {
+  'Time':     '#d97706',
+  'Manager+': '#2563eb',
+  'Flexline': '#059669',
+  'Random':   '#7c3aed'
+};
+
+const VIDA_SECTOR_PALETTE = ['#0ea472','#2563eb','#d97706','#7c3aed','#e11d48','#0891b2','#65a30d','#c2410c','#7e22ce','#0f766e','#b45309','#1d4ed8','#be185d','#166534','#92400e','#065f46'];
+const VIDA_BUCKET_COLORS  = ['#0ea472','#2563eb','#d97706','#7c3aed'];
+
+const VIDA_ERP_BUCKETS = {
+  'Time':     ['<2 UF','2\u20135 UF','5\u201310 UF','>=10 UF'],
+  'Manager+': ['<2.5 UF','2.5\u20135 UF','5\u20138 UF','>=8 UF'],
+  'Flexline': ['<5 UF','5\u201310 UF','10\u201320 UF','>=20 UF'],
+  'Random':   ['<5 UF','5\u201310 UF','10\u201320 UF','>=20 UF'],
+};
+const VIDA_BUCKET_RANGES = {
+  'Time':     {'<2 UF':[0,2],'2\u20135 UF':[2,5],'5\u201310 UF':[5,10],'>=10 UF':[10,Infinity]},
+  'Manager+': {'<2.5 UF':[0,2.5],'2.5\u20135 UF':[2.5,5],'5\u20138 UF':[5,8],'>=8 UF':[8,Infinity]},
+  'Flexline': {'<5 UF':[0,5],'5\u201310 UF':[5,10],'10\u201320 UF':[10,20],'>=20 UF':[20,Infinity]},
+  'Random':   {'<5 UF':[0,5],'5\u201310 UF':[5,10],'10\u201320 UF':[10,20],'>=20 UF':[20,Infinity]},
+};
+
+// ── Normalization ─────────────────────────────────────────
+function vidaNormStr(s){ return (s||'').toString().trim().normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().replace(/\s+/g,' '); }
+function vidaNormalizeERP(v){
+  const s=vidaNormStr(v);
+  if(s.includes('TIME'))    return 'Time';
+  if(s.includes('MANAGER')) return 'Manager+';
+  if(s.includes('FLEX'))    return 'Flexline';
+  if(s.includes('RANDOM'))  return 'Random';
+  return v?v.toString().trim():null;
+}
+function vidaNormalizeStatus(v){
+  const s=vidaNormStr(v);
+  if(s.includes('TERMIN')||s.includes('INACTIV')||s.includes('CHURN')||s.includes('BAJA')||s.includes('EGRES')) return 'Terminado';
+  if(s.includes('ACTIV')||s.includes('VIGENT')) return 'Activo';
+  if(s.includes('SUSPENS')||s.includes('SUSPEN')) return 'Suspendido';
+  return 'Otro';
+}
+function vidaNormalizeSector(v){ return v?(v.toString().trim().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ')):''; }
+function vidaNormalizeSize(v){
+  const s=vidaNormStr(v);
+  if(s.includes('GRAN'))   return 'Gran empresa';
+  if(s.includes('MEDIAN')) return 'Mediana empresa';
+  if(s.includes('PEQUE'))  return 'Pequeña empresa';
+  if(s.includes('MICRO'))  return 'Microempresa';
+  return v?v.toString().trim():'';
+}
+function vidaParseTicket(v){
+  if(v===null||v===undefined||v==='') return null;
+  const n=parseFloat(String(v).replace(/,/,'.'));
+  return isNaN(n)||n<=0?null:n;
+}
+function vidaParseVida(vA,vM){
+  let y=parseFloat(String(vA||'').replace(/,/,'.'));
+  if(!isNaN(y)&&y>=0) return y;
+  let m=parseFloat(String(vM||'').replace(/,/,'.'));
+  if(!isNaN(m)&&m>=0) return +(m/12).toFixed(3);
+  return null;
+}
+function vidaAssignBucket(erp,ticket){
+  if(!ticket||isNaN(ticket)||ticket<=0) return null;
+  for(const b of(VIDA_ERP_BUCKETS[erp]||[])){
+    const[lo,hi]=VIDA_BUCKET_RANGES[erp][b];if(ticket>=lo&&ticket<hi)return b;
+  }return null;
+}
+
+// ── Excel parsing ─────────────────────────────────────────
+const VIDA_COL_PATTERNS = {
+  erp:   [/^erp$/i,/producto/i,/sistema/i],
+  estado:[/^estado$/i,/status/i],
+  vidaA: [/vida.*a[ñn]/i,/a[ñn]os/i,/^vida\s*\(a/i,/vida.*yr/i],
+  vidaM: [/vida.*mes/i,/meses/i,/^vida\s*\(m/i],
+  sector:[/^sector$/i],
+  rubro: [/^rubro$/i],
+  tam:   [/tama[ñn]/i,/empresa.*size/i],
+  ticket:[/ticket/i,/mensual.*uf/i,/uf.*mensual/i,/ticket.*mensual/i],
+  tramo: [/^tramo/i,/tramo.*uf/i,/rango.*uf/i],
+};
+const VIDA_HEADER_KWS = ['RUT','ERP','ESTADO','SECTOR','TICKET','FECHA','VIDA','RUBRO','HOLDING','RAZON','SOCIAL','TAMA','MESES','ANOS'];
+
+function vidaDetectHeaderRow(rows){
+  for(let i=0;i<Math.min(rows.length,8);i++){
+    const row=rows[i]; let hits=0;
+    for(const cell of row){
+      const s=vidaNormStr(String(cell||''));
+      if(s.length<=60&&VIDA_HEADER_KWS.some(k=>s.includes(k))) hits++;
+    }
+    if(hits>=2) return i;
+  }
+  return -1;
+}
+function vidaDetectCols(headers){
+  const cols={};
+  headers.forEach((h,i)=>{
+    const raw=(h||'').toString().replace(/\n/g,' ').trim();
+    for(const[key,pats] of Object.entries(VIDA_COL_PATTERNS)){
+      if(!(key in cols)&&pats.some(p=>p.test(raw))) cols[key]=i;
+    }
+  });
+  return cols;
+}
+function vidaParseWorkbook(name,buffer){
+  let wb;
+  try{ wb=XLSX.read(buffer,{type:'array'}); }
+  catch(e){ return{file:name,error:'Error leyendo archivo: '+e.message,rows:[]}; }
+  let best=null,bestN=0;
+  for(const sn of wb.SheetNames){
+    const raw=XLSX.utils.sheet_to_json(wb.Sheets[sn],{header:1,defval:null,raw:true});
+    if(raw.length>bestN){bestN=raw.length;best={sn,raw};}
+  }
+  if(!best)return{file:name,error:'Archivo vacío',rows:[]};
+  const{sn,raw}=best;
+  const hi=vidaDetectHeaderRow(raw);
+  if(hi<0)return{file:name,error:'No se detectó encabezado (necesita ≥2 columnas: ERP, Estado, Vida, Sector, Ticket)',rows:[]};
+  const headers=raw[hi].map(h=>h||'');
+  const cols=vidaDetectCols(headers);
+  if(cols.erp==null||cols.estado==null)
+    return{file:name,error:`Faltan columnas clave. Detectadas: ${JSON.stringify(cols)}`,rows:[]};
+  const rows=[],warns=[];
+  for(let r=hi+1;r<raw.length;r++){
+    const row=raw[r];
+    if(!row||row.every(v=>v===null||v===''))continue;
+    const erp   =vidaNormalizeERP(row[cols.erp]);
+    const estado=vidaNormalizeStatus(row[cols.estado]);
+    const vidaA =cols.vidaA!=null?row[cols.vidaA]:null;
+    const vidaM =cols.vidaM!=null?row[cols.vidaM]:null;
+    const vida  =vidaParseVida(vidaA,vidaM);
+    let sectorRaw=cols.sector!=null?(row[cols.sector]||''):'';
+    if((!sectorRaw||String(sectorRaw).trim()===''||String(sectorRaw).trim()==='—'||String(sectorRaw).trim()==='-')&&cols.rubro!=null)
+      sectorRaw=row[cols.rubro]||'';
+    const sector=vidaNormalizeSector(sectorRaw);
+    const tam   =vidaNormalizeSize(cols.tam!=null?row[cols.tam]:'');
+    const ticket=vidaParseTicket(cols.ticket!=null?row[cols.ticket]:null);
+    const tramo =cols.tramo!=null?(row[cols.tramo]||'').toString().trim():'';
+    if(!erp||vida===null||isNaN(vida)||vida<0)continue;
+    if(estado==='Suspendido'||estado==='Otro')continue;
+    rows.push({erp,estado,vida,sector,tam,ticket,tramo});
+  }
+  const erpCounts={};
+  rows.forEach(r=>{erpCounts[r.erp]=(erpCounts[r.erp]||0)+1;});
+  return{file:name,rows,erpCounts,warns};
+}
+
+// ── KM Engine ─────────────────────────────────────────────
+function vidaComputeKM(records){
+  const valid=(records||[]).filter(r=>!isNaN(r.vida)&&r.vida>=0&&(r.event===0||r.event===1)).sort((a,b)=>a.vida-b.vida);
+  if(valid.length<2)return null;
+  const uniqueTimes=[...new Set(valid.map(r=>+r.vida))].sort((a,b)=>a-b);
+  let surv=1.0;
+  const rows=[];
+  for(const t of uniqueTimes){
+    const at=valid.filter(r=>r.vida===t);
+    const d=at.filter(r=>r.event===1).length;
+    const c=at.filter(r=>r.event===0).length;
+    const nRisk=valid.filter(r=>r.vida>=t).length;
+    if(nRisk>0&&d>0)surv*=(1-d/nRisk);
+    rows.push({time:t,nRisk,d,c,surv});
+  }
+  const annual=[100.0];
+  for(let yr=1;yr<=VIDA_MAX_YR;yr++){
+    let v=1.0;
+    for(const row of rows){ if(row.time<=yr) v=row.surv; else break; }
+    annual.push(+(v*100).toFixed(1));
+  }
+  const medRow=rows.find(r=>r.surv<=0.5);
+  const maxT=Math.ceil(Math.max(...valid.map(r=>r.vida)));
+  const rmstT=Math.min(15,maxT);
+  let rmst=0;
+  for(let yr=1;yr<=rmstT;yr++) rmst+=(annual[yr]||0)/100;
+  const nar={};
+  for(let t=0;t<=VIDA_MAX_YR;t++) nar[t]=valid.filter(r=>r.vida>=t).length;
+  return{
+    survival:annual,
+    median:medRow?+medRow.time.toFixed(2):null,
+    rmst:+rmst.toFixed(2),
+    rmstHorizon:rmstT,
+    n:valid.length,
+    events:valid.filter(r=>r.event===1).length,
+    nar
+  };
+}
+const vidaToRecs=rows=>rows.map(r=>({vida:+r.vida,event:r.estado==='Terminado'?1:0}));
+
+// ── Build State ───────────────────────────────────────────
+function vidaBuildState(allRows){
+  const erps=[...new Set(allRows.map(r=>r.erp))].filter(e=>VIDA_ERPS.includes(e));
+  const MIN5=VIDA_MIN_BUCKET_N;
+  const kmERP={},narERP={},kmSector={},narSector={},kmBucket={},narBucket={},kmSecBkt={},narSecBkt={};
+  for(const erp of erps){
+    const er=allRows.filter(r=>r.erp===erp);
+    const km=vidaComputeKM(vidaToRecs(er));
+    if(km){kmERP[erp]={survival:km.survival,median:km.median,n:km.n,events:km.events,rmst:km.rmst,rmstHorizon:km.rmstHorizon};narERP[erp]=km.nar;}
+    kmSector[erp]={};narSector[erp]={};
+    for(const sec of[...new Set(er.map(r=>r.sector).filter(Boolean))]){
+      const k=vidaComputeKM(vidaToRecs(er.filter(r=>r.sector===sec)));
+      if(k&&k.n>=MIN5){kmSector[erp][sec]={survival:k.survival,median:k.median,n:k.n,events:k.events,rmst:k.rmst};narSector[erp][sec]=k.nar;}
+    }
+    kmBucket[erp]={};narBucket[erp]={};kmSecBkt[erp]={};narSecBkt[erp]={};
+    for(const b of(VIDA_ERP_BUCKETS[erp]||[])){
+      const[lo,hi]=VIDA_BUCKET_RANGES[erp][b];
+      const bR=er.filter(r=>r.ticket!=null&&r.ticket>=lo&&r.ticket<hi);
+      const k=vidaComputeKM(vidaToRecs(bR));
+      if(k&&k.n>=MIN5){kmBucket[erp][b]={survival:k.survival,median:k.median,n:k.n,events:k.events,rmst:k.rmst};narBucket[erp][b]=k.nar;}
+      for(const sec of[...new Set(bR.map(r=>r.sector).filter(Boolean))]){
+        kmSecBkt[erp][sec]=kmSecBkt[erp][sec]||{};narSecBkt[erp][sec]=narSecBkt[erp][sec]||{};
+        const k2=vidaComputeKM(vidaToRecs(bR.filter(r=>r.sector===sec)));
+        if(k2&&k2.n>=MIN5){kmSecBkt[erp][sec][b]={survival:k2.survival,median:k2.median,n:k2.n,events:k2.events,rmst:k2.rmst};narSecBkt[erp][sec][b]=k2.nar;}
+      }
+    }
+  }
+  const segLTV={byERP:{},byERPSector:{},byERPBucket:{},byERPSectorBucket:{},_computed:true};
+  for(const erp of erps){
+    if(kmERP[erp])segLTV.byERP[erp]={...kmERP[erp],nar:narERP[erp]};
+    segLTV.byERPSector[erp]={};
+    for(const[sec,k]of Object.entries(kmSector[erp]||{}))segLTV.byERPSector[erp][sec]={...k,nar:narSector[erp][sec]};
+    segLTV.byERPBucket[erp]={};
+    for(const[b,k]of Object.entries(kmBucket[erp]||{}))segLTV.byERPBucket[erp][b]={...k,nar:narBucket[erp][b]};
+    segLTV.byERPSectorBucket[erp]={};
+    for(const[sec,bkts]of Object.entries(kmSecBkt[erp]||{})){
+      segLTV.byERPSectorBucket[erp][sec]={};
+      for(const[b,k]of Object.entries(bkts))segLTV.byERPSectorBucket[erp][sec][b]={...k,nar:narSecBkt[erp][sec][b]};
+    }
+  }
+  return{kmERP,narERP,kmSector,narSector,kmBucket,narBucket,kmSecBkt,narSecBkt,segmentLTV:segLTV,erps};
+}
+
+// ── Load File ─────────────────────────────────────────────
+function vidaLoadFile(file, source){
+  const rd=new FileReader();
+  rd.onload=e=>{
+    const result=vidaParseWorkbook(file.name, new Uint8Array(e.target.result));
+    if(!result.rows.length){ console.warn('vidaLoadFile: no rows from', file.name, result.error); return; }
+    // Merge: remove rows from same source if re-loading
+    vidaRAW_ROWS=vidaRAW_ROWS.filter(r=>r._src!==source);
+    result.rows.forEach(r=>r._src=source);
+    vidaRAW_ROWS=vidaRAW_ROWS.concat(result.rows);
+    vidaRebuildAll();
+    vidaCloudScheduleSave();
+  };
+  rd.readAsArrayBuffer(file);
+}
+
+// ── Rebuild All ───────────────────────────────────────────
+function vidaRebuildAll(){
+  if(!vidaRAW_ROWS.length) return;
+  vidaSTATE=vidaBuildState(vidaRAW_ROWS);
+  // Show content, hide empty states
+  ['km','ltv'].forEach(p=>{
+    const em=document.getElementById('vida-empty-'+p);
+    const ct=document.getElementById('vida-content-'+p);
+    if(em) em.style.display='none';
+    if(ct) ct.style.display='';
+  });
+  // Populate LTV ERP selector
+  const erps=vidaSTATE.erps||[];
+  const erpSel=document.getElementById('vida-ltv-erp');
+  if(erpSel){
+    erpSel.innerHTML='<option value="">— Seleccionar —</option>'+erps.map(e=>`<option>${e}</option>`).join('');
+  }
+  // Update KM summary cards
+  const cards={
+    'Time':     ['vida-km-time-med','vida-km-time-rmst','vida-km-time-n','vida-km-time-note'],
+    'Manager+': ['vida-km-mgr-med', 'vida-km-mgr-rmst', 'vida-km-mgr-n', 'vida-km-mgr-note'],
+    'Flexline': ['vida-km-flx-med', 'vida-km-flx-rmst', 'vida-km-flx-n', 'vida-km-flx-note'],
+    'Random':   ['vida-km-rnd-med', 'vida-km-rnd-rmst', 'vida-km-rnd-n', 'vida-km-rnd-note'],
+  };
+  for(const[erp,[mId,rId,nId,noId]]of Object.entries(cards)){
+    const d=vidaSTATE.kmERP?.[erp];
+    if(d){
+      const mel=document.getElementById(mId); if(mel) mel.textContent=d.median!=null?d.median:'NR';
+      const rel=document.getElementById(rId); if(rel) rel.textContent=d.rmst!=null?d.rmst:'—';
+      const nel=document.getElementById(nId); if(nel) nel.textContent=d.n.toLocaleString();
+    }
+  }
+  // If KM tab is currently active, rebuild charts
+  const kmTab=document.getElementById('tab-km');
+  if(kmTab&&(kmTab.classList.contains('active')||kmTab.style.display==='block')){
+    vidaBuildKMChart();
+    vidaRefreshNARGlobal();
+    vidaRenderSectorKMFilters();
+    vidaBuildKMSectorChart();
+    vidaBuildKMBucketChart();
+  }
+}
+
+// ── Cloud: Vida Gist ──────────────────────────────────────
+let vidaCloudSaveTimer=null;
+function vidaCloudScheduleSave(){
+  if(!cloudHasWriteAccess()) return;
+  if(vidaCloudSaveTimer) clearTimeout(vidaCloudSaveTimer);
+  vidaCloudSaveTimer=setTimeout(()=>{ vidaCloudSaveTimer=null; vidaCloudSave(); },5000);
+}
+async function vidaCloudLoad(){
+  if(!VIDA_GIST_ID) return;
+  try{
+    const result=await cloudFetchGistFile(VIDA_GIST_ID, VIDA_GIST_FILE);
+    if(!result||!result.text||!result.text.trim()||result.text.trim()==='{}') return;
+    const payload=JSON.parse(result.text);
+    const rows=Array.isArray(payload?.rows)?payload.rows:[];
+    if(!rows.length) return;
+    vidaRAW_ROWS=rows;
+    vidaRebuildAll();
+    console.log('vidaCloudLoad: restauradas',rows.length,'filas');
+  }catch(e){
+    console.warn('vidaCloudLoad error:',e);
+  }
+}
+async function vidaCloudSave(){
+  if(!cloudHasWriteAccess()||!vidaRAW_ROWS.length) return;
+  try{
+    const payload={savedAt:new Date().toISOString(),rows:vidaRAW_ROWS};
+    await fetch(`https://api.github.com/gists/${VIDA_GIST_ID}`,{
+      method:'PATCH',
+      headers:{
+        'Accept':'application/vnd.github+json',
+        'Authorization':'token '+GIST_TOKEN,
+        'Content-Type':'application/json'
+      },
+      body:JSON.stringify({files:{[VIDA_GIST_FILE]:{content:JSON.stringify(payload)}}})
+    });
+    console.log('vidaCloudSave: guardado',vidaRAW_ROWS.length,'filas');
+  }catch(e){
+    console.warn('vidaCloudSave error:',e);
+  }
+}
+
+// ── KM Chart — Global ─────────────────────────────────────
+function vidaBuildKMChart(){
+  if(!vidaSTATE) return;
+  const labels=['Inicio',...Array.from({length:VIDA_MAX_YR},(_,i)=>'Año '+(i+1))];
+  const datasets=VIDA_ERPS.filter(e=>vidaSTATE.kmERP?.[e]).map(erp=>{
+    const d=vidaSTATE.kmERP[erp];
+    return{label:`${erp} (med:${d.median!=null?d.median+'a':'NR'})`,data:d.survival,
+      borderColor:VIDA_COLORS[erp],backgroundColor:'transparent',pointRadius:0,borderWidth:2.5,tension:0,stepped:'after'};
+  });
+  datasets.push({label:'50%',data:Array(VIDA_MAX_YR+1).fill(50),borderColor:'#94a3b8',borderDash:[6,4],borderWidth:1,pointRadius:0,tension:0});
+  if(vidaChartKM) vidaChartKM.destroy();
+  const ctx=document.getElementById('vida-chartKM');
+  if(!ctx) return;
+  vidaChartKM=new Chart(ctx,{type:'line',data:{labels,datasets},
+    options:{responsive:true,
+      plugins:{
+        legend:{labels:{color:getComputedStyle(document.documentElement).getPropertyValue('--text2').trim()||'#4a5568',font:{family:'DM Mono',size:11,weight:'600'},boxWidth:16}},
+        datalabels:{display:false}
+      },
+      scales:{
+        x:{ticks:{color:getComputedStyle(document.documentElement).getPropertyValue('--text3').trim()||'#6b7280',font:{size:10}},grid:{color:getComputedStyle(document.documentElement).getPropertyValue('--border').trim()||'#f3f4f6'}},
+        y:{min:0,max:100,ticks:{color:getComputedStyle(document.documentElement).getPropertyValue('--text3').trim()||'#6b7280',callback:v=>v+'%',font:{size:10}},grid:{color:getComputedStyle(document.documentElement).getPropertyValue('--border').trim()||'#f3f4f6'}}
+      }
+    }
+  });
+  vidaRefreshNARGlobal();
+}
+
+function vidaRefreshNARGlobal(){
+  if(!vidaSTATE) return;
+  const tbl=document.getElementById('vida-nar-global-table');
+  if(!tbl) return;
+  const yrs=[0,1,2,3,5,7,10,13,15,18,20,22];
+  tbl.innerHTML=`<tr><td style="font-weight:600;color:var(--text3);padding:3px 10px 3px 0;white-space:nowrap">Año</td>${yrs.map(y=>`<td style="padding:3px 8px;text-align:center;color:var(--text3)">${y}</td>`).join('')}</tr>`+
+    VIDA_ERPS.filter(e=>vidaSTATE.narERP?.[e]).map(erp=>`<tr><td style="padding:3px 10px 3px 0;font-weight:600;color:${VIDA_COLORS[erp]};white-space:nowrap">${erp}</td>${yrs.map(y=>{const n=(vidaSTATE.narERP[erp]||{})[y]||0;return`<td style="padding:3px 8px;text-align:center;color:${n>0&&n<15?'var(--red)':'var(--text3)'}">${n||'—'}</td>`;}).join('')}</tr>`).join('');
+}
+
+// ── KM Chart — Sector ─────────────────────────────────────
+function vidaSwitchKMSector(erp,btn){
+  vidaCurrentKMSectorERP=erp; vidaActiveSectors={};
+  document.querySelectorAll('#vida-km-sector-erp-filters .vc-erp-btn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  vidaRenderSectorKMFilters();
+  vidaBuildKMSectorChart();
+}
+function vidaRenderSectorKMFilters(){
+  if(!vidaSTATE) return;
+  const secs=Object.keys(vidaSTATE.kmSector?.[vidaCurrentKMSectorERP]||{});
+  const el=document.getElementById('vida-km-sector-filters');
+  if(!el) return;
+  el.innerHTML=secs.map((sec,i)=>{
+    const color=VIDA_SECTOR_PALETTE[i%VIDA_SECTOR_PALETTE.length];
+    return`<button onclick="vidaToggleSectorKM('${sec.replace(/'/g,"\\'")}',this,'${color}')"
+      style="padding:4px 12px;border-radius:100px;font-family:inherit;font-size:11px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:transparent;color:var(--text3);transition:all .15s">${sec}</button>`;
+  }).join('');
+}
+function vidaToggleSectorKM(sec,btn,color){
+  vidaActiveSectors[sec]=!vidaActiveSectors[sec];
+  btn.style.borderColor=vidaActiveSectors[sec]?color:'var(--border)';
+  btn.style.background=vidaActiveSectors[sec]?color+'25':'transparent';
+  btn.style.color=vidaActiveSectors[sec]?color:'var(--text3)';
+  vidaBuildKMSectorChart();
+  vidaRefreshNARSector();
+  const low=Object.keys(vidaActiveSectors).filter(s=>vidaActiveSectors[s]&&((vidaSTATE.narSector?.[vidaCurrentKMSectorERP]||{})[s]||{})[10]<15);
+  const wd=document.getElementById('vida-warn-km-sector');
+  if(wd) wd.innerHTML=low.length?`<div class="vc-stat-warn"><span class="vc-stat-warn-icon">⚠</span>N at Risk &lt;15 en año 10: ${low.join(', ')}</div>`:'';
+}
+function vidaBuildKMSectorChart(){
+  if(!vidaSTATE) return;
+  const labels=['Inicio',...Array.from({length:VIDA_MAX_YR},(_,i)=>'Año '+(i+1))];
+  const allS=Object.keys(vidaSTATE.kmSector?.[vidaCurrentKMSectorERP]||{});
+  const active=allS.filter(s=>vidaActiveSectors[s]);
+  const datasets=active.map(sec=>{
+    const color=VIDA_SECTOR_PALETTE[allS.indexOf(sec)%VIDA_SECTOR_PALETTE.length];
+    const d=vidaSTATE.kmSector[vidaCurrentKMSectorERP][sec];
+    return{label:`${sec}${d.median!=null?' ('+d.median+'a)':''}`,data:d.survival,borderColor:color,backgroundColor:'transparent',pointRadius:0,borderWidth:2,tension:0,stepped:'after'};
+  });
+  datasets.push({label:'50%',data:Array(VIDA_MAX_YR+1).fill(50),borderColor:'#94a3b8',borderDash:[6,4],borderWidth:1,pointRadius:0,tension:0});
+  if(vidaChartKMSector) vidaChartKMSector.destroy();
+  const ctx=document.getElementById('vida-chartKMSector');
+  if(!ctx) return;
+  vidaChartKMSector=new Chart(ctx,{type:'line',data:{labels,datasets},
+    options:{responsive:true,
+      plugins:{
+        legend:{labels:{color:getComputedStyle(document.documentElement).getPropertyValue('--text2').trim()||'#4a5568',font:{size:10,weight:'600'},boxWidth:12}},
+        datalabels:{display:false}
+      },
+      scales:{
+        x:{ticks:{color:getComputedStyle(document.documentElement).getPropertyValue('--text3').trim()||'#6b7280',font:{size:10}},grid:{color:getComputedStyle(document.documentElement).getPropertyValue('--border').trim()||'#f3f4f6'}},
+        y:{min:0,max:100,ticks:{color:getComputedStyle(document.documentElement).getPropertyValue('--text3').trim()||'#6b7280',callback:v=>v+'%',font:{size:10}},grid:{color:getComputedStyle(document.documentElement).getPropertyValue('--border').trim()||'#f3f4f6'}}
+      }
+    }
+  });
+}
+function vidaRefreshNARSector(){
+  if(!vidaSTATE) return;
+  const active=Object.keys(vidaActiveSectors).filter(s=>vidaActiveSectors[s]);
+  const tbl=document.getElementById('vida-nar-sector-table');
+  if(!tbl) return;
+  if(!active.length){tbl.innerHTML='';return;}
+  const yrs=[0,1,2,3,5,7,10,13,15];
+  const allS=Object.keys(vidaSTATE.kmSector?.[vidaCurrentKMSectorERP]||{});
+  tbl.innerHTML=`<tr><td style="font-weight:600;color:var(--text3);padding:3px 10px 3px 0">Año</td>${yrs.map(y=>`<td style="padding:3px 8px;text-align:center;color:var(--text3)">${y}</td>`).join('')}</tr>`+
+    active.map(sec=>{const color=VIDA_SECTOR_PALETTE[allS.indexOf(sec)%VIDA_SECTOR_PALETTE.length];const nar=(vidaSTATE.narSector?.[vidaCurrentKMSectorERP]||{})[sec]||{};
+      return`<tr><td style="padding:3px 10px 3px 0;font-weight:600;color:${color};font-size:10px;white-space:nowrap">${sec}</td>${yrs.map(y=>{const n=nar[y]||0;return`<td style="padding:3px 8px;text-align:center;color:${n>0&&n<15?'var(--red)':'var(--text3)'}">${n||'—'}</td>`;}).join('')}</tr>`;}).join('');
+}
+
+// ── KM Chart — Bucket ─────────────────────────────────────
+function vidaSwitchKMBucket(erp,btn){
+  vidaCurrentBucketERP=erp;
+  document.querySelectorAll('#vida-bucket-erp-filters .vc-erp-btn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  vidaBuildKMBucketChart();
+}
+function vidaBuildKMBucketChart(){
+  if(!vidaSTATE) return;
+  const erp=vidaCurrentBucketERP;
+  const labels=['Inicio',...Array.from({length:VIDA_MAX_YR},(_,i)=>'Año '+(i+1))];
+  const datasets=[],tableRows=[];
+  (VIDA_ERP_BUCKETS[erp]||[]).forEach((b,i)=>{
+    const d=vidaSTATE.kmBucket?.[erp]?.[b];if(!d)return;
+    const nar=vidaSTATE.narBucket?.[erp]?.[b]||{};const color=VIDA_BUCKET_COLORS[i%VIDA_BUCKET_COLORS.length];
+    datasets.push({label:`${b}  ·  n=${d.n}  ·  ${d.median!=null?d.median+'a med.':'RMST '+d.rmst+'a'}`,
+      data:d.survival,borderColor:color,backgroundColor:'transparent',pointRadius:0,borderWidth:2.5,tension:0,stepped:'after'});
+    tableRows.push({b,color,n:d.n,events:d.events,median:d.median,rmst:d.rmst,nar});
+  });
+  const leg=document.getElementById('vida-bucket-legend-table');
+  if(!tableRows.length){
+    if(leg) leg.innerHTML=`<tr><td colspan="5" style="padding:16px;color:var(--text3);text-align:center">Sin datos suficientes (n≥15) para buckets de ${erp}</td></tr>`;
+    if(vidaChartKMBucket){vidaChartKMBucket.destroy();vidaChartKMBucket=null;}return;
+  }
+  datasets.push({label:'50%',data:Array(VIDA_MAX_YR+1).fill(50),borderColor:'#94a3b8',borderDash:[6,4],borderWidth:1,pointRadius:0,tension:0});
+  if(vidaChartKMBucket) vidaChartKMBucket.destroy();
+  const ctx=document.getElementById('vida-chartKMBucket');
+  if(!ctx) return;
+  vidaChartKMBucket=new Chart(ctx,{type:'line',data:{labels,datasets},
+    options:{responsive:true,
+      plugins:{
+        legend:{labels:{color:getComputedStyle(document.documentElement).getPropertyValue('--text2').trim()||'#4a5568',font:{family:'DM Mono',size:10,weight:'600'},boxWidth:14,padding:14}},
+        datalabels:{display:false}
+      },
+      scales:{
+        x:{ticks:{color:getComputedStyle(document.documentElement).getPropertyValue('--text3').trim()||'#6b7280',font:{size:10}},grid:{color:getComputedStyle(document.documentElement).getPropertyValue('--border').trim()||'#f3f4f6'}},
+        y:{min:0,max:100,ticks:{color:getComputedStyle(document.documentElement).getPropertyValue('--text3').trim()||'#6b7280',callback:v=>v+'%',font:{size:10}},grid:{color:getComputedStyle(document.documentElement).getPropertyValue('--border').trim()||'#f3f4f6'}}
+      }
+    }
+  });
+  if(leg) leg.innerHTML=tableRows.map(r=>`<tr>
+    <td style="padding:6px 10px"><span style="color:${r.color};font-weight:700">■</span> ${r.b}</td>
+    <td style="padding:6px 10px;text-align:center">${r.n}</td>
+    <td style="padding:6px 10px;text-align:center">${r.events}</td>
+    <td style="padding:6px 10px;text-align:center;font-weight:700;color:${r.color}">${r.median!=null?r.median+'a':'NR'}</td>
+    <td style="padding:6px 10px;text-align:center">${r.rmst?r.rmst+'a':'—'}</td></tr>`).join('');
+  const yrs=[0,1,2,3,5,7,10,13,15,18,20,22];
+  const narTbl=document.getElementById('vida-nar-bucket-table');
+  if(narTbl) narTbl.innerHTML=`<tr><td style="font-weight:600;color:var(--text3);padding:3px 10px 3px 0;white-space:nowrap">Año</td>${yrs.map(y=>`<td style="padding:3px 8px;text-align:center;color:var(--text3)">${y}</td>`).join('')}</tr>`+
+    tableRows.map(r=>`<tr><td style="padding:3px 10px 3px 0;font-weight:600;color:${r.color};white-space:nowrap">${r.b}</td>${yrs.map(y=>{const n=(r.nar||{})[y]||0;return`<td style="padding:3px 8px;text-align:center;color:${n>0&&n<15?'var(--red)':'var(--text3)'}">${n||'—'}</td>`;}).join('')}</tr>`).join('');
+}
+
+// ── LTV Calculator ────────────────────────────────────────
+function vidaPopulateLTVSectors(){
+  if(!vidaSTATE) return;
+  const erp=document.getElementById('vida-ltv-erp').value;
+  const sel=document.getElementById('vida-ltv-sector');
+  if(!sel) return;
+  const secs=erp?Object.keys(vidaSTATE.segmentLTV?.byERPSector?.[erp]||{}).sort():[];
+  sel.innerHTML='<option value="">— Sin filtro (promedio ERP) —</option>'+secs.map(s=>`<option value="${s}">${s}</option>`).join('');
+}
+function vidaConfLevel(n){
+  return n>=VIDA_LTV_CONF_HIGH?{cls:'high',lbl:'Alta',icon:'●'}:n>=VIDA_LTV_CONF_MED?{cls:'med',lbl:'Media',icon:'◑'}:{cls:'low',lbl:'Baja',icon:'○'};
+}
+function vidaBestSegment(erp,sector,ticket){
+  const seg=vidaSTATE.segmentLTV;
+  let bucket=null;
+  if(ticket&&!isNaN(ticket)&&ticket>0){
+    for(const b of(VIDA_ERP_BUCKETS[erp]||[])){const[lo,hi]=VIDA_BUCKET_RANGES[erp][b];if(ticket>=lo&&ticket<hi){bucket=b;break;}}
+  }
+  const c=[];
+  if(sector&&bucket){const s=seg.byERPSectorBucket?.[erp]?.[sector]?.[bucket];if(s)c.push({seg:s,level:'ERP + Rubro + Bucket',label:`${erp} + ${sector} + ${bucket}`,bucket,isFallback:false});}
+  if(sector){const s=seg.byERPSector?.[erp]?.[sector];if(s)c.push({seg:s,level:'ERP + Rubro',label:`${erp} + ${sector}`,bucket:null,isFallback:true});}
+  if(bucket){const s=seg.byERPBucket?.[erp]?.[bucket];if(s)c.push({seg:s,level:'ERP + Bucket',label:`${erp} + ${bucket}`,bucket,isFallback:true});}
+  const base=seg.byERP?.[erp];if(base)c.push({seg:base,level:'Solo ERP',label:`${erp} (promedio)`,bucket:null,isFallback:true});
+  for(const x of c){if(x.seg.n>=VIDA_LTV_CONF_MED)return x;}
+  return c[0]||null;
+}
+function vidaCalcularLTV(){
+  if(!vidaSTATE){alert('Carga los archivos de Vida de Clientes primero');return;}
+  const erp=document.getElementById('vida-ltv-erp').value;
+  const sector=document.getElementById('vida-ltv-sector').value;
+  const ticket=parseFloat(document.getElementById('vida-ltv-ticket').value);
+  const discount=parseFloat(document.getElementById('vida-discount-rate').value)/100;
+  const mm={
+    'Time':     parseFloat(document.getElementById('vida-margin-time').value)/100,
+    'Manager+': parseFloat(document.getElementById('vida-margin-mgr').value)/100,
+    'Flexline': parseFloat(document.getElementById('vida-margin-flx').value)/100,
+    'Random':   parseFloat(document.getElementById('vida-margin-rnd').value)/100
+  };
+  if(!erp){alert('Selecciona un ERP');return;}
+  if(isNaN(ticket)||ticket<=0){alert('Ticket inválido');return;}
+  const margin=mm[erp]||0.4;
+  const color=VIDA_COLORS[erp];
+  const best=vidaBestSegment(erp,sector,ticket);
+  const resEl=document.getElementById('vida-ltv-result');
+  if(!best){if(resEl)resEl.innerHTML=`<div class="vc-stat-err">Sin datos KM para ${erp}.</div>`;return;}
+  const km=best.seg;const conf=vidaConfLevel(km.n);
+  const annual=ticket*12;let ltv=0,ltvU=0;const bd=[];
+  for(let t=1;t<=VIDA_MAX_YR;t++){
+    const s=(km.survival[t]||0)/100;if(s<=0.003&&t>4)break;
+    const u=annual*margin*s;const d=u/Math.pow(1+discount,t);ltv+=d;ltvU+=u;
+    bd.push({year:t,surv:km.survival[t]||0,nar:km.nar?.[t]||0,disc:+d.toFixed(1),und:+u.toFixed(1)});
+  }
+  ltv=+ltv.toFixed(1);ltvU=+ltvU.toFixed(1);
+  const sBadge=sector?`<span style="padding:3px 8px;border-radius:100px;font-size:10px;background:var(--surface2);color:var(--text2);border:1px solid var(--border);margin-left:6px">${sector}</span>`:'';
+  const fHtml=best.isFallback?`<div class="vc-stat-warn" style="margin-bottom:12px"><span class="vc-stat-warn-icon">↩</span>Fallback a <strong>${best.level}</strong> por muestra insuficiente.</div>`:'';
+  const mNote=km.median!=null?'':`<div style="font-size:10px;color:var(--text3);margin-top:2px">Curva no cruza 50% — RMST truncada</div>`;
+  const bucket=best.bucket;
+  const cc=[];
+  if(sector&&bucket)cc.push({label:`${erp} + ${sector} + ${bucket}`,km:vidaSTATE.segmentLTV.byERPSectorBucket?.[erp]?.[sector]?.[bucket]});
+  if(sector)cc.push({label:`${erp} + ${sector}`,km:vidaSTATE.segmentLTV.byERPSector?.[erp]?.[sector]});
+  if(bucket)cc.push({label:`${erp} + ${bucket}`,km:vidaSTATE.segmentLTV.byERPBucket?.[erp]?.[bucket]});
+  cc.push({label:`${erp} (total)`,km:vidaSTATE.segmentLTV.byERP?.[erp]});
+  const cRows=cc.filter(x=>x.km).map(x=>{const used=x.label===best.label;const m=x.km.median!=null?`${x.km.median}a`:`RMST ${x.km.rmst}a`;
+    return`<tr style="${used?'background:var(--mgr-dim)':''}"><td style="padding:5px 10px;font-weight:${used?700:400};color:${used?color:'var(--text2)'}">${x.label}${used?` <span style="font-size:9px;color:${color}">← USADO</span>`:''}</td><td style="padding:5px 10px;text-align:center">${x.km.n}</td><td style="padding:5px 10px;text-align:center">${m}</td><td style="padding:5px 10px;text-align:center;font-size:10px;color:var(--text3)">${x.km.events!=null?x.km.events+' ev.':'—'}</td></tr>`;}).join('');
+  if(resEl) resEl.innerHTML=`
+    <div style="margin-bottom:12px">
+      <div style="font-size:10px;color:var(--text3);letter-spacing:1px;font-weight:600;margin-bottom:6px">RESULTADO · ${best.level.toUpperCase()}</div>
+      <span style="padding:3px 12px;border-radius:100px;font-size:11px;font-weight:600;background:${color}20;color:${color};border:1px solid ${color}40">${erp}</span>${sBadge}
+    </div>
+    ${fHtml}
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-bottom:14px">
+      <div class="result-metric" style="border-top:3px solid ${color}"><div class="result-metric-val" style="color:${color};font-size:36px">${ltv}</div><div class="result-metric-unit">UF</div><div class="result-metric-lbl">LTV descontado</div></div>
+      <div class="result-metric"><div class="result-metric-val" style="font-size:36px">${ltvU}</div><div class="result-metric-unit">UF</div><div class="result-metric-lbl">LTV sin descuento</div></div>
+      <div class="result-metric"><div class="result-metric-val" style="font-size:36px">${km.median??km.rmst??'—'}</div><div class="result-metric-unit">años</div><div class="result-metric-lbl">${km.median!=null?'Mediana KM':'RMST'}</div>${mNote}</div>
+      <div class="result-metric"><div class="result-confidence ${conf.cls}" style="margin:0;justify-content:center;flex-direction:column;gap:2px;text-align:center"><span style="font-size:20px">${conf.icon}</span><span>${conf.lbl}</span><span style="font-size:10px;opacity:.8">n=${km.n}</span></div></div>
+    </div>
+    <div style="font-size:11px;background:var(--surface2);border-radius:7px;padding:11px 14px;margin-bottom:14px;line-height:1.9;border:1px solid var(--border)">
+      <strong>Fórmula:</strong> Σ (${ticket} × 12 × ${(margin*100).toFixed(0)}% × S(t) / (1+${(discount*100).toFixed(0)}%)^t) = <strong style="color:${color}">${ltv} UF</strong>
+      <br><span style="font-size:10px;color:var(--text3)">Ahorro descuento: ${(ltvU-ltv).toFixed(1)} UF · Segmento: ${best.label}</span>
+    </div>
+    <div style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);font-weight:700;margin-bottom:8px">Comparativa de segmentos</div>
+    <div style="overflow-x:auto;border:1px solid var(--border);border-radius:8px;margin-bottom:14px">
+      <table style="width:100%;border-collapse:collapse;font-size:11px;font-family:inherit">
+        <thead><tr style="background:var(--surface2)">
+          <th style="padding:7px 10px;text-align:left;font-weight:700;color:var(--text3);font-size:10px">Segmento</th>
+          <th style="padding:7px 10px;text-align:center;font-weight:700;color:var(--text3);font-size:10px">n</th>
+          <th style="padding:7px 10px;text-align:center;font-weight:700;color:var(--text3);font-size:10px">Med/RMST</th>
+          <th style="padding:7px 10px;text-align:center;font-weight:700;color:var(--text3);font-size:10px">Eventos</th>
+        </tr></thead><tbody>${cRows}</tbody></table></div>
+    <div style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);font-weight:700;margin-bottom:8px">Flujo anual descontado</div>
+    <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:10.5px;font-family:inherit">
+      <tr><td style="color:var(--text3);padding:3px 8px 3px 0;font-weight:600;white-space:nowrap">Año</td>${bd.map(b=>`<td style="color:var(--text3);padding:3px 5px;text-align:center">${b.year}</td>`).join('')}</tr>
+      <tr><td style="color:var(--text3);padding:3px 8px 3px 0;font-weight:600">S(t)</td>${bd.map(b=>`<td style="color:${b.surv<30?'var(--red)':b.surv<60?'#d97706':color};padding:3px 5px;text-align:center;font-weight:500">${b.surv.toFixed(0)}%</td>`).join('')}</tr>
+      <tr><td style="color:var(--text3);padding:3px 8px 3px 0;font-weight:600;white-space:nowrap">UF desc.</td>${bd.map(b=>`<td style="color:${color};padding:3px 5px;text-align:center;font-weight:600">${b.disc}</td>`).join('')}</tr>
+      <tr><td style="color:var(--text3);padding:3px 8px 3px 0;font-weight:600;white-space:nowrap">N riesgo</td>${bd.map(b=>`<td style="color:${b.nar>0&&b.nar<15?'var(--red)':'var(--text3)'};padding:3px 5px;text-align:center">${b.nar||'—'}</td>`).join('')}</tr>
+    </table></div>`;
+}
+
 /* ═══════════ THEME TOGGLE ═══════════ */
 function toggleTheme(){
   const isDark=document.documentElement.getAttribute('data-theme')==='dark';
@@ -5582,7 +6911,6 @@ function applyTheme(t){
 })();
 
 </script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.27.0/plotly.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3-sankey@0.12.3/dist/d3-sankey.min.js"></script>
