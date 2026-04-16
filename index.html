@@ -8,7 +8,7 @@
   script-src  'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net;
   style-src   'self' 'unsafe-inline' https://fonts.googleapis.com;
   font-src    https://fonts.gstatic.com data:;
-  connect-src https://api.github.com https://*.workers.dev;
+  connect-src https://api.github.com https://*.workers.dev https://gist.githubusercontent.com;
   img-src     'self' data: blob:;
   object-src  'none';
 ">
@@ -1262,7 +1262,6 @@ async function cloudLoad(manual) {
         const brgData = cloudParseStoredJson(bridgeFile.text, 'bridge');
         if (brgData && brgData.length > 0 && typeof brgRestoreData === 'function') {
           brgRestoreData(brgData);
-          console.log('cloudLoad: bridge restaurado, filas:', brgData.length, bridgeFile.fileObj && bridgeFile.fileObj.truncated ? '(raw_url)' : '(content)');
         }
       }
     } catch(eBrg) {
