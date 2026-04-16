@@ -3159,7 +3159,6 @@ function rndRenderAll(){
 
   let ih=`<table><thead><tr><th>Línea</th><th>Monto</th><th>% Total</th>${showYoYRnd?'<th>vs Mismo Mes AA</th>':''}<th>Tipo</th></tr></thead><tbody>`;
   // Sección Recurrente
-  ih+=`<tr style="background:rgba(37,99,235,.04)"><td colspan="${showYoYRnd?5:4}" style="padding:6px 14px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--mgr2)">Recurrente · Mantención · ASP · Cloud</td></tr>`;
   ingRecCats.forEach(cat=>{
     const v=r.ingCats[cat]||0; if(!v) return;
     const vPrev=rndPrevYear?.ingCats[cat]||0;
@@ -3167,7 +3166,6 @@ function rndRenderAll(){
   });
   ih+=`<tr class="sub-row" style="background:rgba(37,99,235,.06)"><td style="padding-left:14px"><strong>Subtotal Recurrente</strong></td><td><strong>${fmt(rndRecTotal)}</strong></td><td><span class="pct-badge">${pct(rndRecTotal,r.totalIng)}</span></td>${showYoYRnd?`<td>${growHtml(rndRecTotal,rndRecPrev)}</td>`:''}<td></td></tr>`;
   // Sección No Recurrente
-  ih+=`<tr style="background:rgba(124,58,237,.04)"><td colspan="${showYoYRnd?5:4}" style="padding:6px 14px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--rnd2)">No Recurrente · Implementación · Licencias · Ordename</td></tr>`;
   ingNoRecCats.forEach(cat=>{
     const v=r.ingCats[cat]||0; if(!v) return;
     const vPrev=rndPrevYear?.ingCats[cat]||0;
