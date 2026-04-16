@@ -671,6 +671,31 @@ table.brg-bridge tbody tr.pct.B td{font-weight:700;color:var(--text2);background
   .insights-summary-bar { grid-template-columns: 1fr 1fr; gap: 8px; }
   .insights-row { flex-wrap: wrap; gap: 6px; }
   .insights-diag { flex-basis: 100%; }
+
+  /* Columna fija en tablas PPTO y Consolidado viewer */
+  #pptoBIng .ppto-tbl thead th:first-child, #pptoBIng .ppto-tbl tbody td:first-child,
+  #pptoBCos .ppto-tbl thead th:first-child, #pptoBCos .ppto-tbl tbody td:first-child,
+  #pptoRndBIng .ppto-tbl thead th:first-child, #pptoRndBIng .ppto-tbl tbody td:first-child,
+  #pptoRndBCv .ppto-tbl thead th:first-child, #pptoRndBCv .ppto-tbl tbody td:first-child,
+  #pptoRndBSga .ppto-tbl thead th:first-child, #pptoRndBSga .ppto-tbl tbody td:first-child,
+  #consolTableWrap thead th:first-child, #consolTableWrap tbody td:first-child {
+    position: sticky; left: 0; z-index: 2;
+    background: var(--surface);
+    box-shadow: 2px 0 4px rgba(0,0,0,.06);
+  }
+  /* section-head span ocupa todo el colspan, necesita fondo explícito */
+  #pptoBIng .ppto-tbl tr.section-head td,
+  #pptoBCos .ppto-tbl tr.section-head td,
+  #pptoRndBIng .ppto-tbl tr.section-head td,
+  #pptoRndBCv .ppto-tbl tr.section-head td,
+  #pptoRndBSga .ppto-tbl tr.section-head td {
+    background: var(--mgr-dim);
+  }
+  #pptoBIng .ppto-tbl tr.grand td:first-child,
+  #pptoBCos .ppto-tbl tr.grand td:first-child,
+  #pptoRndBIng .ppto-tbl tr.grand td:first-child,
+  #pptoRndBCv .ppto-tbl tr.grand td:first-child,
+  #pptoRndBSga .ppto-tbl tr.grand td:first-child { background: var(--surface2); }
 }
 
 @media(max-width:480px){
@@ -848,6 +873,11 @@ table.brg-bridge tbody tr.pct.B td{font-weight:700;color:var(--text2);background
   .insights-summary-bar { grid-template-columns: 1fr; }
   .insights-bridge-metrics { flex-wrap: wrap; gap: 6px; }
   #insightsLayer2 button { width: 100%; justify-content: center; }
+
+  /* PPTO — section-head headers compactos en móvil */
+  .ppto-tbl tr.section-head td,
+  .ppto-tbl tr.section-head-red td,
+  .ppto-tbl tr.section-head-amber td { font-size: 9px !important; padding: 7px 10px; letter-spacing: .5px; }
 
   /* KM/LTV responsive 480px */
   .vc-km-cards { grid-template-columns: 1fr 1fr; gap: 8px; }
@@ -2086,7 +2116,7 @@ function cloudAutoSave() {
       <div class="vc-chart-box">
         <div class="vc-chart-title">Global · los 4 ERPs comparados</div>
         <div class="vc-chart-subtitle">% de clientes que siguen activos según año de vida</div>
-        <canvas id="vida-chartKM" height="70"></canvas>
+        <div style="position:relative;height:280px"><canvas id="vida-chartKM"></canvas></div>
         <div style="margin-top:16px">
           <div class="vc-chart-title" style="margin-bottom:8px">Number at Risk</div>
           <div class="vc-nar-wrap"><table class="vc-nar-table" id="vida-nar-global-table"></table></div>
@@ -2108,7 +2138,7 @@ function cloudAutoSave() {
         </div>
         <div id="vida-km-sector-filters" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px"></div>
         <div id="vida-warn-km-sector" style="margin-bottom:10px"></div>
-        <canvas id="vida-chartKMSector" height="70"></canvas>
+        <div style="position:relative;height:280px"><canvas id="vida-chartKMSector"></canvas></div>
         <div style="font-size:10.5px;color:var(--text3);margin-top:10px">La línea punteada marca el 50%.</div>
         <div style="margin-top:16px">
           <div class="vc-chart-title" style="margin-bottom:8px">Number at Risk · sectores</div>
@@ -2128,7 +2158,7 @@ function cloudAutoSave() {
             <button class="vc-erp-btn random" onclick="vidaSwitchKMBucket('Random',this)">Random</button>
           </div>
         </div>
-        <canvas id="vida-chartKMBucket" height="70"></canvas>
+        <div style="position:relative;height:280px"><canvas id="vida-chartKMBucket"></canvas></div>
         <div style="font-size:10.5px;color:var(--text3);margin-top:10px">Línea punteada = 50%. NR = curva no cruzó el 50%.</div>
         <div style="margin-top:16px">
           <div class="vc-chart-title" style="margin-bottom:8px">Resumen por bucket</div>
@@ -5562,11 +5592,11 @@ function pptoRndRenderAll(){
   const hdr=`<thead><tr><th style="text-align:left">Categoría</th><th>Real 2026</th><th>PPTO 2026</th><th>Desv $</th><th>Desv %</th></tr></thead>`;
   document.getElementById('pptoRndBIng').innerHTML=`<table class="ppto-tbl">${hdr}<tbody>
     <tr class="section-head" onclick="pptoSecToggle('rs1')" style="cursor:pointer" data-open="0" id="rs1">
-      <td colspan="5"><span id="rs1ico" style="font-size:9px;margin-right:5px;opacity:.7">▶</span><span style="text-transform:none">Ingresos Recurrentes (Mantención · ASP · Cloud${hasPeru?' · Perú':''})</span></td>
+      <td colspan="5"><span id="rs1ico" style="font-size:9px;margin-right:5px;opacity:.7">▶</span>Recurrente</td>
     </tr>
     <tr data-sec="rs1" style="display:none"><td>Recurrente${peruLabel}</td><td>${fmtM(rRecFull)}</td><td>${fmtM(pRec)}</td>${devHtml(rRecFull,pRec)}</tr>
     <tr class="section-head" onclick="pptoSecToggle('rs2')" style="cursor:pointer" data-open="0" id="rs2">
-      <td colspan="5"><span id="rs2ico" style="font-size:9px;margin-right:5px;opacity:.7">▶</span><span style="text-transform:none">Ingresos No Recurrentes (Implementación · Licencias · Ordename)</span></td>
+      <td colspan="5"><span id="rs2ico" style="font-size:9px;margin-right:5px;opacity:.7">▶</span>No Recurrente</td>
     </tr>
     <tr data-sec="rs2" style="display:none"><td>No Recurrente</td><td>${fmtM(rNoRec)}</td><td>${fmtM(pNoRec)}</td>${devHtml(rNoRec,pNoRec)}</tr>
     <tr class="grand"><td>Total Ingresos${peruLabel}</td><td>${fmtM(rTotIngFull)}</td><td>${fmtM(pTotIng)}</td>${devHtml(rTotIngFull,pTotIng)}</tr>
@@ -6642,15 +6672,17 @@ function vidaBuildKMChart(){
   if(vidaChartKM) vidaChartKM.destroy();
   const ctx=document.getElementById('vida-chartKM');
   if(!ctx) return;
+  const allVals=datasets.flatMap(d=>d.data.filter(v=>typeof v==='number'&&isFinite(v)));
+  const yMinKM=Math.max(0,Math.floor((Math.min(...allVals)-5)/10)*10);
   vidaChartKM=new Chart(ctx,{type:'line',data:{labels,datasets},
-    options:{responsive:true,
+    options:{responsive:true,maintainAspectRatio:false,
       plugins:{
         legend:{labels:{color:getComputedStyle(document.documentElement).getPropertyValue('--text2').trim()||'#4a5568',font:{family:'DM Mono',size:11,weight:'600'},boxWidth:16}},
         datalabels:{display:false}
       },
       scales:{
-        x:{ticks:{color:getComputedStyle(document.documentElement).getPropertyValue('--text3').trim()||'#6b7280',font:{size:10}},grid:{color:getComputedStyle(document.documentElement).getPropertyValue('--border').trim()||'#f3f4f6'}},
-        y:{min:0,max:100,ticks:{color:getComputedStyle(document.documentElement).getPropertyValue('--text3').trim()||'#6b7280',callback:v=>v+'%',font:{size:10}},grid:{color:getComputedStyle(document.documentElement).getPropertyValue('--border').trim()||'#f3f4f6'}}
+        x:{ticks:{color:getComputedStyle(document.documentElement).getPropertyValue('--text3').trim()||'#6b7280',font:{size:10},maxRotation:45,autoSkip:true,maxTicksLimit:12},grid:{color:getComputedStyle(document.documentElement).getPropertyValue('--border').trim()||'#f3f4f6'}},
+        y:{min:yMinKM,max:100,ticks:{color:getComputedStyle(document.documentElement).getPropertyValue('--text3').trim()||'#6b7280',callback:v=>v+'%',font:{size:10}},grid:{color:getComputedStyle(document.documentElement).getPropertyValue('--border').trim()||'#f3f4f6'}}
       }
     }
   });
@@ -6710,15 +6742,17 @@ function vidaBuildKMSectorChart(){
   if(vidaChartKMSector) vidaChartKMSector.destroy();
   const ctx=document.getElementById('vida-chartKMSector');
   if(!ctx) return;
+  const sVals=datasets.flatMap(d=>d.data.filter(v=>typeof v==='number'&&isFinite(v)));
+  const yMinSec=sVals.length?Math.max(0,Math.floor((Math.min(...sVals)-5)/10)*10):0;
   vidaChartKMSector=new Chart(ctx,{type:'line',data:{labels,datasets},
-    options:{responsive:true,
+    options:{responsive:true,maintainAspectRatio:false,
       plugins:{
         legend:{labels:{color:getComputedStyle(document.documentElement).getPropertyValue('--text2').trim()||'#4a5568',font:{size:10,weight:'600'},boxWidth:12}},
         datalabels:{display:false}
       },
       scales:{
-        x:{ticks:{color:getComputedStyle(document.documentElement).getPropertyValue('--text3').trim()||'#6b7280',font:{size:10}},grid:{color:getComputedStyle(document.documentElement).getPropertyValue('--border').trim()||'#f3f4f6'}},
-        y:{min:0,max:100,ticks:{color:getComputedStyle(document.documentElement).getPropertyValue('--text3').trim()||'#6b7280',callback:v=>v+'%',font:{size:10}},grid:{color:getComputedStyle(document.documentElement).getPropertyValue('--border').trim()||'#f3f4f6'}}
+        x:{ticks:{color:getComputedStyle(document.documentElement).getPropertyValue('--text3').trim()||'#6b7280',font:{size:10},maxRotation:45,autoSkip:true,maxTicksLimit:12},grid:{color:getComputedStyle(document.documentElement).getPropertyValue('--border').trim()||'#f3f4f6'}},
+        y:{min:yMinSec,max:100,ticks:{color:getComputedStyle(document.documentElement).getPropertyValue('--text3').trim()||'#6b7280',callback:v=>v+'%',font:{size:10}},grid:{color:getComputedStyle(document.documentElement).getPropertyValue('--border').trim()||'#f3f4f6'}}
       }
     }
   });
@@ -6764,15 +6798,17 @@ function vidaBuildKMBucketChart(){
   if(vidaChartKMBucket) vidaChartKMBucket.destroy();
   const ctx=document.getElementById('vida-chartKMBucket');
   if(!ctx) return;
+  const bVals=datasets.flatMap(d=>d.data.filter(v=>typeof v==='number'&&isFinite(v)));
+  const yMinBkt=bVals.length?Math.max(0,Math.floor((Math.min(...bVals)-5)/10)*10):0;
   vidaChartKMBucket=new Chart(ctx,{type:'line',data:{labels,datasets},
-    options:{responsive:true,
+    options:{responsive:true,maintainAspectRatio:false,
       plugins:{
         legend:{labels:{color:getComputedStyle(document.documentElement).getPropertyValue('--text2').trim()||'#4a5568',font:{family:'DM Mono',size:10,weight:'600'},boxWidth:14,padding:14}},
         datalabels:{display:false}
       },
       scales:{
-        x:{ticks:{color:getComputedStyle(document.documentElement).getPropertyValue('--text3').trim()||'#6b7280',font:{size:10}},grid:{color:getComputedStyle(document.documentElement).getPropertyValue('--border').trim()||'#f3f4f6'}},
-        y:{min:0,max:100,ticks:{color:getComputedStyle(document.documentElement).getPropertyValue('--text3').trim()||'#6b7280',callback:v=>v+'%',font:{size:10}},grid:{color:getComputedStyle(document.documentElement).getPropertyValue('--border').trim()||'#f3f4f6'}}
+        x:{ticks:{color:getComputedStyle(document.documentElement).getPropertyValue('--text3').trim()||'#6b7280',font:{size:10},maxRotation:45,autoSkip:true,maxTicksLimit:12},grid:{color:getComputedStyle(document.documentElement).getPropertyValue('--border').trim()||'#f3f4f6'}},
+        y:{min:yMinBkt,max:100,ticks:{color:getComputedStyle(document.documentElement).getPropertyValue('--text3').trim()||'#6b7280',callback:v=>v+'%',font:{size:10}},grid:{color:getComputedStyle(document.documentElement).getPropertyValue('--border').trim()||'#f3f4f6'}}
       }
     }
   });
