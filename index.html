@@ -3,10 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="
+  default-src 'self' 'unsafe-inline';
+  script-src  'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net;
+  style-src   'self' 'unsafe-inline' https://fonts.googleapis.com;
+  font-src    https://fonts.gstatic.com data:;
+  connect-src https://api.github.com https://*.workers.dev;
+  img-src     'self' data: blob:;
+  object-src  'none';
+">
 <title>Dashboard Financiero — Grupo</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>
 <style>
 :root{
   /* Vida de Clientes palette — light, clean */
@@ -862,8 +872,6 @@ table.brg-bridge tbody tr.pct.B td{font-weight:700;color:var(--text2);background
   #pptoPeriodBar .view-toggle { flex-wrap: wrap; gap: 4px; }
   #pptoPeriodBar .divider { display: none; }
   #pptoPeriodBar select.sel { width: 100%; }
-  /* PPTO — ocultar col PPTO$ en tablas angostas */
-  .ppto-tbl th:nth-child(3), .ppto-tbl td:nth-child(3) { display: none; }
   /* PPTO — KPI cards */
   #pptoKpi .kpi-card, #pptoRndKpi .kpi-card { min-width: 0; overflow: hidden; }
   #pptoKpi .kpi-sub-split, #pptoRndKpi .kpi-sub-split { flex-direction: column; gap: 2px; }
@@ -1118,8 +1126,6 @@ async function doLogin(){
     });
 
     if (res.ok) {
-      const data = await res.json();
-      if (data.token) GIST_TOKEN = data.token;
       err.style.display = 'none';
       const overlay = document.getElementById('loginOverlay');
       overlay.classList.add('fade-out');
@@ -1160,11 +1166,7 @@ window.addEventListener('load', () => {
 //     (puede ser secreto, contenido cualquiera)
 //  4. Pega el token y el ID del Gist abajo
 // ═══════════════════════════════════════════════════════
-let GIST_TOKEN = '';   // opcional: dejar vacío si el Gist es público y solo quieres lectura
-const GIST_ID    = 'c72d7567dafb186c0a9e700cee59f309';      // mgr + rnd + usr
-const GIST_ID_BRG = 'fca69901de41a6b50de5d8ebef96b009';     // bridge MRR
 const GIST_FILE  = 'sable_dashboard.json';
-const GIST_BASE  = 'https://api.github.com/gists';
 
 let cloudReady = false;
 let cloudSaving = false;
@@ -1183,7 +1185,7 @@ function cloudSetStatus(state, msg) {
   text.textContent = msg;
 }
 function cloudHasWriteAccess() {
-  return !!(GIST_TOKEN && String(GIST_TOKEN).trim());
+  return true; // acceso via Worker autenticado — token nunca sale al browser
 }
 function cloudShowSaveBtn(show) {
   const btn = document.getElementById('cloudSaveBtn');
@@ -1192,11 +1194,8 @@ function cloudShowSaveBtn(show) {
 }
 
 // ─── LOAD from Gist ──────────────────────────────────
-async function cloudFetchGistFile(gistId, fileName) {
-  const headers = { 'Accept': 'application/vnd.github+json' };
-  if (cloudHasWriteAccess()) headers['Authorization'] = 'token ' + GIST_TOKEN;
-
-  const res = await fetch(`${GIST_BASE}/${gistId}`, { headers });
+async function cloudFetchGistFile(gistName, fileName) {
+  const res = await fetch(`${WORKER_URL}/gist/${gistName}`);
   if (!res.ok) throw new Error('HTTP ' + res.status);
 
   const json = await res.json();
@@ -1231,13 +1230,9 @@ function cloudParseStoredJson(text, label) {
 }
 
 async function cloudLoad(manual) {
-  if (!GIST_ID || GIST_ID.includes('AQUI')) {
-    cloudSetStatus('error', 'Sin configurar — falta GIST_ID');
-    return;
-  }
   cloudSetStatus('saving', manual ? 'Recargando...' : 'Cargando datos guardados...');
   try {
-    const mainFile = await cloudFetchGistFile(GIST_ID, GIST_FILE);
+    const mainFile = await cloudFetchGistFile('main', GIST_FILE);
 
     if (!mainFile || !mainFile.text || mainFile.text.trim() === '') {
       cloudSetStatus('ok', 'Sin datos guardados aún');
@@ -1262,7 +1257,7 @@ async function cloudLoad(manual) {
 
     // Cargar bridge desde Gist separado
     try {
-      const bridgeFile = await cloudFetchGistFile(GIST_ID_BRG, 'sable_bridge.json');
+      const bridgeFile = await cloudFetchGistFile('bridge', 'sable_bridge.json');
       if (bridgeFile && bridgeFile.text && bridgeFile.text.trim() !== '' && bridgeFile.text.trim() !== '{}') {
         const brgData = cloudParseStoredJson(bridgeFile.text, 'bridge');
         if (brgData && brgData.length > 0 && typeof brgRestoreData === 'function') {
@@ -1282,14 +1277,6 @@ async function cloudLoad(manual) {
 
 // ─── SAVE to Gist ────────────────────────────────────
 async function cloudSave() {
-  if (!cloudHasWriteAccess()) {
-    cloudSetStatus('error', 'Solo lectura: el Gist público carga sin token, pero guardar requiere token');
-    return;
-  }
-  if (!GIST_ID || GIST_ID.includes('AQUI')) {
-    cloudSetStatus('error', 'Sin configurar — falta GIST_ID');
-    return;
-  }
   if (cloudSaving) return; // evitar guardados simultáneos
   cloudSaving = true;
 
@@ -1325,9 +1312,9 @@ async function cloudSave() {
 
   try {
     // Guardar mgr + rnd + usr en Gist principal
-    const res = await fetch(`${GIST_BASE}/${GIST_ID}`, {
+    const res = await fetch(`${WORKER_URL}/gist/main`, {
       method:  'PATCH',
-      headers: { 'Authorization': 'token ' + GIST_TOKEN, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json' },
       body:    JSON.stringify({ files: { [GIST_FILE]: { content } } })
     });
     if (!res.ok) throw new Error('HTTP ' + res.status);
@@ -1346,9 +1333,9 @@ async function cloudSave() {
       } else {
         brgContent = brgJson;
       }
-      const resBrg = await fetch(`${GIST_BASE}/${GIST_ID_BRG}`, {
+      const resBrg = await fetch(`${WORKER_URL}/gist/bridge`, {
         method:  'PATCH',
-        headers: { 'Authorization': 'token ' + GIST_TOKEN, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json' },
         body:    JSON.stringify({ files: { ['sable_bridge.json']: { content: brgContent } } })
       });
       if (!resBrg.ok) console.warn('Bridge Gist save error: HTTP ' + resBrg.status);
@@ -4987,7 +4974,7 @@ function pptoRenderAll(){
   const sTot=(lbl,r,p)=>`<tr class="erp-tot" data-sec="${mgrCurrSec}" style="display:none"><td>${lbl}</td><td>${fmtM(r)}</td><td>${fmtM(p)}</td>${pptoDevHtml(r,p)}</tr>`;
   const sRowAcc=(lbl,r,p,indent=true)=>r||p?`<tr class="erp-sub open" data-sec="${mgrCurrSec}" style="display:none"><td style="${indent?'padding-left:24px;':''}">${lbl}</td><td>${fmtM(r)}</td><td>${p?fmtM(p):'—'}</td>${pptoDevHtml(r,p)}</tr>`:'';
 
-  let html=`<div style="overflow-x:auto"><table class="ppto-tbl"><thead><tr>
+  let html=`<table class="ppto-tbl"><thead><tr>
     <th>Línea de negocio · ${periodLbl}</th><th>Real</th><th>PPTO</th><th>Desv $</th><th>Desv %</th>
   </tr></thead><tbody>`;
 
@@ -5026,7 +5013,7 @@ function pptoRenderAll(){
   html+=sTot('Otros (Senegocia · Ptos. Terceros · Varios)',r5,p5||0);
 
   html+=`<tr class="grand"><td>Total Ingresos</td><td>${fmtM(totR)}</td><td>${fmtM(totP)}</td>${pptoDevHtml(totR,totP)}</tr>`;
-  html+=`</tbody></table></div>`;
+  html+=`</tbody></table>`;
   document.getElementById('pptoBIng').innerHTML=html;
   document.getElementById('pptoTotIng').textContent=`Real ${fmtM(totR)} vs PPTO ${fmtM(totP)}`;
 
@@ -5044,7 +5031,7 @@ function pptoRenderAll(){
 
   const costCats=[...new Set([...Object.keys(realCos),...Object.keys(ppCos)])];
   const gavCats=[...new Set([...Object.keys(realGav),...Object.keys(ppGav)])];
-  let html2=`<div style="overflow-x:auto"><table class="ppto-tbl"><thead><tr>
+  let html2=`<table class="ppto-tbl"><thead><tr>
     <th>Concepto · ${periodLbl}</th><th>Real</th><th>PPTO</th><th>Desv $</th><th>Desv %</th>
   </tr></thead><tbody>`;
   html2+=`<tr class="section-head-red"><td colspan="5">Costos de Venta</td></tr>`;
@@ -5063,7 +5050,7 @@ function pptoRenderAll(){
     html2+=`<tr><td style="padding-left:20px">· ${c}</td><td>${fmtM(rv)}</td><td>${fmtM(pv)}</td>${pptoDevCostHtml(rv,pv)}</tr>`;
   });
   html2+=`<tr class="grand"><td>Subtotal GAVs</td><td>${fmtM(tgR)}</td><td>${fmtM(tgP)}</td>${pptoDevCostHtml(tgR,tgP)}</tr>`;
-  html2+=`</tbody></table></div>`;
+  html2+=`</tbody></table>`;
   document.getElementById('pptoBCos').innerHTML=html2;
   document.getElementById('pptoTotCos').textContent=`Real ${fmtM(tcR+tgR)} vs PPTO ${fmtM(tcP+tgP)}`;
 
@@ -5591,14 +5578,8 @@ function pptoRndRenderAll(){
   // ── Ingresos table: 2 filas (Rec / No Rec) ──
   const hdr=`<thead><tr><th style="text-align:left">Categoría</th><th>Real 2026</th><th>PPTO 2026</th><th>Desv $</th><th>Desv %</th></tr></thead>`;
   document.getElementById('pptoRndBIng').innerHTML=`<table class="ppto-tbl">${hdr}<tbody>
-    <tr class="section-head" onclick="pptoSecToggle('rs1')" style="cursor:pointer" data-open="0" id="rs1">
-      <td colspan="5"><span id="rs1ico" style="font-size:9px;margin-right:5px;opacity:.7">▶</span>Recurrente</td>
-    </tr>
-    <tr data-sec="rs1" style="display:none"><td>Recurrente${peruLabel}</td><td>${fmtM(rRecFull)}</td><td>${fmtM(pRec)}</td>${devHtml(rRecFull,pRec)}</tr>
-    <tr class="section-head" onclick="pptoSecToggle('rs2')" style="cursor:pointer" data-open="0" id="rs2">
-      <td colspan="5"><span id="rs2ico" style="font-size:9px;margin-right:5px;opacity:.7">▶</span>No Recurrente</td>
-    </tr>
-    <tr data-sec="rs2" style="display:none"><td>No Recurrente</td><td>${fmtM(rNoRec)}</td><td>${fmtM(pNoRec)}</td>${devHtml(rNoRec,pNoRec)}</tr>
+    <tr><td>Recurrente${peruLabel}</td><td>${fmtM(rRecFull)}</td><td>${fmtM(pRec)}</td>${devHtml(rRecFull,pRec)}</tr>
+    <tr><td>No Recurrente</td><td>${fmtM(rNoRec)}</td><td>${fmtM(pNoRec)}</td>${devHtml(rNoRec,pNoRec)}</tr>
     <tr class="grand"><td>Total Ingresos${peruLabel}</td><td>${fmtM(rTotIngFull)}</td><td>${fmtM(pTotIng)}</td>${devHtml(rTotIngFull,pTotIng)}</tr>
   </tbody></table>`;
   document.getElementById('pptoRndTotIng').textContent=fmtM(rTotIngFull);
@@ -6292,7 +6273,7 @@ function insightsMdToHtml(text){
 
 function insightsShowAIResult(text){
   const result=document.getElementById('insightsAIResult');
-  if(result) result.innerHTML=`<div class="insights-ai-result">${insightsMdToHtml(text)}</div>`;
+  if(result) result.innerHTML=DOMPurify.sanitize(`<div class="insights-ai-result">${insightsMdToHtml(text)}</div>`,{ALLOWED_TAGS:['div','strong','br'],ALLOWED_ATTR:['class']});
 }
 
 function insightsGetCacheKey(){
@@ -6320,7 +6301,6 @@ let vidaCurrentKMSectorERP = 'Time';
 let vidaCurrentBucketERP   = 'Time';
 let vidaActiveSectors      = {};
 
-const VIDA_GIST_ID   = '84673c2a1010100bdd0e134d5462249d';
 const VIDA_GIST_FILE = 'gistfile1.txt';
 
 // ── Constants ─────────────────────────────────────────────
@@ -6626,9 +6606,8 @@ function vidaCloudScheduleSave(){
   vidaCloudSaveTimer=setTimeout(()=>{ vidaCloudSaveTimer=null; vidaCloudSave(); },5000);
 }
 async function vidaCloudLoad(){
-  if(!VIDA_GIST_ID) return;
   try{
-    const result=await cloudFetchGistFile(VIDA_GIST_ID, VIDA_GIST_FILE);
+    const result=await cloudFetchGistFile('vida', VIDA_GIST_FILE);
     if(!result||!result.text||!result.text.trim()||result.text.trim()==='{}') return;
     const payload=JSON.parse(result.text);
     const rows=Array.isArray(payload?.rows)?payload.rows:[];
@@ -6641,16 +6620,12 @@ async function vidaCloudLoad(){
   }
 }
 async function vidaCloudSave(){
-  if(!cloudHasWriteAccess()||!vidaRAW_ROWS.length) return;
+  if(!vidaRAW_ROWS.length) return;
   try{
     const payload={savedAt:new Date().toISOString(),rows:vidaRAW_ROWS};
-    await fetch(`https://api.github.com/gists/${VIDA_GIST_ID}`,{
+    await fetch(`${WORKER_URL}/gist/vida`,{
       method:'PATCH',
-      headers:{
-        'Accept':'application/vnd.github+json',
-        'Authorization':'token '+GIST_TOKEN,
-        'Content-Type':'application/json'
-      },
+      headers:{'Content-Type':'application/json'},
       body:JSON.stringify({files:{[VIDA_GIST_FILE]:{content:JSON.stringify(payload)}}})
     });
     console.log('vidaCloudSave: guardado',vidaRAW_ROWS.length,'filas');
